@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "exports": {
-    "./*": "./src/*.tsx"
+    "./components": "./src/components/index.ts",
+    "./tailwind.config": "./tailwind.config.ts"
   },
   "scripts": {
-    "generate:component": "turbo gen react-component",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
