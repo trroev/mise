@@ -1,159 +1,153 @@
-# Turborepo starter
+# Mise
 
-This Turborepo starter is maintained by the Turborepo core team.
+A personal recipe application built by a former 2-Michelin-star chef. Fine-dining recipes with first-class unit conversion (metric ↔ US) and yield scaling.
 
-## Using this example
+Built on a Turborepo monorepo with Next.js 16 and PayloadCMS 3 embedded in a single Vercel deployment.
 
-Run the following command:
+---
 
-```sh
-npx create-turbo@latest
+## Stack
+
+| Concern | Choice |
+|---|---|
+| Framework | Next.js 16 (App Router) |
+| CMS | PayloadCMS 3 (embedded) |
+| Database | MongoDB Atlas |
+| Search | Typesense Cloud |
+| Images | Cloudinary |
+| Styling | TailwindCSS v4 |
+| Headless UI | Base UI |
+| Client data | TanStack Query |
+| Validation | Zod |
+| Linting / formatting | Biome (via ultracite) |
+| Testing | Vitest + Playwright (planned) |
+| Hosting | Vercel |
+
+---
+
+## Repository Structure
+
+```
+mise/
+├── apps/
+│   └── web/              # Next.js 16 + PayloadCMS (single deployment)
+├── packages/
+│   ├── payload/          # Payload collections, hooks, and background jobs
+│   ├── ui/               # Shared React components + Tailwind design tokens
+│   ├── utils/            # Unit conversion and yield scaling utilities
+│   ├── types/            # Shared TypeScript types
+│   └── tsconfig/         # Shared TypeScript configs
+└── scripts/
+    ├── migrate-from-sheets.ts   # CSV → Payload import
+    ├── reindex-typesense.ts     # Full Typesense reindex
+    └── setup-typesense.ts       # Create Typesense schema
 ```
 
-## What's inside?
+---
 
-This Turborepo includes the following packages/apps:
+## Getting Started
 
-### Apps and Packages
+### Prerequisites
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+- Node.js ≥ 24
+- pnpm (managed via corepack)
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
+Enable corepack if you haven't:
 
 ```sh
-cd my-turborepo
-turbo build
+corepack enable
 ```
 
-Without global `turbo`, use your package manager:
+### Install
 
 ```sh
-cd my-turborepo
-npx turbo build
-pnpm dlx turbo build
-pnpm exec turbo build
+pnpm install
 ```
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+### Environment
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+Copy the example and fill in the required values:
 
 ```sh
-turbo build --filter=docs
+cp .env.example .env.local
 ```
 
-Without global `turbo`:
+```bash
+# Payload
+MONGODB_URI=
+PAYLOAD_SECRET=
 
-```sh
-npx turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
+# Cloudinary
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+
+# Typesense
+TYPESENSE_HOST=
+TYPESENSE_API_KEY=
+NEXT_PUBLIC_TYPESENSE_SEARCH_ONLY_API_KEY=
+
+# ISR revalidation
+REVALIDATION_SECRET=
+
+# Auth (post-MVP)
+BETTER_AUTH_SECRET=
 ```
 
 ### Develop
 
-To develop all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
 ```sh
-cd my-turborepo
-turbo dev
+pnpm dev
 ```
 
-Without global `turbo`, use your package manager:
+Starts the Next.js app (with embedded Payload admin at `/admin`) in watch mode.
+
+### Build
 
 ```sh
-cd my-turborepo
-npx turbo dev
-pnpm exec turbo dev
-pnpm exec turbo dev
+pnpm build
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+---
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+## Scripts
+
+| Script | Description |
+|---|---|
+| `pnpm dev` | Start all apps in watch mode |
+| `pnpm build` | Build all apps and packages |
+| `pnpm lint` | Check linting and formatting (Biome via ultracite) |
+| `pnpm lint:fix` | Auto-fix lint and formatting issues |
+| `pnpm format` | Check formatting only |
+| `pnpm format:fix` | Auto-fix formatting |
+| `pnpm typecheck` | Type-check all packages |
+| `pnpm test` | Run test suite |
+
+---
+
+## Data Migration
+
+Recipes are imported from Google Sheets via a one-time script:
 
 ```sh
-turbo dev --filter=web
+# Validate without writing
+pnpm tsx scripts/migrate-from-sheets.ts --input ./recipes.csv --dry-run
+
+# Import to local Payload instance
+pnpm tsx scripts/migrate-from-sheets.ts --input ./recipes.csv --env local
+
+# Populate the Typesense search index
+pnpm tsx scripts/reindex-typesense.ts
 ```
 
-Without global `turbo`:
+See `docs/migration-mapping.md` for the Google Sheets → Payload field mapping.
+
+---
+
+## Deployment
+
+The app deploys as a single Vercel project. Payload's embedded architecture means no separate server process.
 
 ```sh
-npx turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
+turbo run build --filter=web
 ```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo login
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo login
-pnpm exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo link
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo link
-pnpm exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
