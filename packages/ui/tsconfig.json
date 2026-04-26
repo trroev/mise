@@ -1,6 +1,7 @@
 {
-  "extends": "@repo/typescript-config/react-library.json",
+  "extends": "@mise/tsconfig/library.json",
   "compilerOptions": {
+    "jsx": "react-jsx",
     "outDir": "dist",
     "strictNullChecks": true
   },
