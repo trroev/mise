@@ -10,6 +10,7 @@
     "typecheck": "next typegen && tsc --noEmit"
   },
   "dependencies": {
+    "@mise/types": "workspace:*",
     "@mise/ui": "workspace:*",
     "next": "16.2.0",
     "react": "^19.2.0",
