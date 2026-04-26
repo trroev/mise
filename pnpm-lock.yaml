@@ -63,6 +63,9 @@ importers:
       '@mise/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@mise/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       next:
         specifier: 16.2.0
         version: 16.2.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -121,6 +124,15 @@ importers:
       '@types/react-dom':
         specifier: 19.2.2
         version: 19.2.2(@types/react@19.2.2)
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
+
+  packages/utils:
+    devDependencies:
+      '@mise/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
       typescript:
         specifier: 5.9.2
         version: 5.9.2
