@@ -4,7 +4,7 @@
   "private": true,
   "license": "MIT",
   "exports": {
-    ".": "./src/index.ts"
+    "./payload-config": "./src/payload.config.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"
