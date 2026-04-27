@@ -1,3 +1,4 @@
+import type React from "react"
 import { Providers } from "../providers"
 import "../globals.css"
 
@@ -6,5 +7,11 @@ export default function FrontendLayout({
 }: {
   children: React.ReactNode
 }) {
-  return <Providers>{children}</Providers>
+  return (
+    <html lang="en">
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  )
 }
