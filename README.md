@@ -77,33 +77,22 @@ pnpm install
 
 ### Environment
 
-Copy the example and fill in the required values:
+Environment variables follow the Next.js convention in `apps/web/`:
+
+| File | Committed | Purpose |
+|---|---|---|
+| `.env.development` | ✓ | Safe development defaults (no secrets) |
+| `.env.production` | ✓ | Safe production defaults (no secrets) |
+| `.env.development.local` | ✗ | Local secrets — create this yourself |
+
+Create `apps/web/.env.development.local` and add your secrets:
 
 ```sh
-cp .env.local.example .env.local
-```
-
-```bash
-# Payload
-MONGODB_URI=
-PAYLOAD_SECRET=
-
-# Cloudinary
-CLOUDINARY_CLOUD_NAME=
-CLOUDINARY_API_KEY=
-CLOUDINARY_API_SECRET=
-
-# Typesense
-TYPESENSE_HOST=
-TYPESENSE_API_KEY=
-NEXT_PUBLIC_TYPESENSE_SEARCH_ONLY_API_KEY=
-
-# ISR revalidation
-REVALIDATION_SECRET=
-
-# Auth (post-MVP)
+# Generate a secret: openssl rand -base64 32
 BETTER_AUTH_SECRET=
 ```
+
+Production secrets (`BETTER_AUTH_SECRET`, `MONGODB_URI` with credentials, etc.) are configured in the Vercel dashboard — never committed.
 
 ### Develop
 
