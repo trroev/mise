@@ -1,18 +1,17 @@
 {
-  "name": "@mise/auth",
+  "name": "@mise/env",
   "version": "0.0.0",
   "private": true,
   "license": "MIT",
   "exports": {
-    ".": "./src/index.ts"
+    "./*": "./src/*.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@mise/env": "workspace:*",
-    "better-auth": "^1.2.8",
-    "mongodb": "^6.16.0"
+    "@t3-oss/env-nextjs": "^0.13.10",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@mise/tsconfig": "workspace:*",
