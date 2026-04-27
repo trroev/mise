@@ -1,5 +1,7 @@
 import path from "node:path"
 import { fileURLToPath } from "node:url"
+import { env as authEnv } from "@mise/env/auth"
+import { env as payloadEnv } from "@mise/env/payload"
 import { mongooseAdapter } from "@payloadcms/db-mongodb"
 import { buildConfig } from "payload"
 
@@ -24,9 +26,9 @@ export default buildConfig({
     },
   ],
   db: mongooseAdapter({
-    url: process.env.MONGODB_URI || "",
+    url: authEnv.MONGODB_URI,
   }),
-  secret: process.env.PAYLOAD_SECRET || "",
+  secret: payloadEnv.PAYLOAD_SECRET,
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),
   },
