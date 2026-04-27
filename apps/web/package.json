@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@mise/auth": "workspace:*",
+    "@mise/env": "workspace:*",
     "@mise/tailwind": "workspace:*",
     "@mise/types": "workspace:*",
     "@mise/ui": "workspace:*",

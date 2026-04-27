@@ -66,6 +66,9 @@ importers:
       '@mise/auth':
         specifier: workspace:*
         version: link:../../packages/auth
+      '@mise/env':
+        specifier: workspace:*
+        version: link:../../packages/env
       '@mise/tailwind':
         specifier: workspace:*
         version: link:../../packages/tailwind
