@@ -3,8 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "exports": {
-    "./components": "./src/components/index.ts",
-    "./tailwind.config": "./tailwind.config.ts"
+    "./components": "./src/components/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"
