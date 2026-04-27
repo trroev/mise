@@ -7,3 +7,40 @@
   Paths are relative to this file (packages/tailwind/src/).
 */
 @source "../../ui/src";
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    @apply relative overscroll-none antialiased;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  .root {
+    isolation: isolate;
+  }
+
+  /* Custom scrollbar styles for WebKit browsers and Firefox */
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 5px;
+  }
+  * {
+    scrollbar-color: hsl(var(--border)) transparent;
+    scrollbar-width: thin;
+  }
+}

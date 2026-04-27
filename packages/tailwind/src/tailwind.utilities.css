@@ -3,3 +3,10 @@
   Use @utility {} for single-property utilities,
   or @layer utilities {} for multi-property ones.
 */
+@layer utilities {
+  /* Example multi-property utility:
+  .btn {
+    @apply inline-flex items-center justify-center rounded-md font-medium transition-colors;
+  }
+  */
+}
