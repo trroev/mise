@@ -4,8 +4,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "next dev --port 3000",
-    "build": "next build",
+    "dev": "dotenvx run -f ../../.env.local -- next dev --port 3000",
+    "build": "dotenvx run -f ../../.env.local -- next build",
     "start": "next start",
     "typecheck": "next typegen && tsc --noEmit"
   },
