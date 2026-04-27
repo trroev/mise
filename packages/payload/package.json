@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "@mise/env": "workspace:*",
-    "@payloadcms/db-mongodb": "^3.84.1"
+    "@payloadcms/db-mongodb": "^3.84.1",
+    "@payloadcms/plugin-cloud-storage": "^3.84.1",
+    "cloudinary": "^2.10.0"
   },
   "peerDependencies": {
     "payload": "^3.84.1"
