@@ -77,22 +77,24 @@ pnpm install
 
 ### Environment
 
-Environment variables follow the Next.js convention in `apps/web/`:
+All env files in `apps/web/` are encrypted with [dotenvx](https://dotenvx.com) and safe to commit. Only `.env.keys` (the private decryption key file) is gitignored.
 
-| File | Committed | Purpose |
-|---|---|---|
-| `.env.development` | ✓ | Safe development defaults (no secrets) |
-| `.env.production` | ✓ | Safe production defaults (no secrets) |
-| `.env.development.local` | ✗ | Local secrets — create this yourself |
+| File | Purpose |
+|---|---|
+| `.env.development` | Development defaults |
+| `.env.development.local` | Local overrides / secrets |
+| `.env.production` | Production defaults |
 
-Create `apps/web/.env.development.local` and add your secrets:
+`apps/web/.env.keys` is a symlink to the repo-root `.env.keys`. Obtain the key file from a teammate or your password manager and place it at the repo root before running the app.
+
+To add a new secret:
 
 ```sh
-# Generate a secret: openssl rand -base64 32
-BETTER_AUTH_SECRET=
+# From apps/web/
+dotenvx set SOME_SECRET "value" -f .env.development.local
 ```
 
-Production secrets (`BETTER_AUTH_SECRET`, `MONGODB_URI` with credentials, etc.) are configured in the Vercel dashboard — never committed.
+This encrypts the value in place and updates `.env.keys`.
 
 ### Develop
 
