@@ -6,7 +6,11 @@
     "ultracite/biome/next"
   ],
   "files": {
-    "includes": ["!**/payload-types.ts", "!**/importMap.js"]
+    "includes": [
+      "!**/payload-types.ts",
+      "!**/importMap.js",
+      "!**/app/(payload)"
+    ]
   },
   "javascript": {
     "formatter": {
