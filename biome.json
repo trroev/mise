@@ -41,8 +41,7 @@
         "**/*.config.ts",
         "**/*.config.js",
         "**/*.config.mjs",
-        "**/*.config.cjs",
-        "packages/testing/vitest.shared.ts"
+        "**/*.config.cjs"
       ],
       "linter": {
         "rules": {
