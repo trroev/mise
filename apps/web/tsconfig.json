@@ -6,7 +6,10 @@
         "name": "next"
       }
     ],
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "paths": {
+      "@payload-config": ["./payload.config.ts"]
+    }
   },
   "include": [
     "**/*.ts",
