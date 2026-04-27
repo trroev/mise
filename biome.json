@@ -35,10 +35,14 @@
   "overrides": [
     {
       "includes": [
-        "apps/web/app/**/*.ts",
-        "apps/web/app/**/*.tsx",
-        "apps/web/next.config.ts",
-        "apps/web/middleware.ts"
+        "apps/**/app/**/*.ts",
+        "apps/**/app/**/*.tsx",
+        "apps/**/middleware.ts",
+        "**/*.config.ts",
+        "**/*.config.js",
+        "**/*.config.mjs",
+        "**/*.config.cjs",
+        "packages/testing/vitest.shared.ts"
       ],
       "linter": {
         "rules": {
