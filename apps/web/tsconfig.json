@@ -8,7 +8,8 @@
     ],
     "strictNullChecks": true,
     "paths": {
-      "@payload-config": ["./payload.config.ts"]
+      "@payload-config": ["./src/payload.config.ts"],
+      "~/*": ["./src/*"]
     }
   },
   "include": [

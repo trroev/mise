@@ -1,10 +1,10 @@
 import type { CollectionConfig } from "payload"
 
-export const users: CollectionConfig = {
-  slug: "users",
-  auth: true,
+export const Users: CollectionConfig = {
   admin: {
     useAsTitle: "email",
   },
+  auth: true,
   fields: [],
+  slug: "users",
 }

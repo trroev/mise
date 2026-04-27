@@ -1,7 +1,22 @@
 import type { CollectionConfig } from "payload"
 
-export const media: CollectionConfig = {
+export const Media: CollectionConfig = {
+  access: {},
+  fields: [
+    {
+      name: "alt",
+      required: true,
+      type: "text",
+    },
+  ],
+  labels: {
+    plural: "Media & Images",
+    singular: "Media/Image",
+  },
+  orderable: true,
   slug: "media",
-  upload: true,
-  fields: [],
+  upload: {
+    bulkUpload: false,
+    focalPoint: true,
+  },
 }
