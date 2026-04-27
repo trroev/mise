@@ -10,6 +10,8 @@
     "typecheck": "next typegen && tsc --noEmit"
   },
   "dependencies": {
+    "@mise/auth": "workspace:*",
+    "better-auth": "^1.2.8",
     "@mise/tailwind": "workspace:*",
     "@mise/types": "workspace:*",
     "@mise/ui": "workspace:*",

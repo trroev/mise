@@ -1,0 +1,21 @@
+{
+  "name": "@mise/auth",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "better-auth": "^1.2.8",
+    "mongodb": "^6.16.0"
+  },
+  "devDependencies": {
+    "@mise/tsconfig": "workspace:*",
+    "@types/node": "^22.15.3",
+    "typescript": "5.9.2"
+  }
+}
