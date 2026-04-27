@@ -1,0 +1,25 @@
+{
+  "name": "@mise/payload",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@mise/env": "workspace:*",
+    "@payloadcms/db-mongodb": "^3.84.1"
+  },
+  "peerDependencies": {
+    "payload": "^3.84.1"
+  },
+  "devDependencies": {
+    "@mise/tsconfig": "workspace:*",
+    "@types/node": "^22.15.3",
+    "payload": "^3.84.1",
+    "typescript": "5.9.2"
+  }
+}

@@ -69,6 +69,9 @@ importers:
       '@mise/env':
         specifier: workspace:*
         version: link:../../packages/env
+      '@mise/payload':
+        specifier: workspace:*
+        version: link:../../packages/payload
       '@mise/tailwind':
         specifier: workspace:*
         version: link:../../packages/tailwind
@@ -168,6 +171,28 @@ importers:
       '@types/node':
         specifier: ^22.15.3
         version: 22.15.3
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
+
+  packages/payload:
+    dependencies:
+      '@mise/env':
+        specifier: workspace:*
+        version: link:../env
+      '@payloadcms/db-mongodb':
+        specifier: ^3.84.1
+        version: 3.84.1(payload@3.84.1(graphql@16.13.2)(typescript@5.9.2))
+    devDependencies:
+      '@mise/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: ^22.15.3
+        version: 22.15.3
+      payload:
+        specifier: ^3.84.1
+        version: 3.84.1(graphql@16.13.2)(typescript@5.9.2)
       typescript:
         specifier: 5.9.2
         version: 5.9.2

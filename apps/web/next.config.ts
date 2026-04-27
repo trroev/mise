@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   transpilePackages: [
     "@mise/auth",
     "@mise/env",
+    "@mise/payload",
     "@mise/tailwind",
     "@mise/types",
     "@mise/ui",
