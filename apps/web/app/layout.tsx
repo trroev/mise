@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 
-import "@mise/tailwind"
+import "./globals.css"
 
 export const metadata: Metadata = {
   title: "Mise",
