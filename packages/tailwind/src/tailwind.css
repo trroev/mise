@@ -1,0 +1,9 @@
+@import "tailwindcss";
+@import "./tailwind.theme.css";
+@import "./tailwind.utilities.css";
+
+/*
+  Scan shared packages so their Tailwind classes are included in the build.
+  Paths are relative to this file (packages/tailwind/src/).
+*/
+@source "../../ui/src";

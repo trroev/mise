@@ -1,0 +1,9 @@
+{
+  "name": "@mise/tailwind",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "exports": {
+    ".": "./src/tailwind.css"
+  }
+}
