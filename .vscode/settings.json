@@ -30,7 +30,7 @@
   },
   "prettier.enable": false,
   "tailwindCSS.classFunctions": ["tw", "clsx", "tw\\.[a-z-]+", "tv", "cn"],
-  "tailwindCSS.experimental.configFile": "./packages/ui/src/styles/tailwind.css",
+  "tailwindCSS.experimental.configFile": "./packages/tailwind/src/tailwind.css",
   "js/ts.tsdk.path": "node_modules/typescript/lib",
   "js/ts.preferences.importModuleSpecifier": "non-relative",
   "js/ts.preferences.importModuleSpecifierEnding": "minimal"
