@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import type React from "react"
-import { Providers } from "../providers"
+import { Providers } from "./providers"
 
 import "../globals.css"
 
