@@ -10,6 +10,7 @@
     "typecheck": "next typegen && tsc --noEmit"
   },
   "dependencies": {
+    "@mise/tailwind": "workspace:*",
     "@mise/types": "workspace:*",
     "@mise/ui": "workspace:*",
     "@mise/utils": "workspace:*",
@@ -19,9 +20,11 @@
   },
   "devDependencies": {
     "@mise/tsconfig": "workspace:*",
+    "@tailwindcss/postcss": "^4.2.4",
     "@types/node": "^22.15.3",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
+    "tailwindcss": "^4.2.4",
     "typescript": "5.9.2"
   }
 }
