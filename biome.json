@@ -17,12 +17,36 @@
     "rules": {
       "style": {
         "useConsistentTypeDefinitions": {
+          "level": "error",
           "options": {
             "style": "type"
-          },
-          "level": "error"
+          }
+        },
+        "useConsistentArrayType": {
+          "level": "error",
+          "options": {
+            "syntax": "generic"
+          }
+        },
+        "noDefaultExport": "error"
+      }
+    }
+  },
+  "overrides": [
+    {
+      "includes": [
+        "apps/web/app/**/*.ts",
+        "apps/web/app/**/*.tsx",
+        "apps/web/next.config.ts",
+        "apps/web/middleware.ts"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noDefaultExport": "off"
+          }
         }
       }
     }
-  }
+  ]
 }
