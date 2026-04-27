@@ -4,6 +4,9 @@
   "private": true,
   "license": "MIT",
   "exports": {
-    ".": "./src/tailwind.css"
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/tailwind.css"
+    }
   }
 }
