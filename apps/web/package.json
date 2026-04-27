@@ -12,11 +12,13 @@
   },
   "dependencies": {
     "@mise/auth": "workspace:*",
-    "better-auth": "^1.2.8",
     "@mise/tailwind": "workspace:*",
     "@mise/types": "workspace:*",
     "@mise/ui": "workspace:*",
     "@mise/utils": "workspace:*",
+    "@tanstack/react-query": "^5.100.5",
+    "@tanstack/react-query-devtools": "^5.100.5",
+    "better-auth": "^1.2.8",
     "next": "16.2.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
