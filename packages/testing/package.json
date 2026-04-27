@@ -1,0 +1,12 @@
+{
+  "name": "@mise/testing",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "exports": {
+    "./vitest.shared": "./vitest.shared.ts"
+  },
+  "devDependencies": {
+    "vitest": "^3.2.4"
+  }
+}
