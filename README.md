@@ -51,12 +51,23 @@ mise/
 
 - Node.js ≥ 24
 - pnpm (managed via corepack)
+- Docker (for local MongoDB)
 
 Enable corepack if you haven't:
 
 ```sh
 corepack enable
 ```
+
+### Start local services
+
+MongoDB runs in Docker for local development. Start it before running the app:
+
+```sh
+docker compose up -d
+```
+
+This starts a MongoDB instance at `mongodb://localhost:27017`. Data is persisted in a named volume (`mongodb_data`).
 
 ### Install
 
@@ -69,7 +80,7 @@ pnpm install
 Copy the example and fill in the required values:
 
 ```sh
-cp .env.example .env.local
+cp .env.local.example .env.local
 ```
 
 ```bash
