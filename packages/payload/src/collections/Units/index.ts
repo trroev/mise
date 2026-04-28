@@ -1,6 +1,14 @@
 import type { CollectionConfig } from "payload"
+import { everyone } from "../../access/everyone"
+import { isAdmin } from "../../access/isAdmin"
 
 export const Units: CollectionConfig = {
+  access: {
+    create: isAdmin,
+    delete: isAdmin,
+    read: everyone,
+    update: isAdmin,
+  },
   admin: {
     defaultColumns: ["name", "abbreviation", "system", "type"],
     useAsTitle: "name",
