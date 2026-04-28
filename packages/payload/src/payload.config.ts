@@ -9,6 +9,7 @@ import { mongooseAdapter } from "@payloadcms/db-mongodb"
 import { cloudStoragePlugin } from "@payloadcms/plugin-cloud-storage"
 import { buildConfig } from "payload"
 import { cloudinaryAdapter } from "./adapters/cloudinary"
+import { Units } from "./collections/units"
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -36,7 +37,7 @@ export function createPayloadConfig({ baseDir }: CreatePayloadConfigOptions) {
       },
       user: Users.slug,
     },
-    collections: [Media, Users],
+    collections: [Media, Units, Users],
     db: mongooseAdapter({
       url: authEnv.MONGODB_URI,
     }),
