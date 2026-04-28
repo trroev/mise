@@ -4,12 +4,12 @@ import { env as authEnv } from "@mise/env/auth"
 import { env as cloudinaryEnv } from "@mise/env/cloudinary"
 import { env as payloadEnv } from "@mise/env/payload"
 import { Media } from "@mise/payload/collections/Media"
+import { Units } from "@mise/payload/collections/Units"
 import { Users } from "@mise/payload/collections/Users"
 import { mongooseAdapter } from "@payloadcms/db-mongodb"
 import { cloudStoragePlugin } from "@payloadcms/plugin-cloud-storage"
 import { buildConfig } from "payload"
 import { cloudinaryAdapter } from "./adapters/cloudinary"
-import { Units } from "./collections/units"
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
