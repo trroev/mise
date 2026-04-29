@@ -1,26 +1,8 @@
 import { everyone } from "@mise/payload/access/everyone"
 import { isAdmin } from "@mise/payload/access/isAdmin"
-import {
-  type CollectionBeforeChangeHook,
-  type CollectionConfig,
-  slugField,
-} from "payload"
-
-const computeTotalTime: CollectionBeforeChangeHook = ({ data }) => {
-  const prep = typeof data.prepTime === "number" ? data.prepTime : 0
-  const cook = typeof data.cookTime === "number" ? data.cookTime : 0
-  return { ...data, totalTime: prep + cook }
-}
-
-const stampPublishedAt: CollectionBeforeChangeHook = ({
-  data,
-  originalDoc,
-}) => {
-  if (data.status === "published" && !originalDoc?.publishedAt) {
-    return { ...data, publishedAt: new Date().toISOString() }
-  }
-  return data
-}
+import { computeTotalTime } from "@mise/payload/hooks/computeTotalTime"
+import { stampPublishedAt } from "@mise/payload/hooks/stampPublishedAt"
+import { type CollectionConfig, slugField } from "payload"
 
 export const Recipes: CollectionConfig = {
   access: {
@@ -30,7 +12,7 @@ export const Recipes: CollectionConfig = {
     update: isAdmin,
   },
   admin: {
-    defaultColumns: ["title", "status", "course", "difficulty", "publishedAt"],
+    defaultColumns: ["title", "_status", "course", "difficulty", "publishedAt"],
     useAsTitle: "title",
   },
   fields: [
@@ -135,19 +117,6 @@ export const Recipes: CollectionConfig = {
     },
     {
       admin: {
-        position: "sidebar",
-      },
-      defaultValue: "draft",
-      name: "status",
-      options: [
-        { label: "Draft", value: "draft" },
-        { label: "Published", value: "published" },
-      ],
-      required: true,
-      type: "select",
-    },
-    {
-      admin: {
         date: { pickerAppearance: "dayAndTime" },
         description:
           "Set automatically the first time the recipe is published.",
@@ -166,4 +135,7 @@ export const Recipes: CollectionConfig = {
     singular: "Recipe",
   },
   slug: "recipes",
+  versions: {
+    drafts: true,
+  },
 }

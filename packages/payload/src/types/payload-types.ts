@@ -245,13 +245,13 @@ export interface Recipe {
      */
     unit?: string | null;
   };
-  status: 'draft' | 'published';
   /**
    * Set automatically the first time the recipe is published.
    */
   publishedAt?: string | null;
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -453,10 +453,10 @@ export interface RecipesSelect<T extends boolean = true> {
         quantity?: T;
         unit?: T;
       };
-  status?: T;
   publishedAt?: T;
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
