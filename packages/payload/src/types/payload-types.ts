@@ -246,6 +246,29 @@ export interface Recipe {
     unit?: string | null;
   };
   /**
+   * Group ingredients by recipe component (e.g. 'For the sauce', 'For the garnish'). Drag to reorder.
+   */
+  ingredientGroups: {
+    /**
+     * Optional label, e.g. 'For the sauce'.
+     */
+    groupLabel?: string | null;
+    ingredients: {
+      name: string;
+      /**
+       * Always stored in metric.
+       */
+      quantity: number;
+      unit: string | Unit;
+      /**
+       * e.g. 'finely diced', 'room temperature'.
+       */
+      prepNote?: string | null;
+      id?: string | null;
+    }[];
+    id?: string | null;
+  }[];
+  /**
    * Set automatically the first time the recipe is published.
    */
   publishedAt?: string | null;
@@ -452,6 +475,21 @@ export interface RecipesSelect<T extends boolean = true> {
     | {
         quantity?: T;
         unit?: T;
+      };
+  ingredientGroups?:
+    | T
+    | {
+        groupLabel?: T;
+        ingredients?:
+          | T
+          | {
+              name?: T;
+              quantity?: T;
+              unit?: T;
+              prepNote?: T;
+              id?: T;
+            };
+        id?: T;
       };
   publishedAt?: T;
   updatedAt?: T;

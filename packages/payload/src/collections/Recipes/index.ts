@@ -117,6 +117,66 @@ export const Recipes: CollectionConfig = {
     },
     {
       admin: {
+        description:
+          "Group ingredients by recipe component (e.g. 'For the sauce', 'For the garnish'). Drag to reorder.",
+        initCollapsed: false,
+      },
+      fields: [
+        {
+          admin: {
+            description: "Optional label, e.g. 'For the sauce'.",
+          },
+          name: "groupLabel",
+          type: "text",
+        },
+        {
+          fields: [
+            {
+              name: "name",
+              required: true,
+              type: "text",
+            },
+            {
+              admin: {
+                description: "Always stored in metric.",
+                width: "33%",
+              },
+              min: 0,
+              name: "quantity",
+              required: true,
+              type: "number",
+            },
+            {
+              admin: {
+                width: "33%",
+              },
+              name: "unit",
+              relationTo: "units",
+              required: true,
+              type: "relationship",
+            },
+            {
+              admin: {
+                description: "e.g. 'finely diced', 'room temperature'.",
+                width: "33%",
+              },
+              name: "prepNote",
+              type: "text",
+            },
+          ],
+          minRows: 1,
+          name: "ingredients",
+          required: true,
+          type: "array",
+        },
+      ],
+      minRows: 1,
+      name: "ingredientGroups",
+      required: true,
+      type: "array",
+    },
+    {
+      admin: {
         date: { pickerAppearance: "dayAndTime" },
         description:
           "Set automatically the first time the recipe is published.",
