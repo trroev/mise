@@ -13,4 +13,5 @@ Before writing any code:
 Work through the acceptance criteria. When all are met:
 - Run `pnpm typecheck` and `pnpm lint` and fix any issues
 - Update the ticket's criteria checkboxes in TASKS.md
-- Commit and push using conventional atomic commits, grouped logically by concern
+- Invoke the `commit` skill to commit the changes
+- After commits land, run `git push`
