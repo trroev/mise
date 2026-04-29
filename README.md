@@ -51,7 +51,7 @@ mise/
 
 - Node.js ≥ 24
 - pnpm (managed via corepack)
-- Docker (for local MongoDB)
+- Docker (for local MongoDB and Typesense)
 
 Enable corepack if you haven't:
 
@@ -61,13 +61,19 @@ corepack enable
 
 ### Start local services
 
-MongoDB runs in Docker for local development. Start it before running the app:
+MongoDB and Typesense run in Docker for local development. Start them before running the app:
 
 ```sh
 docker compose up -d
 ```
 
-This starts a MongoDB instance at `mongodb://localhost:27017`. Data is persisted in a named volume (`mongodb_data`).
+This starts:
+
+- **MongoDB** at `mongodb://localhost:27017` (data persisted in `mongodb_data` volume)
+- **Typesense** at `http://localhost:8108` (data persisted in `typesense_data` volume; local API key is `typesense`)
+- **Typesense Dashboard** at `http://localhost:8109` — admin UI auto-connected to the local Typesense server via `typesense-dashboard.config.json`
+
+Collection schemas are managed by the application (Payload background jobs); no manual setup is required after the services are up.
 
 ### Install
 
