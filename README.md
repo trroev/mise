@@ -104,6 +104,15 @@ pnpm dev
 
 Starts the Next.js app (with embedded Payload admin at `/admin`) in watch mode.
 
+### MongoDB Atlas
+
+Local dev uses the Docker MongoDB container by default. PR preview deploys connect to the `mise_staging` Atlas database; production connects to `mise_production`. Both databases live on the same M0 cluster with separate per-database users.
+
+- **Credentials:** the staging and production connection strings are stored in 1Password under **Mise — MongoDB Atlas (staging)** and **Mise — MongoDB Atlas (production)**.
+- **Encrypted into the repo:** `MONGODB_URI` is set in `apps/web/.env.development` (staging) and `apps/web/.env.production` (production), encrypted via dotenvx.
+- **Point local dev at staging Atlas:** copy the staging URI from 1Password into `MONGODB_URI` in `.env.local`. Production credentials must not be used locally.
+- **Provisioning runbook:** see [`docs/atlas-setup.md`](./docs/atlas-setup.md) for the full setup, network-access policy, and how to recreate the cluster from scratch.
+
 ### Build
 
 ```sh
