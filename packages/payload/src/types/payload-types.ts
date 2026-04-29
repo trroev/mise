@@ -269,6 +269,24 @@ export interface Recipe {
     id?: string | null;
   }[];
   /**
+   * Group instructions by recipe component (e.g. 'Make the pasta dough', 'Assemble'). Drag to reorder.
+   */
+  instructionGroups: {
+    /**
+     * Optional label, e.g. 'Make the pasta dough'.
+     */
+    groupLabel?: string | null;
+    steps: {
+      description: string;
+      /**
+       * Optional active timer in minutes.
+       */
+      timerMinutes?: number | null;
+      id?: string | null;
+    }[];
+    id?: string | null;
+  }[];
+  /**
    * Set automatically the first time the recipe is published.
    */
   publishedAt?: string | null;
@@ -487,6 +505,19 @@ export interface RecipesSelect<T extends boolean = true> {
               quantity?: T;
               unit?: T;
               prepNote?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  instructionGroups?:
+    | T
+    | {
+        groupLabel?: T;
+        steps?:
+          | T
+          | {
+              description?: T;
+              timerMinutes?: T;
               id?: T;
             };
         id?: T;

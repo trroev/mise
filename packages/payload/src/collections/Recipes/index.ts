@@ -177,6 +177,48 @@ export const Recipes: CollectionConfig = {
     },
     {
       admin: {
+        description:
+          "Group instructions by recipe component (e.g. 'Make the pasta dough', 'Assemble'). Drag to reorder.",
+        initCollapsed: false,
+      },
+      fields: [
+        {
+          admin: {
+            description: "Optional label, e.g. 'Make the pasta dough'.",
+          },
+          name: "groupLabel",
+          type: "text",
+        },
+        {
+          fields: [
+            {
+              name: "description",
+              required: true,
+              type: "textarea",
+            },
+            {
+              admin: {
+                description: "Optional active timer in minutes.",
+                width: "33%",
+              },
+              min: 0,
+              name: "timerMinutes",
+              type: "number",
+            },
+          ],
+          minRows: 1,
+          name: "steps",
+          required: true,
+          type: "array",
+        },
+      ],
+      minRows: 1,
+      name: "instructionGroups",
+      required: true,
+      type: "array",
+    },
+    {
+      admin: {
         date: { pickerAppearance: "dayAndTime" },
         description:
           "Set automatically the first time the recipe is published.",
