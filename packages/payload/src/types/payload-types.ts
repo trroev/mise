@@ -70,6 +70,7 @@ export interface Config {
     cuisines: Cuisine;
     ingredients: Ingredient;
     media: Media;
+    recipes: Recipe;
     tags: Tag;
     units: Unit;
     users: User;
@@ -83,6 +84,7 @@ export interface Config {
     cuisines: CuisinesSelect<false> | CuisinesSelect<true>;
     ingredients: IngredientsSelect<false> | IngredientsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    recipes: RecipesSelect<false> | RecipesSelect<true>;
     tags: TagsSelect<false> | TagsSelect<true>;
     units: UnitsSelect<false> | UnitsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -208,6 +210,51 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "recipes".
+ */
+export interface Recipe {
+  id: string;
+  title: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  description?: string | null;
+  heroImage?: (string | null) | Media;
+  cuisine?: (string | null) | Cuisine;
+  course?: ('appetizer' | 'entrée' | 'dessert' | 'side' | 'snack' | 'bread' | 'other') | null;
+  difficulty?: ('easy' | 'medium' | 'hard') | null;
+  dietaryTags?: ('vegetarian' | 'vegan' | 'gluten-free' | 'dairy-free' | 'nut-free')[] | null;
+  /**
+   * Preparation time in minutes.
+   */
+  prepTime?: number | null;
+  /**
+   * Cook time in minutes.
+   */
+  cookTime?: number | null;
+  /**
+   * Auto-computed from prep time + cook time.
+   */
+  totalTime?: number | null;
+  yield?: {
+    quantity?: number | null;
+    /**
+     * e.g. 'servings', 'portions', 'cookies'.
+     */
+    unit?: string | null;
+  };
+  status: 'draft' | 'published';
+  /**
+   * Set automatically the first time the recipe is published.
+   */
+  publishedAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "tags".
  */
 export interface Tag {
@@ -281,6 +328,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: string | Media;
+      } | null)
+    | ({
+        relationTo: 'recipes';
+        value: string | Recipe;
       } | null)
     | ({
         relationTo: 'tags';
@@ -378,6 +429,34 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "recipes_select".
+ */
+export interface RecipesSelect<T extends boolean = true> {
+  title?: T;
+  generateSlug?: T;
+  slug?: T;
+  description?: T;
+  heroImage?: T;
+  cuisine?: T;
+  course?: T;
+  difficulty?: T;
+  dietaryTags?: T;
+  prepTime?: T;
+  cookTime?: T;
+  totalTime?: T;
+  yield?:
+    | T
+    | {
+        quantity?: T;
+        unit?: T;
+      };
+  status?: T;
+  publishedAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

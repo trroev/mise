@@ -6,6 +6,7 @@ import { env as payloadEnv } from "@mise/env/payload"
 import { Cuisines } from "@mise/payload/collections/Cuisines"
 import { Ingredients } from "@mise/payload/collections/Ingredients"
 import { Media } from "@mise/payload/collections/Media"
+import { Recipes } from "@mise/payload/collections/Recipes"
 import { Tags } from "@mise/payload/collections/Tags"
 import { Units } from "@mise/payload/collections/Units"
 import { Users } from "@mise/payload/collections/Users"
@@ -40,7 +41,7 @@ export function createPayloadConfig({ baseDir }: CreatePayloadConfigOptions) {
       },
       user: Users.slug,
     },
-    collections: [Cuisines, Ingredients, Media, Tags, Units, Users],
+    collections: [Cuisines, Ingredients, Media, Recipes, Tags, Units, Users],
     db: mongooseAdapter({
       url: authEnv.MONGODB_URI,
     }),
