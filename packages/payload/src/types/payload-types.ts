@@ -68,6 +68,7 @@ export interface Config {
   blocks: {};
   collections: {
     cuisines: Cuisine;
+    ingredients: Ingredient;
     media: Media;
     tags: Tag;
     units: Unit;
@@ -80,6 +81,7 @@ export interface Config {
   collectionsJoins: {};
   collectionsSelect: {
     cuisines: CuisinesSelect<false> | CuisinesSelect<true>;
+    ingredients: IngredientsSelect<false> | IngredientsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     tags: TagsSelect<false> | TagsSelect<true>;
     units: UnitsSelect<false> | UnitsSelect<true>;
@@ -140,6 +142,52 @@ export interface Cuisine {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ingredients".
+ */
+export interface Ingredient {
+  id: string;
+  name: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  /**
+   * Alternate names for this ingredient (e.g. 'cilantro' for 'coriander').
+   */
+  aliases?: string[] | null;
+  /**
+   * Default unit suggested when this ingredient is added to a recipe.
+   */
+  defaultUnit?: (string | null) | Unit;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "units".
+ */
+export interface Unit {
+  id: string;
+  name: string;
+  abbreviation: string;
+  /**
+   * Measurement system this unit belongs to. Count-type units may omit this.
+   */
+  system?: ('metric' | 'imperial') | null;
+  /**
+   * Category of measurement.
+   */
+  type?: ('weight' | 'volume' | 'count') | null;
+  /**
+   * Multiplier to convert this unit to its base SI unit (gram for weight, milliliter for volume). Temperature units use offset conversions and may leave this blank.
+   */
+  conversionFactor?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
 export interface Media {
@@ -170,29 +218,6 @@ export interface Tag {
    */
   generateSlug?: boolean | null;
   slug: string;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "units".
- */
-export interface Unit {
-  id: string;
-  name: string;
-  abbreviation: string;
-  /**
-   * Measurement system this unit belongs to. Count-type units may omit this.
-   */
-  system?: ('metric' | 'imperial') | null;
-  /**
-   * Category of measurement.
-   */
-  type?: ('weight' | 'volume' | 'count') | null;
-  /**
-   * Multiplier to convert this unit to its base SI unit (gram for weight, milliliter for volume). Temperature units use offset conversions and may leave this blank.
-   */
-  conversionFactor?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -248,6 +273,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'cuisines';
         value: string | Cuisine;
+      } | null)
+    | ({
+        relationTo: 'ingredients';
+        value: string | Ingredient;
       } | null)
     | ({
         relationTo: 'media';
@@ -315,6 +344,19 @@ export interface CuisinesSelect<T extends boolean = true> {
   name?: T;
   generateSlug?: T;
   slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ingredients_select".
+ */
+export interface IngredientsSelect<T extends boolean = true> {
+  name?: T;
+  generateSlug?: T;
+  slug?: T;
+  aliases?: T;
+  defaultUnit?: T;
   updatedAt?: T;
   createdAt?: T;
 }
