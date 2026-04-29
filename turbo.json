@@ -17,6 +17,9 @@
       "cache": false,
       "persistent": true
     },
+    "generate:types": {
+      "cache": false
+    },
     "test": {
       "dependsOn": ["^build"],
       "outputs": ["coverage/**"]

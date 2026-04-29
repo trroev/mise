@@ -3,8 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "license": "MIT",
+  "type": "module",
   "exports": {
     "./payload-config": "./src/payload.config.ts",
+    "./payload-types": "./src/types/payload-types.ts",
     "./collections/*": "./src/collections/*/index.ts"
   },
   "scripts": {

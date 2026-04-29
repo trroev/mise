@@ -8,7 +8,9 @@
     "dev": "pnpm with-env next dev --turbopack",
     "start": "pnpm with-env next start",
     "typecheck": "next typegen && tsc --noEmit",
-    "with-env": "dotenvx run --convention=nextjs --"
+    "with-env": "dotenvx run --convention=nextjs --",
+    "generate:types": "pnpm with-env payload generate:types",
+    "postinstall": "if [ \"$CI\" != \"true\" ]; then pnpm generate:types; fi"
   },
   "dependencies": {
     "@mise/auth": "workspace:*",
