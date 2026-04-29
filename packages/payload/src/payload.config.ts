@@ -3,7 +3,9 @@ import { fileURLToPath } from "node:url"
 import { env as authEnv } from "@mise/env/auth"
 import { env as cloudinaryEnv } from "@mise/env/cloudinary"
 import { env as payloadEnv } from "@mise/env/payload"
+import { Cuisines } from "@mise/payload/collections/Cuisines"
 import { Media } from "@mise/payload/collections/Media"
+import { Tags } from "@mise/payload/collections/Tags"
 import { Units } from "@mise/payload/collections/Units"
 import { Users } from "@mise/payload/collections/Users"
 import { mongooseAdapter } from "@payloadcms/db-mongodb"
@@ -37,7 +39,7 @@ export function createPayloadConfig({ baseDir }: CreatePayloadConfigOptions) {
       },
       user: Users.slug,
     },
-    collections: [Media, Units, Users],
+    collections: [Cuisines, Media, Tags, Units, Users],
     db: mongooseAdapter({
       url: authEnv.MONGODB_URI,
     }),
