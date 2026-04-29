@@ -1,6 +1,6 @@
+import { everyone } from "@mise/payload/access/everyone"
+import { isAdmin } from "@mise/payload/access/isAdmin"
 import type { CollectionConfig } from "payload"
-import { everyone } from "../../access/everyone"
-import { isAdmin } from "../../access/isAdmin"
 
 export const Units: CollectionConfig = {
   access: {

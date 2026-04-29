@@ -131,8 +131,9 @@ export interface Cuisine {
   id: string;
   name: string;
   /**
-   * Auto-generated from name. Edit to override.
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
+  generateSlug?: boolean | null;
   slug: string;
   updatedAt: string;
   createdAt: string;
@@ -165,8 +166,9 @@ export interface Tag {
   id: string;
   name: string;
   /**
-   * Auto-generated from name. Edit to override.
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
+  generateSlug?: boolean | null;
   slug: string;
   updatedAt: string;
   createdAt: string;
@@ -311,6 +313,7 @@ export interface PayloadMigration {
  */
 export interface CuisinesSelect<T extends boolean = true> {
   name?: T;
+  generateSlug?: T;
   slug?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -340,6 +343,7 @@ export interface MediaSelect<T extends boolean = true> {
  */
 export interface TagsSelect<T extends boolean = true> {
   name?: T;
+  generateSlug?: T;
   slug?: T;
   updatedAt?: T;
   createdAt?: T;

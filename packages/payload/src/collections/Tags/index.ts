@@ -1,7 +1,6 @@
-import type { CollectionConfig } from "payload"
-import { everyone } from "../../access/everyone"
-import { isAdmin } from "../../access/isAdmin"
-import { slugField } from "../../fields/slugField"
+import { everyone } from "@mise/payload/access/everyone"
+import { isAdmin } from "@mise/payload/access/isAdmin"
+import { type CollectionConfig, slugField } from "payload"
 
 export const Tags: CollectionConfig = {
   access: {

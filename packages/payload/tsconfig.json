@@ -1,4 +1,18 @@
 {
+  "compilerOptions": {
+    "paths": {
+      "@mise/payload/access/*": ["./src/access/*/index.ts"],
+      "@mise/payload/blocks/*": ["./src/blocks/*/index.ts"],
+      "@mise/payload/collections/*": ["./src/collections/*/index.ts"],
+      "@mise/payload/components/*": ["./src/components/*/index.ts"],
+      "@mise/payload/fields/*": ["./src/fields/*/index.ts"],
+      "@mise/payload/globals/*": ["./src/globals/*/index.ts"],
+      "@mise/payload/helpers/*": ["./src/helpers/*/index.ts"],
+      "@mise/payload/hooks/*": ["./src/hooks/*/index.ts"],
+      "@mise/payload/payload-config": ["./src/payload.config.ts"],
+      "@mise/payload/payload-types": ["./src/types/payload-types.ts"]
+    }
+  },
   "extends": "@mise/tsconfig/library.json",
   "include": ["src"],
   "exclude": ["node_modules", "dist"]

@@ -5,9 +5,16 @@
   "license": "MIT",
   "type": "module",
   "exports": {
+    "./access/*": "./src/access/*/index.ts",
+    "./blocks/*": "./src/blocks/*/index.ts",
+    "./collections/*": "./src/collections/*/index.ts",
+    "./components/*": "./src/components/*/index.ts",
+    "./fields/*": "./src/fields/*/index.ts",
+    "./globals/*": "./src/globals/*/index.ts",
+    "./helpers/*": "./src/helpers/*/index.ts",
+    "./hooks/*": "./src/hooks/*/index.ts",
     "./payload-config": "./src/payload.config.ts",
-    "./payload-types": "./src/types/payload-types.ts",
-    "./collections/*": "./src/collections/*/index.ts"
+    "./payload-types": "./src/types/payload-types.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"

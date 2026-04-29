@@ -10,7 +10,7 @@
     "typecheck": "next typegen && tsc --noEmit",
     "with-env": "dotenvx run --convention=nextjs --",
     "generate:types": "pnpm with-env payload generate:types",
-    "postinstall": "if [ \"$CI\" != \"true\" ]; then pnpm generate:types; fi"
+    "postinstall": "if [ \"$CI\" != \"true\" ]; then pnpm generate:types && pnpm payload generate:importMap; fi"
   },
   "dependencies": {
     "@mise/auth": "workspace:*",
