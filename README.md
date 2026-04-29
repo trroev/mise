@@ -161,6 +161,40 @@ See `docs/migration-mapping.md` for the Google Sheets → Payload field mapping.
 
 ---
 
+## CI & Branch Protection
+
+Pull requests are validated by `.github/workflows/ci.yml`, which runs on every PR and on pushes to `main`. The pipeline enforces:
+
+- Clean lockfile (`pnpm install --frozen-lockfile`)
+- Fresh Payload types (`payload generate:types` + `git diff --exit-code`)
+- Lint, type check, tests, and a successful build
+
+`SKIP_ENV_VALIDATION=true` is set for the entire job so steps that touch the Payload config don't require real credentials. `generate:types` and `build` invoke the `payload` and `next` binaries directly (bypassing the `pnpm with-env` dotenvx wrapper) so the private key is never needed in CI.
+
+### Enabling branch protection on `main`
+
+After the CI workflow has run at least once, require it to pass before merging via the GitHub UI:
+
+1. Go to **Settings → Branches → Add branch protection rule**
+2. Set the branch name pattern to `main`
+3. Enable **Require status checks to pass before merging**
+4. Search for and add **CI** as a required status check
+5. Enable **Require branches to be up to date before merging**
+6. Save the rule
+
+Or via the CLI (run once after the first workflow run):
+
+```sh
+gh api repos/trroev/mise/branches/main/protection \
+  --method PUT \
+  --field 'required_status_checks={"strict":true,"contexts":["CI"]}' \
+  --field 'enforce_admins=false' \
+  --field 'required_pull_request_reviews=null' \
+  --field 'restrictions=null'
+```
+
+---
+
 ## Deployment
 
 The app deploys as a single Vercel project. Payload's embedded architecture means no separate server process.
