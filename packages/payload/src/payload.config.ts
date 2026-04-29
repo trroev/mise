@@ -10,8 +10,10 @@ import { Recipes } from "@mise/payload/collections/Recipes"
 import { Tags } from "@mise/payload/collections/Tags"
 import { Units } from "@mise/payload/collections/Units"
 import { Users } from "@mise/payload/collections/Users"
+import type { Recipe } from "@mise/payload/payload-types"
 import { mongooseAdapter } from "@payloadcms/db-mongodb"
 import { cloudStoragePlugin } from "@payloadcms/plugin-cloud-storage"
+import { seoPlugin } from "@payloadcms/plugin-seo"
 import { buildConfig } from "payload"
 import { cloudinaryAdapter } from "./adapters/cloudinary"
 
@@ -61,6 +63,20 @@ export function createPayloadConfig({ baseDir }: CreatePayloadConfigOptions) {
             disablePayloadAccessControl: true,
           },
         },
+      }),
+      seoPlugin({
+        collections: ["recipes"],
+        generateDescription: ({ doc }) =>
+          (doc as Recipe).description?.slice(0, 160) ?? "",
+        generateImage: ({ doc }) => {
+          const heroImage = (doc as Recipe).heroImage
+          return typeof heroImage === "object" && heroImage !== null
+            ? heroImage.id
+            : (heroImage ?? "")
+        },
+        generateTitle: ({ doc }) => (doc as Recipe).title,
+        tabbedUI: true,
+        uploadsCollection: "media",
       }),
     ],
     secret: payloadEnv.PAYLOAD_SECRET,

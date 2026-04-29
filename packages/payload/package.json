@@ -23,6 +23,7 @@
     "@mise/env": "workspace:*",
     "@payloadcms/db-mongodb": "^3.84.1",
     "@payloadcms/plugin-cloud-storage": "^3.84.1",
+    "@payloadcms/plugin-seo": "^3.84.1",
     "cloudinary": "^2.10.0",
     "ts-pattern": "^5.9.0"
   },
