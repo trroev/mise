@@ -8,5 +8,8 @@
       "types": "./src/index.d.ts",
       "default": "./src/tailwind.css"
     }
+  },
+  "dependencies": {
+    "tailwindcss": "^4.2.4"
   }
 }
