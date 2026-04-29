@@ -4,7 +4,7 @@
 
 Mise is a personal recipe app built by a former 2-Michelin-star chef. Full architecture details are in [`ARCHITECTURE.md`](./ARCHITECTURE.md). Work tickets are in [`TASKS.md`](./TASKS.md).
 
-**Stack:** Next.js 16 (App Router) + PayloadCMS 3 (embedded) · MongoDB Atlas · Typesense Cloud · Tailwind v4 · Base UI · TanStack Query · Turborepo + pnpm workspaces · Biome
+**Stack:** Next.js 16 (App Router) + PayloadCMS 3 (embedded) · MongoDB Atlas · Typesense (self-hosted) · Tailwind v4 · Base UI · TanStack Query · Turborepo + pnpm workspaces · Biome
 
 ---
 

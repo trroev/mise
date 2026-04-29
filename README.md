@@ -13,7 +13,7 @@ Built on a Turborepo monorepo with Next.js 16 and PayloadCMS 3 embedded in a sin
 | Framework | Next.js 16 (App Router) |
 | CMS | PayloadCMS 3 (embedded) |
 | Database | MongoDB Atlas |
-| Search | Typesense Cloud |
+| Search | Typesense (self-hosted; Docker locally, prod TBD) |
 | Images | Cloudinary |
 | Styling | TailwindCSS v4 |
 | Headless UI | Base UI |
