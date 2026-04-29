@@ -6,6 +6,7 @@
   "type": "module",
   "exports": {
     "./access/*": "./src/access/*/index.ts",
+    "./adapters/*": "./src/adapters/*/index.ts",
     "./blocks/*": "./src/blocks/*/index.ts",
     "./collections/*": "./src/collections/*/index.ts",
     "./components/*": "./src/components/*/index.ts",

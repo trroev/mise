@@ -2,6 +2,7 @@
   "compilerOptions": {
     "paths": {
       "@mise/payload/access/*": ["./src/access/*/index.ts"],
+      "@mise/payload/adapters/*": ["./src/adapters/*/index.ts"],
       "@mise/payload/blocks/*": ["./src/blocks/*/index.ts"],
       "@mise/payload/collections/*": ["./src/collections/*/index.ts"],
       "@mise/payload/components/*": ["./src/components/*/index.ts"],

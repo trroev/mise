@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url"
 import { env as authEnv } from "@mise/env/auth"
 import { env as cloudinaryEnv } from "@mise/env/cloudinary"
 import { env as payloadEnv } from "@mise/env/payload"
+import { cloudinaryAdapter } from "@mise/payload/adapters/cloudinary"
 import { Cuisines } from "@mise/payload/collections/Cuisines"
 import { Ingredients } from "@mise/payload/collections/Ingredients"
 import { Media } from "@mise/payload/collections/Media"
@@ -15,7 +16,6 @@ import { mongooseAdapter } from "@payloadcms/db-mongodb"
 import { cloudStoragePlugin } from "@payloadcms/plugin-cloud-storage"
 import { seoPlugin } from "@payloadcms/plugin-seo"
 import { buildConfig } from "payload"
-import { cloudinaryAdapter } from "./adapters/cloudinary"
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
