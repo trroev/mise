@@ -14,14 +14,14 @@ export const Checkbox = ({ className, ref, ...props }: CheckboxProps) => (
       "inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-sm border border-border bg-surface",
       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background",
       "disabled:cursor-not-allowed disabled:opacity-50",
-      "data-[checked]:border-accent data-[checked]:bg-accent",
-      "data-[invalid]:border-destructive",
+      "data-checked:border-accent data-checked:bg-accent",
+      "data-invalid:border-destructive",
       className
     )}
     ref={ref}
     {...props}
   >
-    <BaseCheckbox.Indicator className="flex text-accent-foreground data-[unchecked]:hidden">
+    <BaseCheckbox.Indicator className="flex text-accent-foreground data-unchecked:hidden">
       <CheckIcon />
     </BaseCheckbox.Indicator>
   </BaseCheckbox.Root>

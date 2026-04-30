@@ -38,7 +38,7 @@ export const Select = ({
           aria-invalid={error ? "true" : undefined}
           className={cn(
             "flex h-10 w-full items-center justify-between rounded-md border bg-surface px-3 py-2 font-sans text-body text-text-primary",
-            "data-[placeholder]:text-text-muted",
+            "data-placeholder:text-text-muted",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background",
             "disabled:cursor-not-allowed disabled:opacity-50",
             error
@@ -95,8 +95,8 @@ const SelectItem = ({
   <BaseSelect.Item
     className={cn(
       "flex cursor-default select-none items-center justify-between px-3 py-2 font-sans text-body text-text-primary outline-none",
-      "data-[highlighted]:bg-background data-[highlighted]:text-text-primary",
-      "data-[selected]:bg-accent data-[selected]:text-accent-foreground"
+      "data-highlighted:bg-background data-highlighted:text-text-primary",
+      "data-selected:bg-accent data-selected:text-accent-foreground"
     )}
     value={value}
   >
