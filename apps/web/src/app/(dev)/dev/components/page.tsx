@@ -216,8 +216,13 @@ function CheckboxLabel({
   disabled?: boolean
 }) {
   return (
-    <span className={`flex items-center gap-2 ${disabled ? "opacity-70" : ""}`}>
-      <Checkbox defaultChecked={defaultChecked} disabled={disabled} id={id} />
+    <span className="flex items-center gap-2">
+      <Checkbox
+        className="peer"
+        defaultChecked={defaultChecked}
+        disabled={disabled}
+        id={id}
+      />
       <Label className="cursor-pointer" htmlFor={id}>
         {children}
       </Label>
@@ -237,8 +242,13 @@ function SwitchLabel({
   disabled?: boolean
 }) {
   return (
-    <span className={`flex items-center gap-3 ${disabled ? "opacity-70" : ""}`}>
-      <Switch defaultChecked={defaultChecked} disabled={disabled} id={id} />
+    <span className="flex items-center gap-3">
+      <Switch
+        className="peer"
+        defaultChecked={defaultChecked}
+        disabled={disabled}
+        id={id}
+      />
       <Label className="cursor-pointer" htmlFor={id}>
         {children}
       </Label>

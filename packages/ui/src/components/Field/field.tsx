@@ -29,7 +29,7 @@ export const Field = ({
     {...props}
   >
     {label && (
-      <BaseField.Label className="font-sans text-body-sm text-text-primary leading-none">
+      <BaseField.Label className="font-sans text-body-sm text-text-primary leading-none data-disabled:cursor-not-allowed data-disabled:opacity-50">
         {label}
       </BaseField.Label>
     )}

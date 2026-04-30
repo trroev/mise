@@ -8,6 +8,7 @@ export const Label = ({ className, ...props }: LabelProps) => (
     className={cn(
       "font-sans text-body-sm text-text-primary leading-none",
       "peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
+      "peer-data-disabled:cursor-not-allowed peer-data-disabled:opacity-50",
       className
     )}
     {...props}
