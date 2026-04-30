@@ -1,4 +1,4 @@
-import { tv, type VariantProps } from "tailwind-variants"
+import { tv, type VariantProps } from "@mise/ui/utils/tv"
 
 export const spinner = tv({
   base: "inline-block animate-spin rounded-full border-2 border-current border-t-transparent",

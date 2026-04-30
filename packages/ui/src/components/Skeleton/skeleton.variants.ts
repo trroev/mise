@@ -1,4 +1,4 @@
-import { tv, type VariantProps } from "tailwind-variants"
+import { tv, type VariantProps } from "@mise/ui/utils/tv"
 
 export const skeleton = tv({
   base: "block animate-pulse rounded-sm bg-surface",

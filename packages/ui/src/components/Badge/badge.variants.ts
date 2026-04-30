@@ -1,4 +1,4 @@
-import { tv, type VariantProps } from "tailwind-variants"
+import { tv, type VariantProps } from "@mise/ui/utils/tv"
 
 export const badge = tv({
   base: "inline-flex items-center rounded-sm px-2 py-0.5 font-sans text-caption uppercase tracking-widest",
