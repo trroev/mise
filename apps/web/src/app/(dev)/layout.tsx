@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation"
 import type React from "react"
+import { cormorant, inter } from "~/fonts"
 
 import "../globals.css"
 
@@ -8,8 +9,8 @@ export default function DevLayout({ children }: { children: React.ReactNode }) {
     notFound()
   }
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html className={`${cormorant.variable} ${inter.variable}`} lang="en">
+      <body className="font-sans">{children}</body>
     </html>
   )
 }
