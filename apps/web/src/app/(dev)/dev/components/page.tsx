@@ -93,7 +93,10 @@ function Gallery() {
         <Row>
           <Button>Default</Button>
           <Button disabled>Disabled</Button>
-          <Button render={<a href="/recipes">Render as link</a>} />
+          <Button
+            nativeButton={false}
+            render={<a href="/recipes">Render as link</a>}
+          />
         </Row>
       </Section>
 
