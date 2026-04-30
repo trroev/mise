@@ -6,21 +6,5 @@ services:
     volumes:
       - mongodb_data:/data/db
 
-  typesense:
-    image: typesense/typesense:28.0
-    ports:
-      - "8108:8108"
-    volumes:
-      - typesense_data:/data
-    command: "--data-dir /data --api-key=typesense --enable-cors"
-
-  typesense-dashboard:
-    image: ghcr.io/bfritscher/typesense-dashboard:latest
-    ports:
-      - "8109:80"
-    volumes:
-      - ./typesense-dashboard.config.json:/srv/config.json
-
 volumes:
   mongodb_data:
-  typesense_data:

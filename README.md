@@ -13,7 +13,7 @@ Built on a Turborepo monorepo with Next.js 16 and PayloadCMS 3 embedded in a sin
 | Framework | Next.js 16 (App Router) |
 | CMS | PayloadCMS 3 (embedded) |
 | Database | MongoDB Atlas |
-| Search | Typesense (self-hosted; Docker locally, prod TBD) |
+| Search | MiniSearch (in-browser, client-side index) |
 | Images | Cloudinary |
 | Styling | TailwindCSS v4 |
 | Headless UI | Base UI |
@@ -38,9 +38,7 @@ mise/
 │   ├── types/            # Shared TypeScript types
 │   └── tsconfig/         # Shared TypeScript configs
 └── scripts/
-    ├── migrate-from-sheets.ts   # CSV → Payload import
-    ├── reindex-typesense.ts     # Full Typesense reindex
-    └── setup-typesense.ts       # Create Typesense schema
+    └── migrate-from-sheets.ts   # CSV → Payload import
 ```
 
 ---
@@ -51,7 +49,7 @@ mise/
 
 - Node.js ≥ 24
 - pnpm (managed via corepack)
-- Docker (for local MongoDB and Typesense)
+- Docker (for local MongoDB)
 
 Enable corepack if you haven't:
 
@@ -61,7 +59,7 @@ corepack enable
 
 ### Start local services
 
-MongoDB and Typesense run in Docker for local development. Start them before running the app:
+MongoDB runs in Docker for local development. Start it before running the app:
 
 ```sh
 docker compose up -d
@@ -70,10 +68,8 @@ docker compose up -d
 This starts:
 
 - **MongoDB** at `mongodb://localhost:27017` (data persisted in `mongodb_data` volume)
-- **Typesense** at `http://localhost:8108` (data persisted in `typesense_data` volume; local API key is `typesense`)
-- **Typesense Dashboard** at `http://localhost:8109` — admin UI auto-connected to the local Typesense server via `typesense-dashboard.config.json`
 
-Collection schemas are managed by the application (Payload background jobs); no manual setup is required after the services are up.
+Search is handled client-side with MiniSearch — no separate service to run.
 
 ### Install
 
@@ -152,9 +148,6 @@ pnpm tsx scripts/migrate-from-sheets.ts --input ./recipes.csv --dry-run
 
 # Import to local Payload instance
 pnpm tsx scripts/migrate-from-sheets.ts --input ./recipes.csv --env local
-
-# Populate the Typesense search index
-pnpm tsx scripts/reindex-typesense.ts
 ```
 
 See `docs/migration-mapping.md` for the Google Sheets → Payload field mapping.
