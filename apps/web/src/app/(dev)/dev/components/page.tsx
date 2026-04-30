@@ -1,3 +1,4 @@
+import type { Recipe } from "@mise/payload/payload-types"
 import { Badge } from "@mise/ui/components/Badge"
 import { Button } from "@mise/ui/components/Button"
 import { Checkbox } from "@mise/ui/components/Checkbox"
@@ -6,6 +7,7 @@ import { Field } from "@mise/ui/components/Field"
 import { Input } from "@mise/ui/components/Input"
 import { Label } from "@mise/ui/components/Label"
 import { RadioGroup } from "@mise/ui/components/RadioGroup"
+import { RecipeCard } from "@mise/ui/components/RecipeCard"
 import { Select } from "@mise/ui/components/Select"
 import { Skeleton } from "@mise/ui/components/Skeleton"
 import { Spinner } from "@mise/ui/components/Spinner"
@@ -22,6 +24,54 @@ const COURSE_OPTIONS = [
   { value: "main", label: "Main" },
   { value: "dessert", label: "Dessert" },
 ] as const
+
+const SAMPLE_RECIPE_BASE = {
+  id: "sample",
+  generateSlug: false,
+  description: null,
+  cuisine: null,
+  dietaryTags: null,
+  prepTime: null,
+  cookTime: null,
+  yield: { quantity: null, unit: null },
+  ingredientGroups: [],
+  instructionGroups: [],
+  createdAt: "",
+  updatedAt: "",
+} satisfies Partial<Recipe>
+
+const SAMPLE_RECIPES: ReadonlyArray<Recipe> = [
+  {
+    ...SAMPLE_RECIPE_BASE,
+    id: "1",
+    title: "Cassoulet de Toulouse",
+    slug: "cassoulet-de-toulouse",
+    course: "entrée",
+    difficulty: "hard",
+    totalTime: 240,
+    heroImage: null,
+  } as Recipe,
+  {
+    ...SAMPLE_RECIPE_BASE,
+    id: "2",
+    title: "Pâte brisée",
+    slug: "pate-brisee",
+    course: "bread",
+    difficulty: "easy",
+    totalTime: 45,
+    heroImage: null,
+  } as Recipe,
+  {
+    ...SAMPLE_RECIPE_BASE,
+    id: "3",
+    title: "Tarte au citron",
+    slug: "tarte-au-citron",
+    course: "dessert",
+    difficulty: "medium",
+    totalTime: 75,
+    heroImage: null,
+  } as Recipe,
+]
 
 export default function ComponentsPage() {
   return (
@@ -296,6 +346,14 @@ function Gallery() {
             <Button variant="outline">Hover bottom</Button>
           </Tooltip>
         </Row>
+      </Section>
+
+      <Section title="RecipeCard">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {SAMPLE_RECIPES.map((recipe) => (
+            <RecipeCard key={recipe.id} recipe={recipe} />
+          ))}
+        </div>
       </Section>
 
       <Section title="Dialog">

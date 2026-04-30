@@ -188,7 +188,7 @@ importers:
         version: 3.84.1(payload@3.84.1(graphql@16.13.2)(typescript@5.9.2))
       '@payloadcms/plugin-cloud-storage':
         specifier: ^3.84.1
-        version: 3.84.1(@types/react@19.2.2)(monaco-editor@0.55.1)(next@16.2.4(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.77.4))(payload@3.84.1(graphql@16.13.2)(typescript@5.9.2))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.2)
+        version: 3.84.1(monaco-editor@0.55.1)(next@16.2.4(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.77.4))(payload@3.84.1(graphql@16.13.2)(typescript@5.9.2))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.2)
       '@payloadcms/plugin-seo':
         specifier: ^3.84.1
         version: 3.84.1(@types/react@19.2.2)(monaco-editor@0.55.1)(next@16.2.4(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.77.4))(payload@3.84.1(graphql@16.13.2)(typescript@5.9.2))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.2)
@@ -240,12 +240,18 @@ importers:
       '@base-ui/react':
         specifier: 1.4.1
         version: 1.4.1(@date-fns/tz@1.2.0)(@types/react@19.2.2)(date-fns@4.1.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@mise/payload':
+        specifier: workspace:*
+        version: link:../payload
       '@remixicon/react':
         specifier: ^4.9.0
         version: 4.9.0(react@19.2.0)
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      next:
+        specifier: ^16.0.0
+        version: 16.2.4(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.77.4)
       react:
         specifier: ^19.2.0
         version: 19.2.0
@@ -271,6 +277,9 @@ importers:
       '@types/react-dom':
         specifier: 19.2.2
         version: 19.2.2(@types/react@19.2.2)
+      payload:
+        specifier: ^3.84.1
+        version: 3.84.1(graphql@16.13.2)(typescript@5.9.2)
       typescript:
         specifier: 5.9.2
         version: 5.9.2
@@ -3740,7 +3749,7 @@ snapshots:
       - supports-color
       - typescript
 
-  '@payloadcms/plugin-cloud-storage@3.84.1(@types/react@19.2.2)(monaco-editor@0.55.1)(next@16.2.4(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.77.4))(payload@3.84.1(graphql@16.13.2)(typescript@5.9.2))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.2)':
+  '@payloadcms/plugin-cloud-storage@3.84.1(monaco-editor@0.55.1)(next@16.2.4(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.77.4))(payload@3.84.1(graphql@16.13.2)(typescript@5.9.2))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.2)':
     dependencies:
       '@payloadcms/ui': 3.84.1(@types/react@19.2.2)(monaco-editor@0.55.1)(next@16.2.4(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.77.4))(payload@3.84.1(graphql@16.13.2)(typescript@5.9.2))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.2)
       find-node-modules: 2.1.3
