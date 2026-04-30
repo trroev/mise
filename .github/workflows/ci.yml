@@ -1,65 +1,59 @@
 name: CI
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
   pull_request:
 
 env:
-  SKIP_ENV_VALIDATION: "true"
-  # The encrypted .env.development file contains a CLOUDINARY_URL entry that
-  # the app does not use (it uses individual CLOUDINARY_* vars). Setting this
-  # to empty prevents cloudinary's module-load check from seeing the encrypted
-  # value. The real fix is to remove CLOUDINARY_URL from .env.development:
-  #   dotenvx set CLOUDINARY_URL "" -f apps/web/.env.development
-  CLOUDINARY_URL: ""
+  ACT: "${{ false }}"
+
+permissions:
+  contents: read
 
 jobs:
-  ci:
-    name: CI
+  generate-types:
     runs-on: ubuntu-latest
-
+    name: Generate Types
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - name: Generate Types
+        if: env.ACT != 'true'
+        uses: ./tooling/github/ci/generate-types
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "24"
-          cache: "pnpm"
-
-      - name: Restore Turbo cache
-        uses: actions/cache@v4
-        with:
-          path: .turbo
-          key: turbo-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
-          restore-keys: |
-            turbo-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
-            turbo-${{ runner.os }}-
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      # Invoke payload directly (no dotenvx) so CI can run without the private key.
-      - name: Generate Payload types
-        run: pnpm --filter web exec payload generate:types
-
-      - name: Check for stale Payload types
-        run: git diff --exit-code packages/payload/src/types/payload-types.ts
-
+  lint:
+    runs-on: ubuntu-latest
+    name: Lint
+    steps:
+      - uses: actions/checkout@v4
       - name: Lint
-        run: pnpm lint
+        if: env.ACT != 'true'
+        uses: ./tooling/github/ci/lint
 
-      - name: Type check
-        run: pnpm typecheck
+  typecheck:
+    runs-on: ubuntu-latest
+    name: Typecheck
+    steps:
+      - uses: actions/checkout@v4
+      - name: Typecheck
+        if: env.ACT != 'true'
+        uses: ./tooling/github/ci/typecheck
 
+  test:
+    runs-on: ubuntu-latest
+    name: Test
+    steps:
+      - uses: actions/checkout@v4
       - name: Test
-        run: pnpm test
+        if: env.ACT != 'true'
+        uses: ./tooling/github/ci/test
 
-      # Invoke next directly (no dotenvx) so CI can run without the private key.
+  build:
+    runs-on: ubuntu-latest
+    name: Build
+    steps:
+      - uses: actions/checkout@v4
       - name: Build
-        run: pnpm --filter web exec next build
+        if: env.ACT != 'true'
+        uses: ./tooling/github/ci/build
