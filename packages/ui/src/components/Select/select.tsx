@@ -2,6 +2,7 @@
 
 import { Select as BaseSelect } from "@base-ui/react/select"
 import { cn } from "@mise/ui/utils/cn"
+import { RiArrowDownSLine } from "@remixicon/react"
 import type { ReactNode } from "react"
 
 export type SelectOption = {
@@ -55,7 +56,7 @@ export const Select = ({
             }}
           </BaseSelect.Value>
           <BaseSelect.Icon className="ml-2 text-text-muted">
-            <ChevronIcon />
+            <RiArrowDownSLine aria-hidden="true" size={14} />
           </BaseSelect.Icon>
         </BaseSelect.Trigger>
         <BaseSelect.Portal>
@@ -100,21 +101,4 @@ const SelectItem = ({
   >
     <BaseSelect.ItemText>{children}</BaseSelect.ItemText>
   </BaseSelect.Item>
-)
-
-const ChevronIcon = () => (
-  <svg
-    aria-hidden="true"
-    fill="none"
-    height="14"
-    stroke="currentColor"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    strokeWidth="2"
-    viewBox="0 0 24 24"
-    width="14"
-  >
-    <title>Open</title>
-    <polyline points="6 9 12 15 18 9" />
-  </svg>
 )

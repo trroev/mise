@@ -2,6 +2,7 @@
 
 import { Checkbox as BaseCheckbox } from "@base-ui/react/checkbox"
 import { cn } from "@mise/ui/utils/cn"
+import { RiCheckLine } from "@remixicon/react"
 
 export type CheckboxProps = React.ComponentProps<typeof BaseCheckbox.Root>
 
@@ -18,24 +19,7 @@ export const Checkbox = ({ className, ...props }: CheckboxProps) => (
     {...props}
   >
     <BaseCheckbox.Indicator className="flex text-accent-foreground data-unchecked:hidden">
-      <CheckIcon />
+      <RiCheckLine aria-hidden="true" size={14} />
     </BaseCheckbox.Indicator>
   </BaseCheckbox.Root>
-)
-
-const CheckIcon = () => (
-  <svg
-    aria-hidden="true"
-    fill="none"
-    height="14"
-    stroke="currentColor"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    strokeWidth="2.5"
-    viewBox="0 0 24 24"
-    width="14"
-  >
-    <title>Checked</title>
-    <polyline points="20 6 9 17 4 12" />
-  </svg>
 )
