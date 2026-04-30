@@ -1,4 +1,4 @@
-import { Cormorant_Garamond, Inter } from "next/font/google"
+import { Cormorant_Garamond, Manrope } from "next/font/google"
 
 export const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -7,9 +7,9 @@ export const cormorant = Cormorant_Garamond({
   display: "swap",
 })
 
-export const inter = Inter({
+export const manrope = Manrope({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
-  variable: "--font-inter",
+  variable: "--font-manrope",
   display: "swap",
 })

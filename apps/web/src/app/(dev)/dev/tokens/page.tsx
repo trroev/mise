@@ -152,7 +152,7 @@ export default function TokensPage() {
             <p className="font-display text-heading-md">
               Cormorant Garamond — display
             </p>
-            <p className="font-sans text-body">Inter — sans</p>
+            <p className="font-sans text-body">Manrope — sans</p>
           </div>
         </Section>
       </div>
