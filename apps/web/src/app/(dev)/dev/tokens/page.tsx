@@ -136,7 +136,7 @@ export default function TokensPage() {
             {RADIUS_TOKENS.map((r) => (
               <div className="flex flex-col items-center gap-2" key={r.name}>
                 <div
-                  className="h-24 w-24 border border-border bg-surface"
+                  className="size-24 border border-border bg-surface"
                   style={{ borderRadius: `${r.px}px` }}
                 />
                 <p className="font-mono text-caption text-text-muted">

@@ -21,7 +21,7 @@ export const button = tv({
       sm: "h-8 px-3 text-body-sm",
       md: "h-10 px-4 text-body",
       lg: "h-12 px-6 text-body-lg",
-      icon: "h-10 w-10",
+      icon: "size-10",
     },
   },
   defaultVariants: {

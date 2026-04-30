@@ -18,7 +18,7 @@ export const Switch = ({ className, ...props }: SwitchProps) => (
   >
     <BaseSwitch.Thumb
       className={cn(
-        "pointer-events-none block h-5 w-5 translate-x-0 rounded-full bg-surface shadow-sm transition-transform",
+        "pointer-events-none block size-5 translate-x-0 rounded-full bg-surface shadow-sm transition-transform",
         "data-checked:translate-x-5"
       )}
     />

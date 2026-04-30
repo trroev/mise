@@ -9,7 +9,7 @@ export type CheckboxProps = React.ComponentProps<typeof BaseCheckbox.Root>
 export const Checkbox = ({ className, ...props }: CheckboxProps) => (
   <BaseCheckbox.Root
     className={cn(
-      "inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-sm border border-border bg-surface",
+      "inline-flex size-5 shrink-0 items-center justify-center rounded-sm border border-border bg-surface",
       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background",
       "data-disabled:cursor-not-allowed data-disabled:opacity-50",
       "data-checked:border-accent data-checked:bg-accent",
