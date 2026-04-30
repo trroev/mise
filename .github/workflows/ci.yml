@@ -7,9 +7,11 @@ on:
 
 env:
   SKIP_ENV_VALIDATION: "true"
-  # Cloudinary validates CLOUDINARY_URL at module load time regardless of
-  # SKIP_ENV_VALIDATION. Provide a valid-format placeholder so the check passes.
+  # Cloudinary and MongoDB validate their connection strings at module load
+  # time, regardless of SKIP_ENV_VALIDATION. Provide valid-format placeholders
+  # so their init checks pass without real credentials.
   CLOUDINARY_URL: "cloudinary://ci:ci@ci"
+  MONGODB_URI: "mongodb://localhost/ci"
 
 jobs:
   ci:
