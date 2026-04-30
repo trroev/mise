@@ -2,13 +2,10 @@
 
 import { Switch as BaseSwitch } from "@base-ui/react/switch"
 import { cn } from "@mise/ui/utils/cn"
-import type { ComponentProps, Ref } from "react"
 
-export type SwitchProps = ComponentProps<typeof BaseSwitch.Root> & {
-  ref?: Ref<HTMLButtonElement>
-}
+export type SwitchProps = React.ComponentProps<typeof BaseSwitch.Root>
 
-export const Switch = ({ className, ref, ...props }: SwitchProps) => (
+export const Switch = ({ className, ...props }: SwitchProps) => (
   <BaseSwitch.Root
     className={cn(
       "relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent bg-border transition-colors",
@@ -17,7 +14,6 @@ export const Switch = ({ className, ref, ...props }: SwitchProps) => (
       "data-checked:bg-accent",
       className
     )}
-    ref={ref}
     {...props}
   >
     <BaseSwitch.Thumb

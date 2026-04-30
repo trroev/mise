@@ -1,19 +1,13 @@
 import { cn } from "@mise/ui/utils/cn"
-import {
-  type ButtonHTMLAttributes,
-  cloneElement,
-  type ReactElement,
-  type Ref,
-} from "react"
+import { cloneElement, type ReactElement } from "react"
 import { type ButtonVariants, button } from "./button.variants"
 
 type RenderFn = (
-  props: ButtonHTMLAttributes<HTMLElement>
+  props: React.ComponentProps<"button">
 ) => ReactElement<Record<string, unknown>>
 
-export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> &
+export type ButtonProps = React.ComponentProps<"button"> &
   ButtonVariants & {
-    ref?: Ref<HTMLButtonElement>
     render?: ReactElement<Record<string, unknown>> | RenderFn
   }
 

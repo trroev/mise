@@ -2,13 +2,10 @@
 
 import { Checkbox as BaseCheckbox } from "@base-ui/react/checkbox"
 import { cn } from "@mise/ui/utils/cn"
-import type { ComponentProps, Ref } from "react"
 
-export type CheckboxProps = ComponentProps<typeof BaseCheckbox.Root> & {
-  ref?: Ref<HTMLButtonElement>
-}
+export type CheckboxProps = React.ComponentProps<typeof BaseCheckbox.Root>
 
-export const Checkbox = ({ className, ref, ...props }: CheckboxProps) => (
+export const Checkbox = ({ className, ...props }: CheckboxProps) => (
   <BaseCheckbox.Root
     className={cn(
       "inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-sm border border-border bg-surface",
@@ -18,7 +15,6 @@ export const Checkbox = ({ className, ref, ...props }: CheckboxProps) => (
       "data-invalid:border-destructive",
       className
     )}
-    ref={ref}
     {...props}
   >
     <BaseCheckbox.Indicator className="flex text-accent-foreground data-unchecked:hidden">

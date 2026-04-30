@@ -1,20 +1,12 @@
 "use client"
 
 import { cn } from "@mise/ui/utils/cn"
-import type { Ref, TextareaHTMLAttributes } from "react"
 
-export type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
-  ref?: Ref<HTMLTextAreaElement>
+export type TextareaProps = React.ComponentProps<"textarea"> & {
   error?: string
 }
 
-export const Textarea = ({
-  className,
-  error,
-  ref,
-  id,
-  ...props
-}: TextareaProps) => {
+export const Textarea = ({ className, error, id, ...props }: TextareaProps) => {
   const errorId = error && id ? `${id}-error` : undefined
   return (
     <>
@@ -32,7 +24,6 @@ export const Textarea = ({
           className
         )}
         id={id}
-        ref={ref}
         {...props}
       />
       {error ? (

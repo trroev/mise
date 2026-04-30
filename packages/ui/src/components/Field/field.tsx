@@ -2,13 +2,12 @@
 
 import { Field as BaseField } from "@base-ui/react/field"
 import { cn } from "@mise/ui/utils/cn"
-import type { ComponentProps, ReactNode, Ref } from "react"
+import type { ReactNode } from "react"
 
 export type FieldProps = Omit<
-  ComponentProps<typeof BaseField.Root>,
+  React.ComponentProps<typeof BaseField.Root>,
   "children"
 > & {
-  ref?: Ref<HTMLDivElement>
   label?: ReactNode
   hint?: ReactNode
   error?: string
@@ -21,14 +20,12 @@ export const Field = ({
   hint,
   error,
   children,
-  ref,
   invalid,
   ...props
 }: FieldProps) => (
   <BaseField.Root
     className={cn("flex flex-col gap-1.5", className)}
     invalid={invalid ?? Boolean(error)}
-    ref={ref}
     {...props}
   >
     {label ? (

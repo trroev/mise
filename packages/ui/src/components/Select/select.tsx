@@ -2,15 +2,14 @@
 
 import { Select as BaseSelect } from "@base-ui/react/select"
 import { cn } from "@mise/ui/utils/cn"
-import type { ComponentProps, ReactNode, Ref } from "react"
+import type { ReactNode } from "react"
 
 export type SelectOption = {
   value: string
   label: string
 }
 
-export type SelectProps = ComponentProps<typeof BaseSelect.Root> & {
-  ref?: Ref<HTMLDivElement>
+export type SelectProps = React.ComponentProps<typeof BaseSelect.Root> & {
   placeholder?: string
   error?: string
   options: ReadonlyArray<SelectOption>
@@ -25,13 +24,12 @@ export const Select = ({
   placeholder = "Select…",
   error,
   options,
-  ref,
   id,
   ...props
 }: SelectProps) => {
   const errorId = error && id ? `${id}-error` : undefined
   return (
-    <div className={cn("w-full", className)} ref={ref}>
+    <div className={cn("w-full", className)}>
       <BaseSelect.Root {...props}>
         <BaseSelect.Trigger
           aria-describedby={errorId}

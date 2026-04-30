@@ -1,10 +1,8 @@
 import { cn } from "@mise/ui/utils/cn"
-import type { HTMLAttributes, Ref } from "react"
 import { type SpinnerVariants, spinner } from "./spinner.variants"
 
-export type SpinnerProps = HTMLAttributes<HTMLSpanElement> &
+export type SpinnerProps = React.ComponentProps<"span"> &
   SpinnerVariants & {
-    ref?: Ref<HTMLSpanElement>
     label?: string
   }
 

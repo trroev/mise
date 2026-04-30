@@ -1,14 +1,12 @@
 "use client"
 
 import { cn } from "@mise/ui/utils/cn"
-import type { InputHTMLAttributes, Ref } from "react"
 
-export type InputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "size"> & {
-  ref?: Ref<HTMLInputElement>
+export type InputProps = React.ComponentProps<"input"> & {
   error?: string
 }
 
-export const Input = ({ className, error, ref, id, ...props }: InputProps) => {
+export const Input = ({ className, error, id, ...props }: InputProps) => {
   const errorId = error && id ? `${id}-error` : undefined
   return (
     <>
@@ -26,7 +24,6 @@ export const Input = ({ className, error, ref, id, ...props }: InputProps) => {
           className
         )}
         id={id}
-        ref={ref}
         {...props}
       />
       {error ? (

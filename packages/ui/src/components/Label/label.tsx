@@ -1,11 +1,8 @@
 import { cn } from "@mise/ui/utils/cn"
-import type { LabelHTMLAttributes, Ref } from "react"
 
-export type LabelProps = LabelHTMLAttributes<HTMLLabelElement> & {
-  ref?: Ref<HTMLLabelElement>
-}
+export type LabelProps = React.ComponentProps<"label">
 
-export const Label = ({ className, ref, ...props }: LabelProps) => (
+export const Label = ({ className, ...props }: LabelProps) => (
   // biome-ignore lint/a11y/noLabelWithoutControl: consumer wires htmlFor or wraps a control
   <label
     className={cn(
@@ -13,7 +10,6 @@ export const Label = ({ className, ref, ...props }: LabelProps) => (
       "peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
       className
     )}
-    ref={ref}
     {...props}
   />
 )
