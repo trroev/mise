@@ -1,6 +1,6 @@
 "use client"
 
-import { Select as BaseSelect } from "@base-ui-components/react/select"
+import { Select as BaseSelect } from "@base-ui/react/select"
 import type { ComponentProps, ReactNode, Ref } from "react"
 import { cn } from "../cn/cn"
 
