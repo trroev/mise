@@ -11,7 +11,7 @@ export const Checkbox = ({ className, ...props }: CheckboxProps) => (
     className={cn(
       "inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-sm border border-border bg-surface",
       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-      "disabled:cursor-not-allowed disabled:opacity-50",
+      "data-disabled:cursor-not-allowed data-disabled:opacity-50",
       "data-checked:border-accent data-checked:bg-accent",
       "data-invalid:border-destructive",
       className
