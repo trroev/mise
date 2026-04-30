@@ -241,18 +241,18 @@ function Gallery() {
       </Section>
 
       <Section title="ToggleGroup — single (view mode)">
-        <ToggleGroup defaultValue={["list"]}>
+        <ToggleGroup.Root defaultValue={["list"]}>
           <ToggleGroup.Item value="list">List</ToggleGroup.Item>
           <ToggleGroup.Item value="grid">Grid</ToggleGroup.Item>
-        </ToggleGroup>
+        </ToggleGroup.Root>
       </Section>
 
       <Section title="ToggleGroup — multiple">
-        <ToggleGroup defaultValue={["bold"]} multiple>
+        <ToggleGroup.Root defaultValue={["bold"]} multiple>
           <ToggleGroup.Item value="bold">Bold</ToggleGroup.Item>
           <ToggleGroup.Item value="italic">Italic</ToggleGroup.Item>
           <ToggleGroup.Item value="underline">Underline</ToggleGroup.Item>
-        </ToggleGroup>
+        </ToggleGroup.Root>
       </Section>
 
       <Section title="Tabs">

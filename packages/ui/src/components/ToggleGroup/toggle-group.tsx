@@ -26,6 +26,7 @@ const ToggleGroupItem = ({
   <BaseToggle className={cn(toggle({ variant, size }), className)} {...props} />
 )
 
-export const ToggleGroup = Object.assign(ToggleGroupRoot, {
+export const ToggleGroup = {
+  Root: ToggleGroupRoot,
   Item: ToggleGroupItem,
-})
+}
