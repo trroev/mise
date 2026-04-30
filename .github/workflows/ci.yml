@@ -7,6 +7,9 @@ on:
 
 env:
   SKIP_ENV_VALIDATION: "true"
+  # Cloudinary validates CLOUDINARY_URL at module load time regardless of
+  # SKIP_ENV_VALIDATION. Provide a valid-format placeholder so the check passes.
+  CLOUDINARY_URL: "cloudinary://ci:ci@ci"
 
 jobs:
   ci:
