@@ -3,7 +3,18 @@
   "version": "0.0.0",
   "private": true,
   "exports": {
-    "./components": "./src/components/index.ts"
+    "./components/badge": "./src/components/badge.tsx",
+    "./components/button": "./src/components/button.tsx",
+    "./components/checkbox": "./src/components/checkbox.tsx",
+    "./components/field": "./src/components/field.tsx",
+    "./components/input": "./src/components/input.tsx",
+    "./components/label": "./src/components/label.tsx",
+    "./components/select": "./src/components/select.tsx",
+    "./components/skeleton": "./src/components/skeleton.tsx",
+    "./components/spinner": "./src/components/spinner.tsx",
+    "./components/switch": "./src/components/switch.tsx",
+    "./components/textarea": "./src/components/textarea.tsx",
+    "./cn": "./src/cn/cn.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"
@@ -16,7 +27,11 @@
     "typescript": "5.9.2"
   },
   "dependencies": {
+    "@base-ui-components/react": "1.0.0-rc.0",
+    "clsx": "^2.1.1",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "tailwind-merge": "^3.5.0",
+    "tailwind-variants": "^3.2.2"
   }
 }

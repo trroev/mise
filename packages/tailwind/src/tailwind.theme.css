@@ -102,6 +102,9 @@
   --semantic-secondary: var(--color-sage-600);
   --semantic-secondary-hover: var(--color-sage-700);
   --semantic-secondary-foreground: var(--color-neutral-50);
+  --semantic-destructive: oklch(0.55 0.18 27);
+  --semantic-destructive-hover: oklch(0.48 0.19 27);
+  --semantic-destructive-foreground: var(--color-neutral-50);
 }
 
 .dark {
@@ -117,6 +120,9 @@
   --semantic-secondary: var(--color-sage-400);
   --semantic-secondary-hover: var(--color-sage-300);
   --semantic-secondary-foreground: var(--color-neutral-900);
+  --semantic-destructive: oklch(0.65 0.18 27);
+  --semantic-destructive-hover: oklch(0.72 0.17 27);
+  --semantic-destructive-foreground: var(--color-neutral-900);
 }
 
 @theme inline {
@@ -133,4 +139,7 @@
   --color-secondary: var(--semantic-secondary);
   --color-secondary-hover: var(--semantic-secondary-hover);
   --color-secondary-foreground: var(--semantic-secondary-foreground);
+  --color-destructive: var(--semantic-destructive);
+  --color-destructive-hover: var(--semantic-destructive-hover);
+  --color-destructive-foreground: var(--semantic-destructive-foreground);
 }
