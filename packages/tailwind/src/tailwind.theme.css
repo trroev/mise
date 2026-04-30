@@ -1,16 +1,18 @@
 /*
   Design tokens for Mise (RECIPE-022).
-  Kinfolk-inspired: muted warm neutrals, terracotta accent, generous spacing.
+  Kinfolk-inspired: muted warm neutrals, terracotta accent, sage secondary,
+  generous spacing.
 
-  Color values live on :root and .dark so they swap at runtime; @theme inline
-  re-references them so utilities (bg-background, text-primary, ...) stay live.
-  Font family tokens reference CSS variables set via next/font (RECIPE-023).
+  - Static tokens (color scales, typography, spacing, radius) live in @theme {}.
+  - Semantic tokens that swap with dark mode live on :root and .dark, then
+    re-export via @theme inline {} so utilities (bg-background, ...) stay live.
+  - Font family tokens reference CSS variables set via next/font (RECIPE-023).
 */
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-:root {
-  /* Neutral scale (warm-tinted) */
+@theme {
+  /* COLORS — neutral scale (warm-tinted) */
   --color-neutral-50: oklch(0.985 0.003 80);
   --color-neutral-100: oklch(0.96 0.005 80);
   --color-neutral-200: oklch(0.92 0.006 80);
@@ -22,7 +24,7 @@
   --color-neutral-800: oklch(0.25 0.007 60);
   --color-neutral-900: oklch(0.16 0.006 60);
 
-  /* Terracotta accent */
+  /* COLORS — terracotta accent scale */
   --color-accent-50: oklch(0.97 0.015 40);
   --color-accent-100: oklch(0.93 0.035 40);
   --color-accent-200: oklch(0.87 0.06 40);
@@ -34,7 +36,7 @@
   --color-accent-800: oklch(0.37 0.09 40);
   --color-accent-900: oklch(0.28 0.065 40);
 
-  /* Sage secondary (earthy green) */
+  /* COLORS — sage secondary (earthy green) */
   --color-sage-50: oklch(0.97 0.008 140);
   --color-sage-100: oklch(0.94 0.012 140);
   --color-sage-200: oklch(0.88 0.02 140);
@@ -45,87 +47,6 @@
   --color-sage-700: oklch(0.42 0.035 140);
   --color-sage-800: oklch(0.32 0.028 140);
   --color-sage-900: oklch(0.22 0.02 140);
-
-  /* Semantic mappings — light */
-  --color-background: var(--color-neutral-50);
-  --color-surface: oklch(1 0 0);
-  --color-text-primary: var(--color-neutral-900);
-  --color-text-secondary: var(--color-neutral-700);
-  --color-text-muted: var(--color-neutral-500);
-  --color-border: var(--color-neutral-200);
-  --color-accent: var(--color-accent-600);
-  --color-accent-hover: var(--color-accent-700);
-  --color-accent-foreground: var(--color-neutral-50);
-  --color-secondary: var(--color-sage-600);
-  --color-secondary-hover: var(--color-sage-700);
-  --color-secondary-foreground: var(--color-neutral-50);
-}
-
-.dark {
-  --color-background: var(--color-neutral-900);
-  --color-surface: var(--color-neutral-800);
-  --color-text-primary: var(--color-neutral-50);
-  --color-text-secondary: var(--color-neutral-200);
-  --color-text-muted: var(--color-neutral-400);
-  --color-border: var(--color-neutral-700);
-  --color-accent: var(--color-accent-400);
-  --color-accent-hover: var(--color-accent-300);
-  --color-accent-foreground: var(--color-neutral-900);
-  --color-secondary: var(--color-sage-400);
-  --color-secondary-hover: var(--color-sage-300);
-  --color-secondary-foreground: var(--color-neutral-900);
-}
-
-@theme inline {
-  /* COLORS — neutral scale */
-  --color-neutral-50: var(--color-neutral-50);
-  --color-neutral-100: var(--color-neutral-100);
-  --color-neutral-200: var(--color-neutral-200);
-  --color-neutral-300: var(--color-neutral-300);
-  --color-neutral-400: var(--color-neutral-400);
-  --color-neutral-500: var(--color-neutral-500);
-  --color-neutral-600: var(--color-neutral-600);
-  --color-neutral-700: var(--color-neutral-700);
-  --color-neutral-800: var(--color-neutral-800);
-  --color-neutral-900: var(--color-neutral-900);
-
-  /* COLORS — terracotta accent scale */
-  --color-accent-50: var(--color-accent-50);
-  --color-accent-100: var(--color-accent-100);
-  --color-accent-200: var(--color-accent-200);
-  --color-accent-300: var(--color-accent-300);
-  --color-accent-400: var(--color-accent-400);
-  --color-accent-500: var(--color-accent-500);
-  --color-accent-600: var(--color-accent-600);
-  --color-accent-700: var(--color-accent-700);
-  --color-accent-800: var(--color-accent-800);
-  --color-accent-900: var(--color-accent-900);
-
-  /* COLORS — sage secondary scale */
-  --color-sage-50: var(--color-sage-50);
-  --color-sage-100: var(--color-sage-100);
-  --color-sage-200: var(--color-sage-200);
-  --color-sage-300: var(--color-sage-300);
-  --color-sage-400: var(--color-sage-400);
-  --color-sage-500: var(--color-sage-500);
-  --color-sage-600: var(--color-sage-600);
-  --color-sage-700: var(--color-sage-700);
-  --color-sage-800: var(--color-sage-800);
-  --color-sage-900: var(--color-sage-900);
-
-  /* COLORS — semantic */
-  --color-background: var(--color-background);
-  --color-surface: var(--color-surface);
-  --color-text-primary: var(--color-text-primary);
-  --color-text-secondary: var(--color-text-secondary);
-  --color-text-muted: var(--color-text-muted);
-  --color-border: var(--color-border);
-  --color-accent: var(--color-accent);
-  --color-accent-hover: var(--color-accent-hover);
-  --color-accent-foreground: var(--color-accent-foreground);
-  --color-secondary: var(--color-secondary);
-  --color-secondary-hover: var(--color-secondary-hover);
-  --color-secondary-foreground: var(--color-secondary-foreground);
 
   /* TYPOGRAPHY — families (CSS vars wired in RECIPE-023) */
   --font-display: var(--font-cormorant), ui-serif, Georgia, serif;
@@ -151,22 +72,65 @@
   --text-label: 0.6875rem;
   --text-label--line-height: 1.4;
 
-  /* SPACING — named tokens (4px base) */
-  --spacing-xs: 0.25rem;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 0.75rem;
-  --spacing-lg: 1rem;
-  --spacing-xl: 1.5rem;
-  --spacing-2xl: 2rem;
-  --spacing-3xl: 3rem;
-  --spacing-4xl: 4rem;
-  --spacing-5xl: 6rem;
-  --spacing-6xl: 8rem;
-  --spacing-7xl: 10rem;
+  /*
+    SPACING — uses Tailwind v4's default 0.25rem multiplier, which yields
+    every step the design system needs: p-1 (4) · p-2 (8) · p-3 (12) ·
+    p-4 (16) · p-6 (24) · p-8 (32) · p-12 (48) · p-16 (64) · p-24 (96) ·
+    p-32 (128) · p-40 (160). Named --spacing-* tokens are intentionally
+    omitted because they collide with v4's --container-* scale used by
+    max-w-* (e.g., --spacing-5xl would override --container-5xl).
+  */
 
   /* RADIUS */
   --radius-sm: 0.125rem;
   --radius-md: 0.25rem;
   --radius-lg: 0.5rem;
   --radius-xl: 0.75rem;
+}
+
+:root {
+  /* SEMANTIC — light */
+  --semantic-background: var(--color-neutral-50);
+  --semantic-surface: oklch(1 0 0);
+  --semantic-text-primary: var(--color-neutral-900);
+  --semantic-text-secondary: var(--color-neutral-700);
+  --semantic-text-muted: var(--color-neutral-500);
+  --semantic-border: var(--color-neutral-200);
+  --semantic-accent: var(--color-accent-600);
+  --semantic-accent-hover: var(--color-accent-700);
+  --semantic-accent-foreground: var(--color-neutral-50);
+  --semantic-secondary: var(--color-sage-600);
+  --semantic-secondary-hover: var(--color-sage-700);
+  --semantic-secondary-foreground: var(--color-neutral-50);
+}
+
+.dark {
+  --semantic-background: var(--color-neutral-900);
+  --semantic-surface: var(--color-neutral-800);
+  --semantic-text-primary: var(--color-neutral-50);
+  --semantic-text-secondary: var(--color-neutral-200);
+  --semantic-text-muted: var(--color-neutral-400);
+  --semantic-border: var(--color-neutral-700);
+  --semantic-accent: var(--color-accent-400);
+  --semantic-accent-hover: var(--color-accent-300);
+  --semantic-accent-foreground: var(--color-neutral-900);
+  --semantic-secondary: var(--color-sage-400);
+  --semantic-secondary-hover: var(--color-sage-300);
+  --semantic-secondary-foreground: var(--color-neutral-900);
+}
+
+@theme inline {
+  /* COLORS — semantic (re-exported so they remain reactive to .dark) */
+  --color-background: var(--semantic-background);
+  --color-surface: var(--semantic-surface);
+  --color-text-primary: var(--semantic-text-primary);
+  --color-text-secondary: var(--semantic-text-secondary);
+  --color-text-muted: var(--semantic-text-muted);
+  --color-border: var(--semantic-border);
+  --color-accent: var(--semantic-accent);
+  --color-accent-hover: var(--semantic-accent-hover);
+  --color-accent-foreground: var(--semantic-accent-foreground);
+  --color-secondary: var(--semantic-secondary);
+  --color-secondary-hover: var(--semantic-secondary-hover);
+  --color-secondary-foreground: var(--semantic-secondary-foreground);
 }
