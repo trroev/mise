@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Generate Types
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Generate Types
         if: env.ACT != 'true'
         uses: ./tooling/github/ci/generate-types
@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Lint
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Lint
         if: env.ACT != 'true'
         uses: ./tooling/github/ci/lint
@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Typecheck
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Typecheck
         if: env.ACT != 'true'
         uses: ./tooling/github/ci/typecheck
@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Test
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Test
         if: env.ACT != 'true'
         uses: ./tooling/github/ci/test
@@ -53,7 +53,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Build
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Build
         if: env.ACT != 'true'
         uses: ./tooling/github/ci/build
