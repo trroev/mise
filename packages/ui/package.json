@@ -2,19 +2,10 @@
   "name": "@mise/ui",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "exports": {
-    "./components/badge": "./src/components/badge.tsx",
-    "./components/button": "./src/components/button.tsx",
-    "./components/checkbox": "./src/components/checkbox.tsx",
-    "./components/field": "./src/components/field.tsx",
-    "./components/input": "./src/components/input.tsx",
-    "./components/label": "./src/components/label.tsx",
-    "./components/select": "./src/components/select.tsx",
-    "./components/skeleton": "./src/components/skeleton.tsx",
-    "./components/spinner": "./src/components/spinner.tsx",
-    "./components/switch": "./src/components/switch.tsx",
-    "./components/textarea": "./src/components/textarea.tsx",
-    "./cn": "./src/cn/cn.ts"
+    "./components/*": "./src/components/*/index.ts",
+    "./utils/*": "./src/utils/*/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"

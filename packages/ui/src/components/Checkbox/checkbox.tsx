@@ -1,8 +1,8 @@
 "use client"
 
 import { Checkbox as BaseCheckbox } from "@base-ui/react/checkbox"
+import { cn } from "@mise/ui/utils/cn"
 import type { ComponentProps, Ref } from "react"
-import { cn } from "../cn/cn"
 
 export type CheckboxProps = ComponentProps<typeof BaseCheckbox.Root> & {
   ref?: Ref<HTMLButtonElement>

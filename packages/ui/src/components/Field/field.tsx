@@ -1,8 +1,8 @@
 "use client"
 
 import { Field as BaseField } from "@base-ui/react/field"
+import { cn } from "@mise/ui/utils/cn"
 import type { ComponentProps, ReactNode, Ref } from "react"
-import { cn } from "../cn/cn"
 
 export type FieldProps = Omit<
   ComponentProps<typeof BaseField.Root>,

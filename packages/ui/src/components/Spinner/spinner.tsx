@@ -1,22 +1,6 @@
+import { cn } from "@mise/ui/utils/cn"
 import type { HTMLAttributes, Ref } from "react"
-import { tv, type VariantProps } from "tailwind-variants"
-import { cn } from "../cn/cn"
-
-const spinner = tv({
-  base: "inline-block animate-spin rounded-full border-2 border-current border-t-transparent",
-  variants: {
-    size: {
-      sm: "h-4 w-4",
-      md: "h-6 w-6",
-      lg: "h-8 w-8",
-    },
-  },
-  defaultVariants: {
-    size: "md",
-  },
-})
-
-export type SpinnerVariants = VariantProps<typeof spinner>
+import { type SpinnerVariants, spinner } from "./spinner.variants"
 
 export type SpinnerProps = HTMLAttributes<HTMLSpanElement> &
   SpinnerVariants & {

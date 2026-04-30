@@ -2,7 +2,12 @@
   "extends": "@mise/tsconfig/library.json",
   "compilerOptions": {
     "jsx": "react-jsx",
-    "outDir": "dist"
+    "outDir": "dist",
+    "rootDir": "src",
+    "paths": {
+      "@mise/ui/components/*": ["./src/components/*/index.ts"],
+      "@mise/ui/utils/*": ["./src/utils/*/index.ts"]
+    }
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]

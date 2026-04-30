@@ -1,8 +1,8 @@
 "use client"
 
 import { Switch as BaseSwitch } from "@base-ui/react/switch"
+import { cn } from "@mise/ui/utils/cn"
 import type { ComponentProps, Ref } from "react"
-import { cn } from "../cn/cn"
 
 export type SwitchProps = ComponentProps<typeof BaseSwitch.Root> & {
   ref?: Ref<HTMLButtonElement>

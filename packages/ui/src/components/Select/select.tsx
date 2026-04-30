@@ -1,8 +1,8 @@
 "use client"
 
 import { Select as BaseSelect } from "@base-ui/react/select"
+import { cn } from "@mise/ui/utils/cn"
 import type { ComponentProps, ReactNode, Ref } from "react"
-import { cn } from "../cn/cn"
 
 export type SelectOption = {
   value: string
@@ -62,7 +62,7 @@ export const Select = ({
         </BaseSelect.Trigger>
         <BaseSelect.Portal>
           <BaseSelect.Positioner className="z-50 outline-none" sideOffset={4}>
-            <BaseSelect.Popup className="max-h-[var(--available-height)] min-w-[var(--anchor-width)] overflow-y-auto rounded-md border border-border bg-surface py-1 shadow-md">
+            <BaseSelect.Popup className="max-h-(--available-height) min-w-(--anchor-width) overflow-y-auto rounded-md border border-border bg-surface py-1 shadow-md">
               {options.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}

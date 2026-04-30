@@ -1,5 +1,5 @@
+import { cn } from "@mise/ui/utils/cn"
 import type { LabelHTMLAttributes, Ref } from "react"
-import { cn } from "../cn/cn"
 
 export type LabelProps = LabelHTMLAttributes<HTMLLabelElement> & {
   ref?: Ref<HTMLLabelElement>

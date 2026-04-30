@@ -1,22 +1,28 @@
 "use client"
 
-import type { InputHTMLAttributes, Ref } from "react"
-import { cn } from "../cn/cn"
+import { cn } from "@mise/ui/utils/cn"
+import type { Ref, TextareaHTMLAttributes } from "react"
 
-export type InputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "size"> & {
-  ref?: Ref<HTMLInputElement>
+export type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
+  ref?: Ref<HTMLTextAreaElement>
   error?: string
 }
 
-export const Input = ({ className, error, ref, id, ...props }: InputProps) => {
+export const Textarea = ({
+  className,
+  error,
+  ref,
+  id,
+  ...props
+}: TextareaProps) => {
   const errorId = error && id ? `${id}-error` : undefined
   return (
     <>
-      <input
+      <textarea
         aria-describedby={errorId}
         aria-invalid={error ? "true" : undefined}
         className={cn(
-          "flex h-10 w-full rounded-md border bg-surface px-3 py-2 font-sans text-body text-text-primary",
+          "flex min-h-24 w-full rounded-md border bg-surface px-3 py-2 font-sans text-body text-text-primary",
           "placeholder:text-text-muted",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           "disabled:cursor-not-allowed disabled:opacity-50",
