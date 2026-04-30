@@ -3,11 +3,7 @@
 import { Input as BaseInput } from "@base-ui/react/input"
 import { cn } from "@mise/ui/utils/cn"
 
-export type InputProps = Omit<
-  React.ComponentProps<typeof BaseInput>,
-  "className"
-> & {
-  className?: string
+export type InputProps = React.ComponentProps<typeof BaseInput> & {
   error?: string
 }
 

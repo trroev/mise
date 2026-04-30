@@ -1,13 +1,9 @@
 import { Button as BaseButton } from "@base-ui/react/button"
+import { cn } from "@mise/ui/utils/cn"
 import { type ButtonVariants, button } from "./button.variants"
 
-export type ButtonProps = Omit<
-  React.ComponentProps<typeof BaseButton>,
-  "className"
-> &
-  ButtonVariants & {
-    className?: string
-  }
+export type ButtonProps = React.ComponentProps<typeof BaseButton> &
+  ButtonVariants
 
 export const Button = ({
   className,
@@ -17,7 +13,7 @@ export const Button = ({
   ...props
 }: ButtonProps) => (
   <BaseButton
-    className={button({ variant, size, className })}
+    className={cn(button({ variant, size }), className)}
     type={type}
     {...props}
   />
