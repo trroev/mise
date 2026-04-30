@@ -12,6 +12,7 @@ const NEUTRAL_STEPS = [
 ] as const
 
 const ACCENT_STEPS = NEUTRAL_STEPS
+const SAGE_STEPS = NEUTRAL_STEPS
 
 const SEMANTIC_COLORS = [
   { name: "background", className: "bg-background" },
@@ -23,6 +24,9 @@ const SEMANTIC_COLORS = [
   { name: "accent", className: "bg-accent" },
   { name: "accent-hover", className: "bg-accent-hover" },
   { name: "accent-foreground", className: "bg-accent-foreground" },
+  { name: "secondary", className: "bg-secondary" },
+  { name: "secondary-hover", className: "bg-secondary-hover" },
+  { name: "secondary-foreground", className: "bg-secondary-foreground" },
 ] as const
 
 const TYPE_SCALE = [
@@ -83,6 +87,10 @@ export default function TokensPage() {
 
         <Section title="Color · Accent (Terracotta)">
           <Swatches prefix="accent" steps={ACCENT_STEPS} />
+        </Section>
+
+        <Section title="Color · Secondary (Sage)">
+          <Swatches prefix="sage" steps={SAGE_STEPS} />
         </Section>
 
         <Section title="Color · Semantic">

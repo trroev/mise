@@ -34,6 +34,18 @@
   --color-accent-800: oklch(0.37 0.09 40);
   --color-accent-900: oklch(0.28 0.065 40);
 
+  /* Sage secondary (earthy green) */
+  --color-sage-50: oklch(0.97 0.008 140);
+  --color-sage-100: oklch(0.94 0.012 140);
+  --color-sage-200: oklch(0.88 0.02 140);
+  --color-sage-300: oklch(0.8 0.028 140);
+  --color-sage-400: oklch(0.72 0.035 140);
+  --color-sage-500: oklch(0.62 0.04 140);
+  --color-sage-600: oklch(0.52 0.04 140);
+  --color-sage-700: oklch(0.42 0.035 140);
+  --color-sage-800: oklch(0.32 0.028 140);
+  --color-sage-900: oklch(0.22 0.02 140);
+
   /* Semantic mappings — light */
   --color-background: var(--color-neutral-50);
   --color-surface: oklch(1 0 0);
@@ -44,6 +56,9 @@
   --color-accent: var(--color-accent-600);
   --color-accent-hover: var(--color-accent-700);
   --color-accent-foreground: var(--color-neutral-50);
+  --color-secondary: var(--color-sage-600);
+  --color-secondary-hover: var(--color-sage-700);
+  --color-secondary-foreground: var(--color-neutral-50);
 }
 
 .dark {
@@ -56,6 +71,9 @@
   --color-accent: var(--color-accent-400);
   --color-accent-hover: var(--color-accent-300);
   --color-accent-foreground: var(--color-neutral-900);
+  --color-secondary: var(--color-sage-400);
+  --color-secondary-hover: var(--color-sage-300);
+  --color-secondary-foreground: var(--color-neutral-900);
 }
 
 @theme inline {
@@ -83,6 +101,18 @@
   --color-accent-800: var(--color-accent-800);
   --color-accent-900: var(--color-accent-900);
 
+  /* COLORS — sage secondary scale */
+  --color-sage-50: var(--color-sage-50);
+  --color-sage-100: var(--color-sage-100);
+  --color-sage-200: var(--color-sage-200);
+  --color-sage-300: var(--color-sage-300);
+  --color-sage-400: var(--color-sage-400);
+  --color-sage-500: var(--color-sage-500);
+  --color-sage-600: var(--color-sage-600);
+  --color-sage-700: var(--color-sage-700);
+  --color-sage-800: var(--color-sage-800);
+  --color-sage-900: var(--color-sage-900);
+
   /* COLORS — semantic */
   --color-background: var(--color-background);
   --color-surface: var(--color-surface);
@@ -93,6 +123,9 @@
   --color-accent: var(--color-accent);
   --color-accent-hover: var(--color-accent-hover);
   --color-accent-foreground: var(--color-accent-foreground);
+  --color-secondary: var(--color-secondary);
+  --color-secondary-hover: var(--color-secondary-hover);
+  --color-secondary-foreground: var(--color-secondary-foreground);
 
   /* TYPOGRAPHY — families (CSS vars wired in RECIPE-023) */
   --font-display: var(--font-cormorant), ui-serif, Georgia, serif;
