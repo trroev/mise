@@ -1,8 +1,13 @@
 "use client"
 
+import { Input as BaseInput } from "@base-ui/react/input"
 import { cn } from "@mise/ui/utils/cn"
 
-export type InputProps = React.ComponentProps<"input"> & {
+export type InputProps = Omit<
+  React.ComponentProps<typeof BaseInput>,
+  "className"
+> & {
+  className?: string
   error?: string
 }
 
@@ -10,7 +15,7 @@ export const Input = ({ className, error, id, ...props }: InputProps) => {
   const errorId = error && id ? `${id}-error` : undefined
   return (
     <>
-      <input
+      <BaseInput
         aria-describedby={errorId}
         aria-invalid={error ? "true" : undefined}
         className={cn(
