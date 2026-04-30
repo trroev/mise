@@ -56,4 +56,4 @@ jobs:
       - uses: actions/checkout@v6
       - name: Build
         if: env.ACT != 'true'
-        uses: ./tooling/github/ci/build
+        uses: ./tooling/github/ci/check-build
