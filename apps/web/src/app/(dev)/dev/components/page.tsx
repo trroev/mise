@@ -1,14 +1,20 @@
 import { Badge } from "@mise/ui/components/Badge"
 import { Button } from "@mise/ui/components/Button"
 import { Checkbox } from "@mise/ui/components/Checkbox"
+import { Dialog } from "@mise/ui/components/Dialog"
 import { Field } from "@mise/ui/components/Field"
 import { Input } from "@mise/ui/components/Input"
 import { Label } from "@mise/ui/components/Label"
+import { RadioGroup } from "@mise/ui/components/RadioGroup"
 import { Select } from "@mise/ui/components/Select"
 import { Skeleton } from "@mise/ui/components/Skeleton"
 import { Spinner } from "@mise/ui/components/Spinner"
 import { Switch } from "@mise/ui/components/Switch"
+import { Tabs } from "@mise/ui/components/Tabs"
 import { Textarea } from "@mise/ui/components/Textarea"
+import { Toggle } from "@mise/ui/components/Toggle"
+import { ToggleGroup } from "@mise/ui/components/ToggleGroup"
+import { Tooltip } from "@mise/ui/components/Tooltip"
 import type { ReactNode } from "react"
 
 const COURSE_OPTIONS = [
@@ -187,6 +193,134 @@ function Gallery() {
             Disabled
           </SwitchLabel>
         </Row>
+      </Section>
+
+      <Section title="RadioGroup">
+        <div className="grid gap-6 sm:grid-cols-2">
+          <Field label="Course">
+            <RadioGroup
+              defaultValue="main"
+              name="course"
+              options={[
+                { value: "starter", label: "Starter" },
+                { value: "main", label: "Main" },
+                { value: "dessert", label: "Dessert" },
+              ]}
+            />
+          </Field>
+          <Field label="With disabled option">
+            <RadioGroup
+              defaultValue="main"
+              name="course-disabled"
+              options={[
+                { value: "starter", label: "Starter" },
+                { value: "main", label: "Main" },
+                { value: "dessert", label: "Dessert", disabled: true },
+              ]}
+            />
+          </Field>
+        </div>
+      </Section>
+
+      <Section title="Toggle">
+        <Row>
+          <Toggle aria-label="Toggle bold">B</Toggle>
+          <Toggle aria-label="Toggle italic" defaultPressed>
+            I
+          </Toggle>
+          <Toggle aria-label="Toggle ghost" variant="ghost">
+            Ghost
+          </Toggle>
+          <Toggle aria-label="Toggle ghost on" defaultPressed variant="ghost">
+            Ghost on
+          </Toggle>
+          <Toggle aria-label="Toggle disabled" disabled>
+            Disabled
+          </Toggle>
+        </Row>
+      </Section>
+
+      <Section title="ToggleGroup — single (view mode)">
+        <ToggleGroup defaultValue={["list"]}>
+          <ToggleGroup.Item value="list">List</ToggleGroup.Item>
+          <ToggleGroup.Item value="grid">Grid</ToggleGroup.Item>
+        </ToggleGroup>
+      </Section>
+
+      <Section title="ToggleGroup — multiple">
+        <ToggleGroup defaultValue={["bold"]} multiple>
+          <ToggleGroup.Item value="bold">Bold</ToggleGroup.Item>
+          <ToggleGroup.Item value="italic">Italic</ToggleGroup.Item>
+          <ToggleGroup.Item value="underline">Underline</ToggleGroup.Item>
+        </ToggleGroup>
+      </Section>
+
+      <Section title="Tabs">
+        <Tabs.Root defaultValue="overview">
+          <Tabs.List>
+            <Tabs.Tab value="overview">Overview</Tabs.Tab>
+            <Tabs.Tab value="ingredients">Ingredients</Tabs.Tab>
+            <Tabs.Tab value="method">Method</Tabs.Tab>
+            <Tabs.Tab disabled value="notes">
+              Notes
+            </Tabs.Tab>
+            <Tabs.Indicator />
+          </Tabs.List>
+          <Tabs.Panel value="overview">
+            <p className="text-body text-text-secondary">
+              A panel describing the recipe at a high level.
+            </p>
+          </Tabs.Panel>
+          <Tabs.Panel value="ingredients">
+            <p className="text-body text-text-secondary">
+              The ingredient list goes here.
+            </p>
+          </Tabs.Panel>
+          <Tabs.Panel value="method">
+            <p className="text-body text-text-secondary">
+              Step-by-step method goes here.
+            </p>
+          </Tabs.Panel>
+        </Tabs.Root>
+      </Section>
+
+      <Section title="Tooltip">
+        <Row>
+          <Tooltip content="Top tooltip">
+            <Button variant="outline">Hover top</Button>
+          </Tooltip>
+          <Tooltip content="Right tooltip" side="right">
+            <Button variant="outline">Hover right</Button>
+          </Tooltip>
+          <Tooltip content="Bottom tooltip" side="bottom">
+            <Button variant="outline">Hover bottom</Button>
+          </Tooltip>
+        </Row>
+      </Section>
+
+      <Section title="Dialog">
+        <Dialog.Root>
+          <Dialog.Trigger
+            render={<Button variant="outline">Open dialog</Button>}
+          />
+          <Dialog.Portal>
+            <Dialog.Backdrop />
+            <Dialog.Popup>
+              <Dialog.Title>Discard recipe?</Dialog.Title>
+              <Dialog.Description>
+                Your unsaved changes will be lost. This action cannot be undone.
+              </Dialog.Description>
+              <div className="mt-6 flex justify-end gap-2">
+                <Dialog.Close
+                  render={<Button variant="ghost">Cancel</Button>}
+                />
+                <Dialog.Close
+                  render={<Button variant="destructive">Discard</Button>}
+                />
+              </div>
+            </Dialog.Popup>
+          </Dialog.Portal>
+        </Dialog.Root>
       </Section>
     </>
   )
