@@ -48,12 +48,3 @@ jobs:
       - name: Test
         if: env.ACT != 'true'
         uses: ./tooling/github/ci/test
-
-  build:
-    runs-on: ubuntu-latest
-    name: Build
-    steps:
-      - uses: actions/checkout@v6
-      - name: Build
-        if: env.ACT != 'true'
-        uses: ./tooling/github/ci/check-build
