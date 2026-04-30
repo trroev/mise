@@ -1,6 +1,6 @@
 import { twMergeConfig } from "@mise/ui/utils/twMergeConfig"
 import { createTV } from "tailwind-variants"
 
-export const tv = createTV({ twMergeConfig })
+export const tv = createTV({ twMerge: true, twMergeConfig })
 
 export type { VariantProps } from "tailwind-variants"
