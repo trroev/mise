@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Mise is a personal recipe app built by a former 2-Michelin-star chef. Full architecture details are in [`ARCHITECTURE.md`](./ARCHITECTURE.md). Work tickets are tracked as [GitHub Issues](https://github.com/trroev/mise/issues), organised into [Milestones](https://github.com/trroev/mise/milestones).
+Mise is a personal recipe app built by a former 2-Michelin-star chef. Work tickets are tracked as [GitHub Issues](https://github.com/trroev/mise/issues), organised into [Milestones](https://github.com/trroev/mise/milestones).
 
 **Stack:** Next.js 16 (App Router) + PayloadCMS 3 (embedded) · MongoDB Atlas · MiniSearch (in-browser) · Tailwind v4 · Base UI · TanStack Query · Turborepo + pnpm workspaces · Biome
 
@@ -44,8 +44,9 @@ Conventions that require discipline (not auto-enforced): readonly preference, bo
 
 ### Package structure
 - Types: PascalCase subdirectories — `src/Recipe/`, `src/Unit/`
-- Utils: camelCase subdirectories — `src/formatDate/`, `src/scaleIngredients/`
-- Components: kebab-case filenames — `src/components/recipe-card.tsx`
+- Utils: camelCase subdirectories with an `index.ts` entry — `src/formatDate/index.ts`, `src/utils/cn/index.ts`
+- Components (in `packages/ui`): one PascalCase directory per component containing kebab-case files and a barrel — `src/components/Button/{button.tsx, button.variants.ts, index.ts}`. The `tailwind-variants` config lives in a sibling `<name>.variants.ts` only when the component has variants. Each directory is exposed via the package's wildcard exports (`./components/*` → `./src/components/*/index.ts`).
+- Cross-directory imports use the package's TS path alias (e.g. `@mise/ui/utils/cn`); siblings inside the same directory use relative `./` imports.
 
 ### ts-pattern
 Install per-package as needed (`pnpm add ts-pattern --filter <package>`). Use `match(...).exhaustive()` wherever possible to get compile-time exhaustiveness checking.
