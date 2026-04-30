@@ -27,7 +27,7 @@ export const Input = ({ className, error, id, ...props }: InputProps) => {
         id={id}
         {...props}
       />
-      {error ? (
+      {error && (
         <span
           className="mt-1 block font-sans text-body-sm text-destructive"
           id={errorId}
@@ -35,7 +35,7 @@ export const Input = ({ className, error, id, ...props }: InputProps) => {
         >
           {error}
         </span>
-      ) : null}
+      )}
     </>
   )
 }

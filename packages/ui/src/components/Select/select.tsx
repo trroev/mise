@@ -71,7 +71,7 @@ export const Select = ({
           </BaseSelect.Positioner>
         </BaseSelect.Portal>
       </BaseSelect.Root>
-      {error ? (
+      {error && (
         <span
           className="mt-1 block font-sans text-body-sm text-destructive"
           id={errorId}
@@ -79,7 +79,7 @@ export const Select = ({
         >
           {error}
         </span>
-      ) : null}
+      )}
     </div>
   )
 }

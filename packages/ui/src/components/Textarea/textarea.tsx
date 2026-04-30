@@ -26,7 +26,7 @@ export const Textarea = ({ className, error, id, ...props }: TextareaProps) => {
         id={id}
         {...props}
       />
-      {error ? (
+      {error && (
         <span
           className="mt-1 block font-sans text-body-sm text-destructive"
           id={errorId}
@@ -34,7 +34,7 @@ export const Textarea = ({ className, error, id, ...props }: TextareaProps) => {
         >
           {error}
         </span>
-      ) : null}
+      )}
     </>
   )
 }

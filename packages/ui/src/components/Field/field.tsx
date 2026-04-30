@@ -28,24 +28,24 @@ export const Field = ({
     invalid={invalid ?? Boolean(error)}
     {...props}
   >
-    {label ? (
+    {label && (
       <BaseField.Label className="font-sans text-body-sm text-text-primary leading-none">
         {label}
       </BaseField.Label>
-    ) : null}
+    )}
     {children}
-    {hint && !error ? (
+    {hint && !error && (
       <BaseField.Description className="font-sans text-body-sm text-text-muted">
         {hint}
       </BaseField.Description>
-    ) : null}
-    {error ? (
+    )}
+    {error && (
       <BaseField.Error
         className="font-sans text-body-sm text-destructive"
         match={true}
       >
         {error}
       </BaseField.Error>
-    ) : null}
+    )}
   </BaseField.Root>
 )
