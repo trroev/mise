@@ -7,7 +7,10 @@ import { cn } from "@mise/ui/utils/cn"
 
 export type ToggleGroupRootProps = React.ComponentProps<typeof BaseToggleGroup>
 
-const ToggleGroupRoot = ({ className, ...props }: ToggleGroupRootProps) => (
+export const ToggleGroupRoot = ({
+  className,
+  ...props
+}: ToggleGroupRootProps) => (
   <BaseToggleGroup
     className={cn("inline-flex items-center gap-1", className)}
     {...props}
@@ -17,7 +20,7 @@ const ToggleGroupRoot = ({ className, ...props }: ToggleGroupRootProps) => (
 export type ToggleGroupItemProps = React.ComponentProps<typeof BaseToggle> &
   ToggleVariants
 
-const ToggleGroupItem = ({
+export const ToggleGroupItem = ({
   className,
   variant,
   size,
@@ -25,8 +28,3 @@ const ToggleGroupItem = ({
 }: ToggleGroupItemProps) => (
   <BaseToggle className={cn(toggle({ variant, size }), className)} {...props} />
 )
-
-export const ToggleGroup = {
-  Root: ToggleGroupRoot,
-  Item: ToggleGroupItem,
-}

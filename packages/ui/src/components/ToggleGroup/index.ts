@@ -1,5 +1,13 @@
+import { ToggleGroupItem, ToggleGroupRoot } from "./toggle-group"
+
 export {
-  ToggleGroup,
+  ToggleGroupItem,
   type ToggleGroupItemProps,
+  ToggleGroupRoot,
   type ToggleGroupRootProps,
 } from "./toggle-group"
+
+export const ToggleGroup = {
+  Root: ToggleGroupRoot,
+  Item: ToggleGroupItem,
+}
