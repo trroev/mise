@@ -6,7 +6,7 @@
   Scan shared packages so their Tailwind classes are included in the build.
   Paths are relative to this file (packages/tailwind/src/).
 */
-@source "../../ui/src";
+@source "../../**/src/**/**";
 
 /*
   Safelist every step of each color scale so all --color-{scale}-{step}
@@ -24,7 +24,7 @@
   body {
     font-synthesis-weight: none;
     text-rendering: optimizeLegibility;
-    @apply relative overscroll-none antialiased;
+    @apply relative overscroll-none antialiased bg-background;
   }
 
   button:not(:disabled),
