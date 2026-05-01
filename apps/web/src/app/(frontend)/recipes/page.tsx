@@ -1,7 +1,12 @@
-import { RecipeCard } from "@mise/ui/components/RecipeCard"
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query"
 import type { Metadata } from "next"
-import { getPayload } from "payload"
-import config from "~/payload.config"
+import { RecipeSearch } from "~/components/RecipeSearch"
+import { publishedRecipesQueryKey } from "~/lib/queries/published-recipes"
+import { getPublishedRecipes } from "~/lib/queries/published-recipes.server"
 
 export const revalidate = 60
 
@@ -12,13 +17,10 @@ export const metadata: Metadata = {
 }
 
 export default async function RecipesPage() {
-  const payload = await getPayload({ config })
-  const { docs: recipes } = await payload.find({
-    collection: "recipes",
-    where: { _status: { equals: "published" } },
-    sort: "-publishedAt",
-    depth: 1,
-    limit: 0,
+  const queryClient = new QueryClient()
+  await queryClient.prefetchQuery({
+    queryKey: publishedRecipesQueryKey,
+    queryFn: getPublishedRecipes,
   })
 
   return (
@@ -26,19 +28,9 @@ export default async function RecipesPage() {
       <h1 className="font-display text-heading-xl text-text-primary">
         Recipes
       </h1>
-      {recipes.length === 0 ? (
-        <p className="font-sans text-body-md text-text-secondary">
-          No recipes yet — check back soon.
-        </p>
-      ) : (
-        <ul className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {recipes.map((recipe) => (
-            <li key={recipe.id}>
-              <RecipeCard recipe={recipe} />
-            </li>
-          ))}
-        </ul>
-      )}
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <RecipeSearch />
+      </HydrationBoundary>
     </section>
   )
 }

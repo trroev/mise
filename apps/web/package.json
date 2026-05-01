@@ -24,13 +24,17 @@
     "@payloadcms/db-mongodb": "^3.84.1",
     "@payloadcms/next": "^3.84.1",
     "@payloadcms/plugin-seo": "^3.84.1",
+    "@remixicon/react": "^4.9.0",
     "@tanstack/react-query": "^5.100.5",
     "@tanstack/react-query-devtools": "^5.100.5",
     "better-auth": "^1.2.8",
+    "minisearch": "^7.2.0",
     "next": "16.2.4",
     "payload": "^3.84.1",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "server-only": "^0.0.1",
+    "ts-pattern": "^5.9.0"
   },
   "devDependencies": {
     "@mise/tsconfig": "workspace:*",
