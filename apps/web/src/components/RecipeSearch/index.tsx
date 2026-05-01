@@ -9,17 +9,20 @@ import { useQuery } from "@tanstack/react-query"
 import MiniSearch from "minisearch"
 import { useMemo, useState } from "react"
 import { match } from "ts-pattern"
-import {
-  fetchPublishedRecipes,
-  publishedRecipesQueryKey,
-} from "~/lib/queries/published-recipes"
 
-export const RecipeSearch = () => {
+export type RecipeSearchProps = {
+  recipes: Array<Recipe>
+}
+
+export const RecipeSearch = ({
+  recipes: initialRecipes,
+}: RecipeSearchProps) => {
   const [query, setQuery] = useState("")
-  const { data: recipes = [] } = useQuery({
-    queryKey: publishedRecipesQueryKey,
-    queryFn: fetchPublishedRecipes,
-    staleTime: 60_000,
+  const { data: recipes = initialRecipes } = useQuery({
+    queryKey: ["recipes", "published"] as const,
+    queryFn: () => Promise.resolve(initialRecipes),
+    initialData: initialRecipes,
+    staleTime: Number.POSITIVE_INFINITY,
   })
 
   const recipeById = useMemo(
@@ -67,7 +70,7 @@ export const RecipeSearch = () => {
 
   return (
     <div className="flex flex-col space-y-8">
-      <div className="relative">
+      <div className="relative max-w-sm">
         <RiSearchLine
           aria-hidden="true"
           className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-text-muted"
