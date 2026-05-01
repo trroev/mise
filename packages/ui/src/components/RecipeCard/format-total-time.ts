@@ -1,4 +1,4 @@
-import { match } from 'ts-pattern'
+import { match } from "ts-pattern"
 
 export const formatTotalTime = (minutes: number): string => {
   const hours = Math.floor(minutes / 60)
