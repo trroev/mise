@@ -32,7 +32,7 @@ export const SiteHeader = ({
         className
       )}
     >
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
+      <div className="constrainer flex h-16 items-center justify-between">
         <Link
           className="font-display text-heading-md text-text-primary"
           href="/"
