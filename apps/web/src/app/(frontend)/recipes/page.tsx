@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { Suspense } from "react"
 import { RecipeSearch } from "~/components/RecipeSearch"
 import { getPublishedRecipes } from "~/lib/queries/published-recipes"
 
@@ -18,7 +19,9 @@ export default async function RecipesPage() {
       <h1 className="font-display text-heading-xl text-text-primary">
         Recipes
       </h1>
-      <RecipeSearch recipes={recipes} />
+      <Suspense>
+        <RecipeSearch recipes={recipes} />
+      </Suspense>
     </section>
   )
 }
