@@ -2,6 +2,7 @@
 
 import { NavigationMenu } from "@mise/ui/components/NavigationMenu"
 import { cn } from "@mise/ui/utils/cn"
+import { RiCloseLine, RiMenuLine } from "@remixicon/react"
 import Link from "next/link"
 import type React from "react"
 import { useEffect, useState } from "react"
@@ -66,48 +67,24 @@ export const SiteHeader = ({
                 }
                 className="h-9 w-9"
               >
-                {navValue ? <CloseIcon /> : <MenuIcon />}
+                {navValue ? (
+                  <RiCloseLine aria-hidden size={20} />
+                ) : (
+                  <RiMenuLine aria-hidden size={20} />
+                )}
               </NavigationMenu.Trigger>
               <NavigationMenu.Portal>
-                <NavigationMenu.Backdrop />
-                {/*
-                 * positionMethod="fixed" + !inset-0: CSS !important overrides
-                 * FloatingUI's computed top/left inline styles, making the
-                 * positioner fill the viewport regardless of trigger position.
-                 */}
                 <NavigationMenu.Positioner
-                  className="inset-0! z-50 w-auto!"
-                  positionMethod="fixed"
+                  className="size-full"
+                  collisionPadding={0}
                 >
                   <NavigationMenu.Popup
                     className={cn(
-                      "flex h-full w-full flex-col p-6",
-                      "data-ending-style:opacity-0 data-starting-style:opacity-0",
+                      "flex size-full flex-col bg-background p-6",
                       "transition-opacity duration-200"
                     )}
                   >
-                    <div className="flex items-center justify-between">
-                      <Link
-                        className="font-display text-heading-md text-text-primary"
-                        href="/"
-                        onClick={() => setNavValue(null)}
-                      >
-                        Mise
-                      </Link>
-                      <button
-                        aria-label="Close navigation menu"
-                        className={cn(
-                          "flex h-9 w-9 items-center justify-center rounded-md",
-                          "text-text-secondary transition-colors hover:text-text-primary",
-                          "focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
-                        )}
-                        onClick={() => setNavValue(null)}
-                        type="button"
-                      >
-                        <CloseIcon />
-                      </button>
-                    </div>
-                    <ul className="mt-8 flex flex-col gap-4">
+                    <ul className="flex flex-col space-y-4">
                       <li>
                         <NavigationMenu.Link
                           className="text-heading-md text-text-primary hover:text-text-secondary"
@@ -128,40 +105,3 @@ export const SiteHeader = ({
     </header>
   )
 }
-
-const MenuIcon = (): React.JSX.Element => (
-  <svg
-    aria-hidden="true"
-    fill="none"
-    height="20"
-    stroke="currentColor"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    strokeWidth="2"
-    viewBox="0 0 24 24"
-    width="20"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <line x1="3" x2="21" y1="6" y2="6" />
-    <line x1="3" x2="21" y1="12" y2="12" />
-    <line x1="3" x2="21" y1="18" y2="18" />
-  </svg>
-)
-
-const CloseIcon = (): React.JSX.Element => (
-  <svg
-    aria-hidden="true"
-    fill="none"
-    height="20"
-    stroke="currentColor"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    strokeWidth="2"
-    viewBox="0 0 24 24"
-    width="20"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <line x1="18" x2="6" y1="6" y2="18" />
-    <line x1="6" x2="18" y1="6" y2="18" />
-  </svg>
-)
