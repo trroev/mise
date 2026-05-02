@@ -1,3 +1,3 @@
 @utility constrainer {
-  @apply mx-auto px-4 max-w-360 w-full;
+  @apply mx-auto px-page-margin max-w-360 w-full;
 }

@@ -80,6 +80,7 @@
     omitted because they collide with v4's --container-* scale used by
     max-w-* (e.g., --spacing-5xl would override --container-5xl).
   */
+  --spacing-page-margin: clamp(1rem, -2rem + 8vw, 5rem);
 
   /* RADIUS */
   --radius-sm: 0.125rem;
