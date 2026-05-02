@@ -27,7 +27,7 @@ export const SiteHeader = ({
     <header
       className={cn(
         "sticky top-0 z-40 transition-[background-color,border-color,backdrop-filter] duration-200",
-        isScrolled
+        isScrolled || navValue
           ? "border-border/40 border-b bg-background/80 backdrop-blur-md"
           : "border-transparent border-b",
         className
@@ -75,13 +75,20 @@ export const SiteHeader = ({
               </NavigationMenu.Trigger>
               <NavigationMenu.Portal>
                 <NavigationMenu.Positioner
-                  className="size-full"
+                  className={cn(
+                    "z-30 size-full",
+                    "transition-[top,left,right,bottom] duration-350 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                    "data-instant:transition-none"
+                  )}
                   collisionPadding={0}
                 >
                   <NavigationMenu.Popup
                     className={cn(
                       "flex size-full flex-col bg-background p-6",
-                      "transition-opacity duration-200"
+                      "transition-[opacity,translate] duration-350 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                      "data-starting-style:-translate-y-16 data-starting-style:opacity-0",
+                      "data-ending-style:-translate-y-16 data-ending-style:opacity-0",
+                      "data-ending-style:duration-150 data-ending-style:ease-in"
                     )}
                   >
                     <ul className="flex flex-col space-y-4">
