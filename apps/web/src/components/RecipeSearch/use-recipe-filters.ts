@@ -3,6 +3,7 @@
 import type { Recipe } from "@mise/payload/payload-types"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useMemo } from "react"
+import { match, P } from "ts-pattern"
 import {
   COURSE_LABELS,
   DIETARY_TAG_LABELS,
@@ -55,11 +56,9 @@ export const useRecipeFilters = (
 
   const updateFilterParam = (key: string, value: string | null) => {
     const params = new URLSearchParams(searchParams.toString())
-    if (value) {
-      params.set(key, value)
-    } else {
-      params.delete(key)
-    }
+    match(value)
+      .with(P.string.minLength(1), (v) => params.set(key, v))
+      .otherwise(() => params.delete(key))
     router.replace(`?${params.toString()}`, { scroll: false })
   }
 

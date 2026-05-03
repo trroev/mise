@@ -1,4 +1,5 @@
 import type { Recipe } from "@mise/payload/payload-types"
+import { match, P } from "ts-pattern"
 
 export const COURSE_LABELS: Readonly<Record<string, string>> = {
   appetizer: "Appetizer",
@@ -26,25 +27,19 @@ export const DIETARY_TAG_LABELS: Readonly<Record<string, string>> = {
   "nut-free": "Nut-Free",
 }
 
-export const getCuisineId = (cuisine: Recipe["cuisine"]): string | null => {
-  if (!cuisine) {
-    return null
-  }
-  if (typeof cuisine === "string") {
-    return cuisine
-  }
-  return cuisine.id
-}
+export const getCuisineId = (cuisine: Recipe["cuisine"]): string | null =>
+  match(cuisine)
+    .with(P.nullish, () => null)
+    .with(P.string, (id) => id)
+    .with({ id: P.string }, (c) => c.id)
+    .exhaustive()
 
-export const getCuisineName = (cuisine: Recipe["cuisine"]): string | null => {
-  if (!cuisine) {
-    return null
-  }
-  if (typeof cuisine === "string") {
-    return null
-  }
-  return cuisine.name
-}
+export const getCuisineName = (cuisine: Recipe["cuisine"]): string | null =>
+  match(cuisine)
+    .with(P.nullish, () => null)
+    .with(P.string, () => null)
+    .with({ name: P.string }, (c) => c.name)
+    .exhaustive()
 
 export const applyFacetFilters = (
   list: ReadonlyArray<Recipe>,
@@ -76,12 +71,14 @@ export const getNoResultsMessage = (
   trimmed: string,
   isSearching: boolean,
   hasActiveFilters: boolean
-): string => {
-  if (isSearching && hasActiveFilters) {
-    return `No recipes match "${trimmed}" with the active filters.`
-  }
-  if (isSearching) {
-    return `No recipes match "${trimmed}". Try a different search.`
-  }
-  return "No recipes match the active filters."
-}
+): string =>
+  match({ isSearching, hasActiveFilters })
+    .with(
+      { isSearching: true, hasActiveFilters: true },
+      () => `No recipes match "${trimmed}" with the active filters.`
+    )
+    .with(
+      { isSearching: true },
+      () => `No recipes match "${trimmed}". Try a different search.`
+    )
+    .otherwise(() => "No recipes match the active filters.")
