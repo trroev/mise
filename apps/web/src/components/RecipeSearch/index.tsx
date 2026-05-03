@@ -75,7 +75,8 @@ export const RecipeSearch = ({
         filters.courseFilter,
         filters.cuisineFilter,
         filters.difficultyFilter,
-        filters.tagsFilter
+        filters.tagsFilter,
+        filters.timeRangeFilter
       ),
     [searchResults, filters]
   )
@@ -140,6 +141,9 @@ export const RecipeSearch = ({
         newTags.length > 0 ? newTags.join(",") : null
       )
     },
+    timeRangeFilter: filters.timeRangeFilter,
+    onTimeRangeChange: (value: string) =>
+      filters.updateFilterParam("time", value || null),
     onClearAll: filters.clearAllFilters,
     activeCount: filters.activeFilterCount,
   }

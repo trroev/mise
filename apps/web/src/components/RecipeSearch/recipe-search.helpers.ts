@@ -35,6 +35,15 @@ export const DIETARY_TAG_LABELS = {
   "nut-free": "Nut-Free",
 } as const satisfies Record<DietaryTag, string>
 
+export const TIME_RANGE_OPTIONS = [
+  { value: "", label: "Any time" },
+  { value: "under-30", label: "Under 30 min" },
+  { value: "30-60", label: "30–60 min" },
+  { value: "over-60", label: "Over 1 hour" },
+] as const
+
+export type TimeRange = (typeof TIME_RANGE_OPTIONS)[number]["value"]
+
 export const getCuisineId = (cuisine: Recipe["cuisine"]): string | null =>
   match(cuisine)
     .with(P.nullish, () => null)
@@ -54,7 +63,8 @@ export const applyFacetFilters = (
   course: string,
   cuisine: string,
   difficulty: string,
-  tags: ReadonlyArray<string>
+  tags: ReadonlyArray<string>,
+  timeRange: string
 ): Array<Recipe> =>
   list.filter((recipe) => {
     if (course && recipe.course !== course) {
@@ -69,6 +79,17 @@ export const applyFacetFilters = (
     if (tags.length > 0) {
       const recipeTags = (recipe.dietaryTags as Array<string> | null) ?? []
       if (!tags.every((tag) => recipeTags.includes(tag))) {
+        return false
+      }
+    }
+    if (timeRange) {
+      const t = recipe.totalTime
+      const passes = match(timeRange)
+        .with("under-30", () => t != null && t < 30)
+        .with("30-60", () => t != null && t >= 30 && t <= 60)
+        .with("over-60", () => t != null && t > 60)
+        .otherwise(() => true)
+      if (!passes) {
         return false
       }
     }

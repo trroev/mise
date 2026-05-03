@@ -28,6 +28,7 @@ export type UseRecipeFiltersReturn = {
   cuisineFilter: string
   difficultyFilter: string
   tagsFilter: Array<string>
+  timeRangeFilter: string
   courseOptions: Array<FilterOption>
   cuisineOptions: Array<FilterOption>
   difficultyOptions: Array<FilterOption>
@@ -50,11 +51,13 @@ export const useRecipeFilters = (
     () => searchParams.get("tags")?.split(",").filter(Boolean) ?? [],
     [searchParams]
   )
+  const timeRangeFilter = searchParams.get("time") ?? ""
 
   const activeFilterCount = [
     courseFilter,
     cuisineFilter,
     difficultyFilter,
+    timeRangeFilter,
     ...tagsFilter,
   ].filter(Boolean).length
 
@@ -72,6 +75,7 @@ export const useRecipeFilters = (
     params.delete("cuisine")
     params.delete("difficulty")
     params.delete("tags")
+    params.delete("time")
     router.replace(`?${params.toString()}`, { scroll: false })
   }
 
@@ -153,6 +157,7 @@ export const useRecipeFilters = (
     cuisineFilter,
     difficultyFilter,
     tagsFilter,
+    timeRangeFilter,
     courseOptions,
     cuisineOptions,
     difficultyOptions,

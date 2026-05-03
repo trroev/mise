@@ -6,6 +6,7 @@ import { Label } from "@mise/ui/components/Label"
 import { Select } from "@mise/ui/components/Select"
 import { cn } from "@mise/ui/utils/cn"
 import type { ReactNode } from "react"
+import { TIME_RANGE_OPTIONS } from "~/components/RecipeSearch/recipe-search.helpers"
 
 type FilterOption = {
   value: string
@@ -18,6 +19,7 @@ export type RecipeFilterPanelProps = {
   cuisineFilter: string
   difficultyFilter: string
   tagsFilter: ReadonlyArray<string>
+  timeRangeFilter: string
   courseOptions: ReadonlyArray<FilterOption>
   cuisineOptions: ReadonlyArray<FilterOption>
   difficultyOptions: ReadonlyArray<FilterOption>
@@ -26,6 +28,7 @@ export type RecipeFilterPanelProps = {
   onCuisineChange: (value: string) => void
   onDifficultyChange: (value: string) => void
   onTagToggle: (tag: string) => void
+  onTimeRangeChange: (value: string) => void
   onClearAll: VoidFunction
   activeCount: number
   headerAction?: ReactNode
@@ -36,6 +39,7 @@ export const RecipeFilterPanel = ({
   cuisineFilter,
   difficultyFilter,
   tagsFilter,
+  timeRangeFilter,
   courseOptions,
   cuisineOptions,
   difficultyOptions,
@@ -44,6 +48,7 @@ export const RecipeFilterPanel = ({
   onCuisineChange,
   onDifficultyChange,
   onTagToggle,
+  onTimeRangeChange,
   onClearAll,
   activeCount,
   headerAction,
@@ -139,6 +144,24 @@ export const RecipeFilterPanel = ({
             />
           </div>
         )}
+
+        <div className="flex flex-col gap-2">
+          <Label className={timeRangeFilter ? "text-accent" : undefined}>
+            Total time
+          </Label>
+          <Select
+            onValueChange={(v) => onTimeRangeChange(v as string)}
+            options={TIME_RANGE_OPTIONS.map((o) => ({
+              label: o.label,
+              value: o.value,
+            }))}
+            placeholder="Any time"
+            triggerClassName={
+              timeRangeFilter ? "border-accent text-accent" : undefined
+            }
+            value={timeRangeFilter ?? ""}
+          />
+        </div>
 
         {dietaryTagOptions.length > 0 && (
           <div className="flex flex-col gap-3">
