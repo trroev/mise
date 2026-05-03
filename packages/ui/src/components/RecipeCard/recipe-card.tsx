@@ -5,6 +5,7 @@ import { COURSE_LABELS, DIFFICULTY_LABELS } from "@mise/utils/recipeLabels"
 import { RiImage2Line } from "@remixicon/react"
 import Image from "next/image"
 import Link from "next/link"
+import { match, P } from "ts-pattern"
 import { formatTotalTime } from "./format-total-time"
 
 export type RecipeCardProps = {
@@ -13,14 +14,18 @@ export type RecipeCardProps = {
 }
 
 export const RecipeCard = ({ recipe, className }: RecipeCardProps) => {
-  const heroUrl =
-    recipe.heroImage && typeof recipe.heroImage === "object"
-      ? recipe.heroImage.url
-      : null
-  const heroAlt =
-    recipe.heroImage && typeof recipe.heroImage === "object"
-      ? recipe.heroImage.alt
-      : recipe.title
+  const heroUrl = match(recipe.heroImage)
+    .with(P.nullish, () => null)
+    .with(P.string, () => null)
+    .with({ url: P.string }, ({ url }) => url)
+    .with(P.nonNullable, () => null)
+    .exhaustive()
+
+  const heroAlt = match(recipe.heroImage)
+    .with(P.nullish, () => recipe.title)
+    .with(P.string, () => recipe.title)
+    .with({ alt: P.string }, ({ alt }) => alt)
+    .exhaustive()
 
   return (
     <Link
