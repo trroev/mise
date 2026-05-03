@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@mise/ui/components/Button"
 import { RiArrowLeftSLine, RiArrowRightSLine } from "@remixicon/react"
 

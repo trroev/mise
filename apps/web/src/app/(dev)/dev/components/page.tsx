@@ -6,7 +6,6 @@ import { Dialog } from "@mise/ui/components/Dialog"
 import { Field } from "@mise/ui/components/Field"
 import { Input } from "@mise/ui/components/Input"
 import { Label } from "@mise/ui/components/Label"
-import { Pagination } from "@mise/ui/components/Pagination"
 import { RadioGroup } from "@mise/ui/components/RadioGroup"
 import { RecipeCard } from "@mise/ui/components/RecipeCard"
 import { Select } from "@mise/ui/components/Select"
@@ -19,6 +18,7 @@ import { Toggle } from "@mise/ui/components/Toggle"
 import { ToggleGroup } from "@mise/ui/components/ToggleGroup"
 import { Tooltip } from "@mise/ui/components/Tooltip"
 import type { ReactNode } from "react"
+import { PaginationDemo } from "./pagination-demo"
 
 const COURSE_OPTIONS = [
   { value: "starter", label: "Starter" },
@@ -121,8 +121,6 @@ function Mode({
     </section>
   )
 }
-
-const noop = () => undefined
 
 function Gallery() {
   return (
@@ -360,19 +358,11 @@ function Gallery() {
       </Section>
 
       <Section title="Pagination — few pages">
-        <div className="space-y-4">
-          <Pagination currentPage={1} onPageChange={noop} totalPages={5} />
-          <Pagination currentPage={3} onPageChange={noop} totalPages={5} />
-          <Pagination currentPage={5} onPageChange={noop} totalPages={5} />
-        </div>
+        <PaginationDemo pages={5} />
       </Section>
 
       <Section title="Pagination — many pages (ellipsis)">
-        <div className="space-y-4">
-          <Pagination currentPage={1} onPageChange={noop} totalPages={20} />
-          <Pagination currentPage={10} onPageChange={noop} totalPages={20} />
-          <Pagination currentPage={20} onPageChange={noop} totalPages={20} />
-        </div>
+        <PaginationDemo pages={20} />
       </Section>
 
       <Section title="Dialog">
