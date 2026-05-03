@@ -7,7 +7,6 @@ import { Input } from "@mise/ui/components/Input"
 import { RecipeCard } from "@mise/ui/components/RecipeCard"
 import { cn } from "@mise/ui/utils/cn"
 import { RiCloseLine, RiFilter3Line, RiSearchLine } from "@remixicon/react"
-import { useQuery } from "@tanstack/react-query"
 import MiniSearch from "minisearch"
 import { useSearchParams } from "next/navigation"
 import { useEffect, useMemo, useRef, useState } from "react"
@@ -28,12 +27,7 @@ export const RecipeSearch = ({
   const [localQuery, setLocalQuery] = useState(searchParams.get("q") ?? "")
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const { data: recipes = initialRecipes } = useQuery({
-    queryKey: ["recipes", "published"] as const,
-    queryFn: () => Promise.resolve(initialRecipes),
-    initialData: initialRecipes,
-    staleTime: Number.POSITIVE_INFINITY,
-  })
+  const recipes = initialRecipes
 
   const filters = useRecipeFilters(recipes)
 

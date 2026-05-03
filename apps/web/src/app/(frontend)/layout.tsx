@@ -3,7 +3,6 @@ import type React from "react"
 import { SiteFooter } from "~/components/SiteFooter"
 import { SiteHeader } from "~/components/SiteHeader"
 import { cormorant, manrope } from "~/fonts"
-import { Providers } from "~/providers"
 
 import "../globals.css"
 
@@ -20,11 +19,9 @@ export default function FrontendLayout({
   return (
     <html className={`${cormorant.variable} ${manrope.variable}`} lang="en">
       <body className="flex min-h-dvh flex-col font-sans">
-        <Providers>
-          <SiteHeader />
-          <main className="flex-1">{children}</main>
-          <SiteFooter />
-        </Providers>
+        <SiteHeader />
+        <main className="flex-1">{children}</main>
+        <SiteFooter />
       </body>
     </html>
   )
