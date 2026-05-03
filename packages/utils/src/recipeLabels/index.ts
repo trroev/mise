@@ -1,5 +1,4 @@
 import type { Recipe } from "@mise/payload/payload-types"
-import type {} from "payload"
 
 type Course = NonNullable<Recipe["course"]>
 type Difficulty = NonNullable<Recipe["difficulty"]>
