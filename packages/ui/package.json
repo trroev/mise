@@ -21,6 +21,7 @@
   "dependencies": {
     "@base-ui/react": "1.4.1",
     "@mise/payload": "workspace:*",
+    "@mise/utils": "workspace:*",
     "@remixicon/react": "^4.9.0",
     "clsx": "^2.1.1",
     "react": "^19.2.0",

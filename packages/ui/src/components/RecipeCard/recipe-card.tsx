@@ -1,29 +1,11 @@
 import type { Recipe } from "@mise/payload/payload-types"
 import { Badge } from "@mise/ui/components/Badge"
 import { cn } from "@mise/ui/utils/cn"
+import { COURSE_LABELS, DIFFICULTY_LABELS } from "@mise/utils/recipeLabels"
 import { RiImage2Line } from "@remixicon/react"
 import Image from "next/image"
 import Link from "next/link"
-// Required so the `declare module 'payload'` augmentation in
-// payload-types.ts can resolve when this package is type-checked.
-import type {} from "payload"
 import { formatTotalTime } from "./format-total-time"
-
-const COURSE_LABELS: Record<NonNullable<Recipe["course"]>, string> = {
-  appetizer: "Appetizer",
-  entrée: "Entrée",
-  dessert: "Dessert",
-  side: "Side",
-  snack: "Snack",
-  bread: "Bread",
-  other: "Other",
-}
-
-const DIFFICULTY_LABELS: Record<NonNullable<Recipe["difficulty"]>, string> = {
-  easy: "Easy",
-  medium: "Medium",
-  hard: "Hard",
-}
 
 export type RecipeCardProps = {
   recipe: Recipe
@@ -48,7 +30,7 @@ export const RecipeCard = ({ recipe, className }: RecipeCardProps) => {
       )}
       href={`/recipes/${recipe.slug}`}
     >
-      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-md bg-surface">
+      <div className="relative aspect-4/3 w-full overflow-hidden rounded-md bg-surface">
         {heroUrl ? (
           <Image
             alt={heroAlt}
