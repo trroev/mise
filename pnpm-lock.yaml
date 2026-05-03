@@ -297,6 +297,13 @@ importers:
         version: 5.9.2
 
   packages/utils:
+    dependencies:
+      '@mise/types':
+        specifier: workspace:*
+        version: link:../types
+      ts-pattern:
+        specifier: ^5.9.0
+        version: 5.9.0
     devDependencies:
       '@mise/payload':
         specifier: workspace:*
