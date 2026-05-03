@@ -29,6 +29,7 @@ export type UseRecipeFiltersReturn = {
   difficultyFilter: string
   tagsFilter: Array<string>
   timeRangeFilter: string
+  currentPage: number
   courseOptions: Array<FilterOption>
   cuisineOptions: Array<FilterOption>
   difficultyOptions: Array<FilterOption>
@@ -36,6 +37,7 @@ export type UseRecipeFiltersReturn = {
   activeFilterCount: number
   updateFilterParam: (key: string, value: string | null) => void
   clearAllFilters: () => void
+  goToPage: (page: number) => void
 }
 
 export const useRecipeFilters = (
@@ -52,6 +54,7 @@ export const useRecipeFilters = (
     [searchParams]
   )
   const timeRangeFilter = searchParams.get("time") ?? ""
+  const currentPage = Math.max(1, Number(searchParams.get("page") ?? "1"))
 
   const activeFilterCount = [
     courseFilter,
@@ -66,6 +69,7 @@ export const useRecipeFilters = (
     match(value)
       .with(P.string.minLength(1), (v) => params.set(key, v))
       .otherwise(() => params.delete(key))
+    params.delete("page")
     router.replace(`?${params.toString()}`, { scroll: false })
   }
 
@@ -76,6 +80,17 @@ export const useRecipeFilters = (
     params.delete("difficulty")
     params.delete("tags")
     params.delete("time")
+    params.delete("page")
+    router.replace(`?${params.toString()}`, { scroll: false })
+  }
+
+  const goToPage = (page: number) => {
+    const params = new URLSearchParams(searchParams.toString())
+    if (page <= 1) {
+      params.delete("page")
+    } else {
+      params.set("page", page.toString())
+    }
     router.replace(`?${params.toString()}`, { scroll: false })
   }
 
@@ -158,6 +173,7 @@ export const useRecipeFilters = (
     difficultyFilter,
     tagsFilter,
     timeRangeFilter,
+    currentPage,
     courseOptions,
     cuisineOptions,
     difficultyOptions,
@@ -165,5 +181,6 @@ export const useRecipeFilters = (
     activeFilterCount,
     updateFilterParam,
     clearAllFilters,
+    goToPage,
   }
 }

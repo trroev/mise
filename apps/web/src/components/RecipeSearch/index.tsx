@@ -4,6 +4,7 @@ import type { Recipe } from "@mise/payload/payload-types"
 import { Badge } from "@mise/ui/components/Badge"
 import { Button } from "@mise/ui/components/Button"
 import { Input } from "@mise/ui/components/Input"
+import { Pagination } from "@mise/ui/components/Pagination"
 import { RecipeCard } from "@mise/ui/components/RecipeCard"
 import { cn } from "@mise/ui/utils/cn"
 import { RiCloseLine, RiFilter3Line, RiSearchLine } from "@remixicon/react"
@@ -14,6 +15,8 @@ import { match } from "ts-pattern"
 import { RecipeFilterPanel } from "~/components/RecipeFilterPanel"
 import { applyFacetFilters, getNoResultsMessage } from "./recipe-search.helpers"
 import { useRecipeFilters } from "./use-recipe-filters"
+
+const PAGE_SIZE = 12
 
 export type RecipeSearchProps = {
   recipes: Array<Recipe>
@@ -80,6 +83,15 @@ export const RecipeSearch = ({
       ),
     [searchResults, filters]
   )
+
+  const totalPages = Math.ceil(filteredResults.length / PAGE_SIZE)
+  const currentPage = Math.min(filters.currentPage, Math.max(1, totalPages))
+  const pageStart = (currentPage - 1) * PAGE_SIZE
+  const pageEnd = pageStart + PAGE_SIZE
+  const pagedResults = filteredResults.slice(pageStart, pageEnd)
+
+  const rangeStart = filteredResults.length === 0 ? 0 : pageStart + 1
+  const rangeEnd = Math.min(pageEnd, filteredResults.length)
 
   // Debounce search query → URL sync
   useEffect(() => {
@@ -209,7 +221,14 @@ export const RecipeSearch = ({
           <RecipeFilterPanel {...filterPanelProps} />
         </aside>
 
-        <div className="min-w-0 flex-1">
+        <div className="flex min-w-0 flex-1 flex-col gap-6">
+          {view === "grid" && (
+            <p className="font-sans text-body-sm text-text-secondary">
+              Showing {rangeStart}–{rangeEnd} of {filteredResults.length}{" "}
+              {filteredResults.length === 1 ? "recipe" : "recipes"}
+            </p>
+          )}
+
           {match(view)
             .with("empty", () => (
               <p className="font-sans text-body-md text-text-secondary">
@@ -245,7 +264,7 @@ export const RecipeSearch = ({
             ))
             .with("grid", () => (
               <ul className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-                {filteredResults.map((recipe) => (
+                {pagedResults.map((recipe) => (
                   <li key={recipe.id}>
                     <RecipeCard recipe={recipe} />
                   </li>
@@ -253,6 +272,14 @@ export const RecipeSearch = ({
               </ul>
             ))
             .exhaustive()}
+
+          {view === "grid" && totalPages > 1 && (
+            <Pagination
+              currentPage={currentPage}
+              onPageChange={filters.goToPage}
+              totalPages={totalPages}
+            />
+          )}
         </div>
       </div>
 
