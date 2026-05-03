@@ -2,40 +2,12 @@
 
 import { Button } from "@mise/ui/components/Button"
 import { RiArrowLeftSLine, RiArrowRightSLine } from "@remixicon/react"
+import { getPageItems } from "./pagination.helpers"
 
 export type PaginationProps = {
   currentPage: number
   totalPages: number
   onPageChange: (page: number) => void
-}
-
-const getPageItems = (
-  current: number,
-  total: number
-): Array<number | "ellipsis"> => {
-  if (total <= 7) {
-    return Array.from({ length: total }, (_, i) => i + 1)
-  }
-
-  const items: Array<number | "ellipsis"> = [1]
-  const rangeStart = Math.max(2, current - 1)
-  const rangeEnd = Math.min(total - 1, current + 1)
-
-  if (rangeStart > 2) {
-    items.push("ellipsis")
-  }
-
-  for (let i = rangeStart; i <= rangeEnd; i++) {
-    items.push(i)
-  }
-
-  if (rangeEnd < total - 1) {
-    items.push("ellipsis")
-  }
-
-  items.push(total)
-
-  return items
 }
 
 export const Pagination = ({
