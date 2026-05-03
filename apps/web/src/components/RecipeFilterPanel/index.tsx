@@ -62,7 +62,7 @@ export const RecipeFilterPanel = ({
             onClick={onClearAll}
             size="sm"
             type="button"
-            variant="ghost"
+            variant="outline"
           >
             Clear all
           </Button>
