@@ -1,7 +1,11 @@
 import type { Recipe } from "@mise/payload/payload-types"
 import { match, P } from "ts-pattern"
 
-export const COURSE_LABELS: Readonly<Record<string, string>> = {
+type Course = NonNullable<Recipe["course"]>
+type Difficulty = NonNullable<Recipe["difficulty"]>
+type DietaryTag = NonNullable<Recipe["dietaryTags"]>[number]
+
+export const COURSE_LABELS = {
   appetizer: "Appetizer",
   entrée: "Entrée",
   dessert: "Dessert",
@@ -9,23 +13,27 @@ export const COURSE_LABELS: Readonly<Record<string, string>> = {
   snack: "Snack",
   bread: "Bread",
   other: "Other",
-}
+} as const satisfies Record<Course, string>
 
-export const DIFFICULTY_ORDER = ["easy", "medium", "hard"] as const
+export const DIFFICULTY_ORDER = [
+  "easy",
+  "medium",
+  "hard",
+] as const satisfies ReadonlyArray<Difficulty>
 
-export const DIFFICULTY_LABELS: Readonly<Record<string, string>> = {
+export const DIFFICULTY_LABELS = {
   easy: "Easy",
   medium: "Medium",
   hard: "Hard",
-}
+} as const satisfies Record<Difficulty, string>
 
-export const DIETARY_TAG_LABELS: Readonly<Record<string, string>> = {
+export const DIETARY_TAG_LABELS = {
   vegetarian: "Vegetarian",
   vegan: "Vegan",
   "gluten-free": "Gluten-Free",
   "dairy-free": "Dairy-Free",
   "nut-free": "Nut-Free",
-}
+} as const satisfies Record<DietaryTag, string>
 
 export const getCuisineId = (cuisine: Recipe["cuisine"]): string | null =>
   match(cuisine)

@@ -13,6 +13,10 @@ import {
   getCuisineName,
 } from "./recipe-search.helpers"
 
+type Course = NonNullable<Recipe["course"]>
+type Difficulty = NonNullable<Recipe["difficulty"]>
+type DietaryTag = NonNullable<Recipe["dietaryTags"]>[number]
+
 export type FilterOption = {
   value: string
   label: string
@@ -72,7 +76,7 @@ export const useRecipeFilters = (
   }
 
   const courseOptions = useMemo(() => {
-    const counts: Record<string, number> = {}
+    const counts: Partial<Record<Course, number>> = {}
     for (const recipe of recipes) {
       if (recipe.course) {
         counts[recipe.course] = (counts[recipe.course] ?? 0) + 1
@@ -81,8 +85,8 @@ export const useRecipeFilters = (
     return Object.entries(counts)
       .map(([value, count]) => ({
         value,
-        label: COURSE_LABELS[value] ?? value,
-        count,
+        label: COURSE_LABELS[value as Course],
+        count: count ?? 0,
       }))
       .sort((a, b) => a.label.localeCompare(b.label))
   }, [recipes])
@@ -109,7 +113,7 @@ export const useRecipeFilters = (
   }, [recipes])
 
   const difficultyOptions = useMemo(() => {
-    const counts: Record<string, number> = {}
+    const counts: Partial<Record<Difficulty, number>> = {}
     for (const recipe of recipes) {
       if (recipe.difficulty) {
         counts[recipe.difficulty] = (counts[recipe.difficulty] ?? 0) + 1
@@ -118,20 +122,18 @@ export const useRecipeFilters = (
     return Object.entries(counts)
       .map(([value, count]) => ({
         value,
-        label: DIFFICULTY_LABELS[value] ?? value,
-        count,
+        label: DIFFICULTY_LABELS[value as Difficulty],
+        count: count ?? 0,
       }))
       .sort(
         (a, b) =>
-          DIFFICULTY_ORDER.indexOf(
-            a.value as (typeof DIFFICULTY_ORDER)[number]
-          ) -
-          DIFFICULTY_ORDER.indexOf(b.value as (typeof DIFFICULTY_ORDER)[number])
+          DIFFICULTY_ORDER.indexOf(a.value as Difficulty) -
+          DIFFICULTY_ORDER.indexOf(b.value as Difficulty)
       )
   }, [recipes])
 
   const dietaryTagOptions = useMemo(() => {
-    const counts: Record<string, number> = {}
+    const counts: Partial<Record<DietaryTag, number>> = {}
     for (const recipe of recipes) {
       for (const tag of recipe.dietaryTags ?? []) {
         counts[tag] = (counts[tag] ?? 0) + 1
@@ -140,8 +142,8 @@ export const useRecipeFilters = (
     return Object.entries(counts)
       .map(([value, count]) => ({
         value,
-        label: DIETARY_TAG_LABELS[value] ?? value,
-        count,
+        label: DIETARY_TAG_LABELS[value as DietaryTag],
+        count: count ?? 0,
       }))
       .sort((a, b) => a.label.localeCompare(b.label))
   }, [recipes])
