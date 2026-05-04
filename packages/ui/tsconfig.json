@@ -3,12 +3,14 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "outDir": "dist",
-    "rootDir": "src",
+    "noEmit": true,
+    "types": ["vitest/globals"],
     "paths": {
       "@mise/ui/components/*": ["./src/components/*/index.ts"],
-      "@mise/ui/utils/*": ["./src/utils/*/index.ts"]
+      "@mise/ui/utils/*": ["./src/utils/*/index.ts"],
+      "@mise/ui/test/*": ["./test/*.ts"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "test", "vitest.config.ts"],
   "exclude": ["node_modules", "dist"]
 }
