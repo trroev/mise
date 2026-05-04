@@ -58,7 +58,9 @@
     {
       "includes": [
         "packages/ui/src/components/*/index.ts",
-        "packages/ui/src/utils/*/index.ts"
+        "packages/ui/src/utils/*/index.ts",
+        "packages/features/src/components/*/index.ts",
+        "packages/features/src/utils/*/index.ts"
       ],
       "linter": {
         "rules": {

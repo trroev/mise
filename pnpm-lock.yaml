@@ -69,6 +69,9 @@ importers:
       '@mise/env':
         specifier: workspace:*
         version: link:../../packages/env
+      '@mise/features':
+        specifier: workspace:*
+        version: link:../../packages/features
       '@mise/payload':
         specifier: workspace:*
         version: link:../../packages/payload
@@ -184,6 +187,52 @@ importers:
         specifier: 5.9.2
         version: 5.9.2
 
+  packages/features:
+    dependencies:
+      '@mise/payload':
+        specifier: workspace:*
+        version: link:../payload
+      '@mise/types':
+        specifier: workspace:*
+        version: link:../types
+      '@mise/ui':
+        specifier: workspace:*
+        version: link:../ui
+      '@mise/utils':
+        specifier: workspace:*
+        version: link:../utils
+      '@remixicon/react':
+        specifier: ^4.9.0
+        version: 4.9.0(react@19.2.0)
+      react:
+        specifier: ^19.2.0
+        version: 19.2.0
+      ts-pattern:
+        specifier: ^5.9.0
+        version: 5.9.0
+    devDependencies:
+      '@mise/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: ^22.15.3
+        version: 22.15.3
+      '@types/react':
+        specifier: 19.2.2
+        version: 19.2.2
+      '@types/react-dom':
+        specifier: 19.2.2
+        version: 19.2.2(@types/react@19.2.2)
+      next:
+        specifier: 16.2.4
+        version: 16.2.4(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.77.4)
+      payload:
+        specifier: ^3.84.1
+        version: 3.84.1(graphql@16.13.2)(typescript@5.9.2)
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
+
   packages/payload:
     dependencies:
       '@mise/env':
@@ -211,6 +260,9 @@ importers:
       '@types/node':
         specifier: ^22.15.3
         version: 22.15.3
+      '@types/react':
+        specifier: 19.2.2
+        version: 19.2.2
       payload:
         specifier: ^3.84.1
         version: 3.84.1(graphql@16.13.2)(typescript@5.9.2)
@@ -246,9 +298,6 @@ importers:
       '@base-ui/react':
         specifier: 1.4.1
         version: 1.4.1(@date-fns/tz@1.2.0)(@types/react@19.2.2)(date-fns@4.1.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      '@mise/payload':
-        specifier: workspace:*
-        version: link:../payload
       '@mise/utils':
         specifier: workspace:*
         version: link:../utils
@@ -289,34 +338,25 @@ importers:
       '@types/react-dom':
         specifier: 19.2.2
         version: 19.2.2(@types/react@19.2.2)
-      payload:
-        specifier: ^3.84.1
-        version: 3.84.1(graphql@16.13.2)(typescript@5.9.2)
       typescript:
         specifier: 5.9.2
         version: 5.9.2
 
   packages/utils:
     dependencies:
-      '@mise/types':
-        specifier: workspace:*
-        version: link:../types
       ts-pattern:
         specifier: ^5.9.0
         version: 5.9.0
     devDependencies:
-      '@mise/payload':
-        specifier: workspace:*
-        version: link:../payload
       '@mise/testing':
         specifier: workspace:*
         version: link:../testing
       '@mise/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
-      payload:
-        specifier: ^3.84.1
-        version: 3.84.1(graphql@16.13.2)(typescript@5.9.2)
+      '@mise/types':
+        specifier: workspace:*
+        version: link:../types
       typescript:
         specifier: 5.9.2
         version: 5.9.2
