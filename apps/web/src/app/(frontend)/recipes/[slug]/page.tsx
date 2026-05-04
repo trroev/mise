@@ -9,6 +9,8 @@ import { RiTimerLine } from "@remixicon/react"
 import type { Metadata } from "next"
 import Image from "next/image"
 import { notFound } from "next/navigation"
+import { Suspense } from "react"
+import { RecipeControls } from "~/components/RecipeControls"
 import { getPublishedRecipes } from "~/lib/queries/published-recipes"
 import { getRecipeBySlug } from "~/lib/queries/recipe-by-slug"
 
@@ -144,49 +146,24 @@ export default async function RecipeDetailPage({ params }: Props) {
         )}
 
         <div className="grid gap-12 lg:grid-cols-[2fr_3fr]">
-          <section>
-            <h2 className="mb-6 font-display text-heading-lg text-text-primary">
-              Ingredients
-            </h2>
-            <div className="space-y-6">
-              {recipe.ingredientGroups.map((group, gi) => (
-                <div key={group.id ?? gi}>
-                  {group.groupLabel && (
-                    <h3 className="mb-3 font-medium font-sans text-body-sm text-text-muted uppercase tracking-widest">
-                      {group.groupLabel}
-                    </h3>
-                  )}
-                  <ul className="space-y-2">
-                    {group.ingredients.map((ingredient, ii) => {
-                      const unitLabel =
-                        typeof ingredient.unit === "object"
-                          ? ingredient.unit.abbreviation
-                          : ingredient.unit
-                      return (
-                        <li
-                          className="font-sans text-body text-text-primary"
-                          key={ingredient.id ?? ii}
-                        >
-                          <span className="text-text-secondary">
-                            {ingredient.quantity} {unitLabel}
-                          </span>{" "}
-                          {ingredient.name}
-                          {ingredient.prepNote && (
-                            <span className="text-text-muted">
-                              , {ingredient.prepNote}
-                            </span>
-                          )}
-                        </li>
-                      )
-                    })}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </section>
+          <Suspense
+            fallback={
+              <section>
+                <h2 className="font-display text-heading-lg text-text-primary">
+                  Ingredients
+                </h2>
+              </section>
+            }
+          >
+            <RecipeControls
+              baseYield={recipe.yield?.quantity ?? 1}
+              ingredientGroups={recipe.ingredientGroups}
+              yieldUnit={recipe.yield?.unit ?? ""}
+            />
+          </Suspense>
 
-          <section>
-            <h2 className="mb-6 font-display text-heading-lg text-text-primary">
+          <section className="space-y-6">
+            <h2 className="font-display text-heading-lg text-text-primary">
               Instructions
             </h2>
             <div className="space-y-8">
