@@ -45,20 +45,15 @@ export const RecipeCard = ({ recipe, className }: RecipeCardProps) => {
           </>
         ) : undefined
       }
-      body={
-        <>
-          <h3 className="font-display text-heading-md text-text-primary">
-            {recipe.title}
-          </h3>
-          {typeof recipe.totalTime === "number" && (
-            <p className="mt-1 font-sans text-body-sm text-text-secondary">
-              {formatDuration(recipe.totalTime)}
-            </p>
-          )}
-        </>
-      }
       className={className}
       href={`/recipes/${recipe.slug}`}
+      lockUp={{
+        title: recipe.title,
+        body:
+          typeof recipe.totalTime === "number"
+            ? formatDuration(recipe.totalTime)
+            : undefined,
+      }}
       media={
         heroUrl ? (
           <Image

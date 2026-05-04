@@ -6,14 +6,17 @@ export type CardProps = {
   href: string
   media?: React.ReactNode
   badges?: React.ReactNode
-  body: React.ReactNode
+  lockUp: {
+    title: string
+    body?: string
+  }
   className?: string
 }
 
-export const Card = ({ href, media, badges, body, className }: CardProps) => (
+export const Card = ({ href, media, badges, lockUp, className }: CardProps) => (
   <Link
     className={cn(
-      "group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+      "group flex flex-col space-y-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background",
       className
     )}
     href={href}
@@ -22,8 +25,17 @@ export const Card = ({ href, media, badges, body, className }: CardProps) => (
       {media}
     </div>
     {badges && (
-      <div className="mt-3 flex flex-wrap items-center gap-2">{badges}</div>
+      <div className="flex flex-wrap items-center gap-2">{badges}</div>
     )}
-    <div className="mt-3">{body}</div>
+    <div className="flex flex-col space-y-1">
+      <h3 className="font-display text-heading-md text-text-primary">
+        {lockUp.title}
+      </h3>
+      {lockUp.body && (
+        <p className="font-sans text-body-sm text-text-secondary">
+          {lockUp.body}
+        </p>
+      )}
+    </div>
   </Link>
 )
