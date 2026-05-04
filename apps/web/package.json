@@ -16,6 +16,7 @@
   "dependencies": {
     "@mise/auth": "workspace:*",
     "@mise/env": "workspace:*",
+    "@mise/features": "workspace:*",
     "@mise/payload": "workspace:*",
     "@mise/tailwind": "workspace:*",
     "@mise/types": "workspace:*",

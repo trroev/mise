@@ -1,11 +1,11 @@
 "use client"
 
+import { RecipeCard } from "@mise/features/components/RecipeCard"
 import type { Recipe } from "@mise/payload/payload-types"
 import { Badge } from "@mise/ui/components/Badge"
 import { Button } from "@mise/ui/components/Button"
 import { Input } from "@mise/ui/components/Input"
 import { Pagination } from "@mise/ui/components/Pagination"
-import { RecipeCard } from "@mise/ui/components/RecipeCard"
 import { cn } from "@mise/ui/utils/cn"
 import { RiCloseLine, RiFilter3Line, RiSearchLine } from "@remixicon/react"
 import MiniSearch from "minisearch"

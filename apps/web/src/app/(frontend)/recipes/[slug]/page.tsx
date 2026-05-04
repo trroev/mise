@@ -1,10 +1,10 @@
-import { Badge } from "@mise/ui/components/Badge"
-import { formatTotalTime } from "@mise/ui/components/RecipeCard"
 import {
   COURSE_LABELS,
   DIETARY_TAG_LABELS,
   DIFFICULTY_LABELS,
-} from "@mise/utils/recipeLabels"
+} from "@mise/features/utils/recipeLabels"
+import { Badge } from "@mise/ui/components/Badge"
+import { formatDuration } from "@mise/utils/formatDuration"
 import { RiTimerLine } from "@remixicon/react"
 import type { Metadata } from "next"
 import Image from "next/image"
@@ -116,7 +116,7 @@ export default async function RecipeDetailPage({ params }: Props) {
                   Prep
                 </p>
                 <p className="font-sans text-body text-text-primary">
-                  {formatTotalTime(recipe.prepTime)}
+                  {formatDuration(recipe.prepTime)}
                 </p>
               </div>
             )}
@@ -126,7 +126,7 @@ export default async function RecipeDetailPage({ params }: Props) {
                   Cook
                 </p>
                 <p className="font-sans text-body text-text-primary">
-                  {formatTotalTime(recipe.cookTime)}
+                  {formatDuration(recipe.cookTime)}
                 </p>
               </div>
             )}
@@ -136,7 +136,7 @@ export default async function RecipeDetailPage({ params }: Props) {
                   Total
                 </p>
                 <p className="font-sans text-body text-text-primary">
-                  {formatTotalTime(recipe.totalTime)}
+                  {formatDuration(recipe.totalTime)}
                 </p>
               </div>
             )}

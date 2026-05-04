@@ -1,7 +1,6 @@
+import { AppShell } from "@mise/features/components/AppShell"
 import type { Metadata } from "next"
 import type React from "react"
-import { SiteFooter } from "~/components/SiteFooter"
-import { SiteHeader } from "~/components/SiteHeader"
 import { cormorant, manrope } from "~/fonts"
 
 import "../globals.css"
@@ -19,9 +18,7 @@ export default function FrontendLayout({
   return (
     <html className={`${cormorant.variable} ${manrope.variable}`} lang="en">
       <body className="flex min-h-dvh flex-col font-sans">
-        <SiteHeader />
-        <main className="flex-1">{children}</main>
-        <SiteFooter />
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   )

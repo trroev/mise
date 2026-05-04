@@ -1,11 +1,11 @@
 "use client"
 
-import type { Recipe } from "@mise/payload/payload-types"
 import {
   COURSE_LABELS,
   DIETARY_TAG_LABELS,
   DIFFICULTY_LABELS,
-} from "@mise/utils/recipeLabels"
+} from "@mise/features/utils/recipeLabels"
+import type { Recipe } from "@mise/payload/payload-types"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useMemo } from "react"
 import { match, P } from "ts-pattern"
