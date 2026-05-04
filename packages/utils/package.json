@@ -11,11 +11,9 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@mise/payload": "workspace:*",
     "@mise/testing": "workspace:*",
     "@mise/tsconfig": "workspace:*",
     "@mise/types": "workspace:*",
-    "payload": "^3.84.1",
     "typescript": "5.9.2",
     "vitest": "^3.2.4"
   },
