@@ -1,5 +1,32 @@
-import type { Preview } from "@storybook/nextjs-vite"
+import type { Decorator, Preview } from "@storybook/nextjs-vite"
+import { Cormorant_Garamond, Manrope } from "next/font/google"
 import "./preview.css"
+
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-cormorant",
+  display: "swap",
+})
+
+const manrope = Manrope({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-manrope",
+  display: "swap",
+})
+
+const withFontsAndTheme: Decorator = (Story, context) => {
+  const isDark = context.globals.theme === "dark"
+  if (typeof document !== "undefined") {
+    document.documentElement.classList.toggle("dark", isDark)
+  }
+  return (
+    <div className={`${cormorant.variable} ${manrope.variable} font-sans`}>
+      <Story />
+    </div>
+  )
+}
 
 const preview: Preview = {
   parameters: {
@@ -16,9 +43,7 @@ const preview: Preview = {
         dark: { name: "Dark", value: "var(--color-background, #0b0b0b)" },
       },
     },
-    a11y: {
-      test: "todo",
-    },
+    a11y: { test: "todo" },
   },
   initialGlobals: {
     backgrounds: { value: "light" },
@@ -38,15 +63,7 @@ const preview: Preview = {
       },
     },
   },
-  decorators: [
-    (Story, context) => {
-      const theme = context.globals.theme === "dark" ? "dark" : ""
-      if (typeof document !== "undefined") {
-        document.documentElement.classList.toggle("dark", theme === "dark")
-      }
-      return Story()
-    },
-  ],
+  decorators: [withFontsAndTheme],
 }
 
 export default preview
