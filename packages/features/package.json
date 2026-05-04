@@ -27,7 +27,7 @@
     "@types/react-dom": "19.2.2",
     "next": "16.2.4",
     "payload": "^3.84.1",
-    "typescript": "5.9.2"
+    "typescript": "^6.0.3"
   },
   "peerDependencies": {
     "next": "^16.0.0",
