@@ -28,12 +28,10 @@
     "cloudinary": "^2.10.0",
     "ts-pattern": "^5.9.0"
   },
-  "peerDependencies": {
-    "payload": "^3.84.1"
-  },
   "devDependencies": {
     "@mise/tsconfig": "workspace:*",
     "@types/node": "^22.15.3",
+    "@types/react": "19.2.2",
     "payload": "^3.84.1",
     "typescript": "5.9.2"
   }
