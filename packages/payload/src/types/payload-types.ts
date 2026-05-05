@@ -223,6 +223,10 @@ export interface Recipe {
   description?: string | null;
   heroImage?: (string | null) | Media;
   cuisine?: (string | null) | Cuisine;
+  /**
+   * Recipe author name. Surfaced in JSON-LD structured data. TODO: convert to a relationship to `users` once user-submitted recipes ship.
+   */
+  author?: string | null;
   course?: ('appetizer' | 'entrée' | 'dessert' | 'side' | 'snack' | 'bread' | 'other') | null;
   difficulty?: ('easy' | 'medium' | 'hard') | null;
   dietaryTags?: ('vegetarian' | 'vegan' | 'gluten-free' | 'dairy-free' | 'nut-free')[] | null;
@@ -490,6 +494,7 @@ export interface RecipesSelect<T extends boolean = true> {
   description?: T;
   heroImage?: T;
   cuisine?: T;
+  author?: T;
   course?: T;
   difficulty?: T;
   dietaryTags?: T;

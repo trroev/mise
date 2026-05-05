@@ -1,3 +1,4 @@
+import { buildRecipeJsonLd } from "@mise/features/utils/buildRecipeJsonLd"
 import {
   COURSE_LABELS,
   DIETARY_TAG_LABELS,
@@ -69,8 +70,15 @@ export default async function RecipeDetailPage({ params }: Props) {
     recipe.cookTime != null ||
     recipe.totalTime != null
 
+  const jsonLd = buildRecipeJsonLd(recipe)
+
   return (
     <article>
+      <script
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON.stringify output is safe to inline as JSON-LD.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        type="application/ld+json"
+      />
       {heroUrl && (
         <div className="relative aspect-video w-full overflow-hidden bg-surface">
           <Image

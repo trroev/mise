@@ -37,6 +37,14 @@ export const Recipes: CollectionConfig = {
       type: "relationship",
     },
     {
+      admin: {
+        description:
+          "Recipe author name. Surfaced in JSON-LD structured data. TODO: convert to a relationship to `users` once user-submitted recipes ship.",
+      },
+      name: "author",
+      type: "text",
+    },
+    {
       name: "course",
       options: [
         { label: "Appetizer", value: "appetizer" },
