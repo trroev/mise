@@ -11,24 +11,18 @@ const withTooltipProvider: Decorator = (Story) => (
 )
 
 const meta = preview.meta({
-  args: {
-    content: "Tooltip content",
-    children: <Button variant="outline">Hover me</Button>,
-  },
-  argTypes: {
-    children: { table: { disable: true } },
-    side: {
-      control: "inline-radio",
-      options: ["top", "right", "bottom", "left"],
-    },
-  },
-  component: Component,
   decorators: [withTooltipProvider],
   parameters: { layout: "centered" },
   title: "Molecules/Tooltip",
 })
 
-export const Default = meta.story({})
+export const Default = meta.story({
+  render: () => (
+    <Component content="Tooltip content">
+      <Button variant="outline">Hover me</Button>
+    </Component>
+  ),
+})
 
 export const Showcase = meta.story({
   render: () => (
