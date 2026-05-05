@@ -11,6 +11,8 @@ import type { Metadata } from "next"
 import Image from "next/image"
 import { notFound } from "next/navigation"
 import { Suspense } from "react"
+import { JsonLd } from "react-schemaorg"
+import type { Recipe as RecipeSchema } from "schema-dts"
 import { RecipeControls } from "~/components/RecipeControls"
 import { getPublishedRecipes } from "~/lib/queries/published-recipes"
 import { getRecipeBySlug } from "~/lib/queries/recipe-by-slug"
@@ -70,15 +72,9 @@ export default async function RecipeDetailPage({ params }: Props) {
     recipe.cookTime != null ||
     recipe.totalTime != null
 
-  const jsonLd = buildRecipeJsonLd(recipe)
-
   return (
     <article>
-      <script
-        // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON.stringify output is safe to inline as JSON-LD.
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        type="application/ld+json"
-      />
+      <JsonLd<RecipeSchema> item={buildRecipeJsonLd(recipe)} />
       {heroUrl && (
         <div className="relative aspect-video w-full overflow-hidden bg-surface">
           <Image

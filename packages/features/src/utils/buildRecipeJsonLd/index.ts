@@ -1,5 +1,6 @@
 import { COURSE_LABELS } from "@mise/features/utils/recipeLabels"
 import type { Recipe } from "@mise/payload/payload-types"
+import type { Recipe as RecipeSchema, WithContext } from "schema-dts"
 
 const DEFAULT_AUTHOR_NAME = "Trevor Mathiak"
 
@@ -46,42 +47,20 @@ const truncateForName = (text: string, maxLength = 80): string => {
   return `${firstSentence.slice(0, maxLength - 1).trimEnd()}…`
 }
 
-type HowToStep = {
-  "@type": "HowToStep"
-  name: string
-  text: string
-}
-
-type RecipeJsonLd = {
-  "@context": "https://schema.org"
-  "@type": "Recipe"
-  name: string
-  description?: string
-  image?: ReadonlyArray<string>
-  author: { "@type": "Person"; name: string }
-  datePublished?: string
-  prepTime?: string
-  cookTime?: string
-  totalTime?: string
-  recipeYield?: string
-  recipeCategory?: string
-  recipeCuisine?: string
-  recipeIngredient: ReadonlyArray<string>
-  recipeInstructions: ReadonlyArray<HowToStep>
-}
-
-export const buildRecipeJsonLd = (recipe: Recipe): RecipeJsonLd => {
+export const buildRecipeJsonLd = (
+  recipe: Recipe
+): WithContext<RecipeSchema> => {
   const heroUrl =
     recipe.heroImage && typeof recipe.heroImage === "object"
       ? (recipe.heroImage.url ?? null)
       : null
 
   const image = heroUrl
-    ? ([
+    ? [
         transformCloudinary(heroUrl, "c_fill,g_auto,ar_1:1,w_1200"),
         transformCloudinary(heroUrl, "c_fill,g_auto,ar_4:3,w_1200"),
         transformCloudinary(heroUrl, "c_fill,g_auto,ar_16:9,w_1200"),
-      ] as const)
+      ]
     : undefined
 
   const cuisineName =
@@ -95,11 +74,12 @@ export const buildRecipeJsonLd = (recipe: Recipe): RecipeJsonLd => {
 
   const recipeInstructions = recipe.instructionGroups.flatMap((group) =>
     group.steps.map(
-      (step): HowToStep => ({
-        "@type": "HowToStep",
-        name: truncateForName(step.description),
-        text: step.description,
-      })
+      (step) =>
+        ({
+          "@type": "HowToStep",
+          name: truncateForName(step.description),
+          text: step.description,
+        }) as const
     )
   )
 
