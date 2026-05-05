@@ -159,7 +159,7 @@ Common mixes: `g` + `ea` (e.g. bay leaves), `g` + `L` (large stocks). The schema
 
 **Implication for `yield`:** `yield.unit` is a single text field, so for the 29 recipes with mixed units the script leaves `yield` unset rather than picking arbitrarily.
 
-### 3.3 Recipes with no method/instructions — **[manual]**
+### 3.3 Recipes with no method/instructions — **[script]**
 
 5 recipes have a `Method/Notes` header but no step rows underneath:
 
@@ -169,7 +169,7 @@ Common mixes: `g` + `ea` (e.g. bay leaves), `g` + `L` (large stocks). The schema
 - `Preserved Lemon Citronette`
 - `Special Sauce`
 
-`recipes.instructionGroups[].steps` has `minRows: 1`, so these will fail validation as-is. **Decision:** clean **manually before import** by adding at least one step in the source sheet (or accepting a placeholder step like `"Combine all ingredients."` written at import time). Pre-import cleanup is preferred — the migration script should fail loudly if any recipe arrives with zero steps, rather than silently inject placeholders.
+`recipes.instructionGroups[].steps` has `minRows: 1`, so these would fail validation as-is. **Decision:** the script inserts a single placeholder step with `description: "TBD"` for any recipe that has zero method rows. Combined with the import-as-draft policy (§2.1), the chef can fill these in via the admin before publishing.
 
 ### 3.4 Ingredients with blank quantity ("to taste" pattern) — **[script]**
 
@@ -226,11 +226,10 @@ Common mixes: `g` + `ea` (e.g. bay leaves), `g` + `L` (large stocks). The schema
 
 > Subject to revision when the script ticket (RECIPE-038+) is scoped — recorded here so the script author starts from a known baseline.
 
-1. **Pre-import (manual)**: add steps to the 5 recipes in §3.3.
-2. **Seed** `units` via existing `UNIT_SEEDS` **plus** a new `Sprig` (count) unit.
-3. **Read** the workbook tab-by-tab; build an in-memory list of recipe DTOs applying every transformation in §2 and §3.
-4. **Validate** the full batch against the Payload `recipes` schema before any writes — fail fast on the first invalid recipe with a row-level error message.
-5. **Insert** all recipes as drafts (`_status: "draft"`). Take advantage of Payload's local API for performance; no need to go through HTTP.
-6. **Hand off** to the chef for review and per-recipe publishing in the admin.
+1. **Seed** `units` via existing `UNIT_SEEDS` **plus** a new `Sprig` (count) unit.
+2. **Read** the workbook tab-by-tab; build an in-memory list of recipe DTOs applying every transformation in §2 and §3.
+3. **Validate** the full batch against the Payload `recipes` schema before any writes — fail fast on the first invalid recipe with a row-level error message.
+4. **Insert** all recipes as drafts (`_status: "draft"`). Take advantage of Payload's local API for performance; no need to go through HTTP.
+5. **Hand off** to the chef for review and per-recipe publishing in the admin.
 
 `cuisines`, `tags`, and `ingredients` are not seeded by this migration.
