@@ -180,6 +180,7 @@ export const UNIT_SEEDS = [
   { abbreviation: "pc", name: "Piece", type: "count" },
   { abbreviation: "ea", name: "Each", type: "count" },
   { abbreviation: "pinch", name: "Pinch", type: "count" },
+  { abbreviation: "sprig", name: "Sprig", type: "count" },
 ] as const satisfies ReadonlyArray<{
   abbreviation: string
   conversionFactor?: number

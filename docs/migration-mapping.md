@@ -233,3 +233,16 @@ Common mixes: `g` + `ea` (e.g. bay leaves), `g` + `L` (large stocks). The schema
 5. **Hand off** to the chef for review and per-recipe publishing in the admin.
 
 `cuisines`, `tags`, and `ingredients` are not seeded by this migration.
+
+---
+
+## 5. Post-migration cleanup
+
+Once the migration has been run successfully against production and the chef has confirmed the results, remove the one-shot dependencies that are not used by the runtime app:
+
+```sh
+pnpm remove -w xlsx zod
+rm scripts/migrate-from-sheets.ts
+```
+
+`UNIT_SEEDS` and `scripts/seed-units.ts` stay — they are part of the regular environment bootstrap, not migration-only.
