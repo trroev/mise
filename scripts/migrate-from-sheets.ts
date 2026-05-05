@@ -23,7 +23,6 @@ import { getPayload } from "payload"
 import { match } from "ts-pattern"
 import { read as readXlsx, utils as xlsxUtils } from "xlsx"
 import { z } from "zod"
-import config from "../apps/web/src/payload.config"
 
 type Cli = {
   readonly input: string
@@ -567,6 +566,7 @@ async function run(): Promise<void> {
   const targets = cli.limit ? sheetNames.slice(0, cli.limit) : sheetNames
   console.log(`[migrate-from-sheets] sheets to process: ${targets.length}`)
 
+  const { default: config } = await import("../apps/web/src/payload.config")
   const payload = await getPayload({ config })
   const units = await buildUnitLookup(payload)
 
@@ -617,4 +617,7 @@ async function run(): Promise<void> {
   await payload.db.destroy()
 }
 
-await run()
+run().catch((err: unknown) => {
+  console.error(err)
+  process.exit(1)
+})
