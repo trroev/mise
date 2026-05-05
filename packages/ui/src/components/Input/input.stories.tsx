@@ -1,24 +1,23 @@
-import { Input } from "@mise/ui/components/Input"
-import type { Meta, StoryObj } from "@storybook/nextjs-vite"
+import { preview } from "@mise/storybook-config/preview"
 
-const meta = {
-  title: "Components/Input",
-  component: Input,
+import { Input as Component } from "./input"
+
+const meta = preview.meta({
   args: { placeholder: "Enter text…" },
-} satisfies Meta<typeof Input>
+  component: Component,
+  parameters: { layout: "centered" },
+  title: "Atoms/Input",
+})
 
-export default meta
-type Story = StoryObj<typeof meta>
+export const Default = meta.story({})
 
-export const Default: Story = {}
-
-export const Showcase: Story = {
+export const Showcase = meta.story({
   render: () => (
     <div className="flex w-80 flex-col gap-3">
-      <Input placeholder="Default" />
-      <Input defaultValue="Filled" />
-      <Input disabled placeholder="Disabled" />
-      <Input error="Required" id="err" placeholder="With error" />
+      <Component placeholder="Default" />
+      <Component defaultValue="Filled" />
+      <Component disabled placeholder="Disabled" />
+      <Component error="Required" id="err" placeholder="With error" />
     </div>
   ),
-}
+})

@@ -1,25 +1,24 @@
-import { Spinner } from "@mise/ui/components/Spinner"
-import type { Meta, StoryObj } from "@storybook/nextjs-vite"
+import { preview } from "@mise/storybook-config/preview"
 
-const meta = {
-  title: "Components/Spinner",
-  component: Spinner,
+import { Spinner as Component } from "./spinner"
+
+const meta = preview.meta({
   argTypes: {
     size: { control: "inline-radio", options: ["sm", "md", "lg"] },
   },
-} satisfies Meta<typeof Spinner>
+  component: Component,
+  parameters: { layout: "centered" },
+  title: "Atoms/Spinner",
+})
 
-export default meta
-type Story = StoryObj<typeof meta>
+export const Default = meta.story({})
 
-export const Default: Story = {}
-
-export const Showcase: Story = {
+export const Showcase = meta.story({
   render: () => (
     <div className="flex items-center gap-6">
-      <Spinner size="sm" />
-      <Spinner size="md" />
-      <Spinner size="lg" />
+      <Component size="sm" />
+      <Component size="md" />
+      <Component size="lg" />
     </div>
   ),
-}
+})

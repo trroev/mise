@@ -1,23 +1,22 @@
+import { preview } from "@mise/storybook-config/preview"
 import { Input } from "@mise/ui/components/Input"
-import { Label } from "@mise/ui/components/Label"
-import type { Meta, StoryObj } from "@storybook/nextjs-vite"
 
-const meta = {
-  title: "Components/Label",
-  component: Label,
+import { Label as Component } from "./label"
+
+const meta = preview.meta({
   args: { children: "Label" },
-} satisfies Meta<typeof Label>
+  component: Component,
+  parameters: { layout: "centered" },
+  title: "Atoms/Label",
+})
 
-export default meta
-type Story = StoryObj<typeof meta>
+export const Default = meta.story({})
 
-export const Default: Story = {}
-
-export const Showcase: Story = {
+export const Showcase = meta.story({
   render: () => (
     <div className="flex w-80 flex-col gap-2">
-      <Label htmlFor="email">Email</Label>
+      <Component htmlFor="email">Email</Component>
       <Input id="email" placeholder="you@example.com" />
     </div>
   ),
-}
+})

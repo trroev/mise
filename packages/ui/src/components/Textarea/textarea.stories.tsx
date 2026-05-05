@@ -1,24 +1,23 @@
-import { Textarea } from "@mise/ui/components/Textarea"
-import type { Meta, StoryObj } from "@storybook/nextjs-vite"
+import { preview } from "@mise/storybook-config/preview"
 
-const meta = {
-  title: "Components/Textarea",
-  component: Textarea,
+import { Textarea as Component } from "./textarea"
+
+const meta = preview.meta({
   args: { placeholder: "Notes…" },
-} satisfies Meta<typeof Textarea>
+  component: Component,
+  parameters: { layout: "centered" },
+  title: "Atoms/Textarea",
+})
 
-export default meta
-type Story = StoryObj<typeof meta>
+export const Default = meta.story({})
 
-export const Default: Story = {}
-
-export const Showcase: Story = {
+export const Showcase = meta.story({
   render: () => (
     <div className="flex w-80 flex-col gap-3">
-      <Textarea placeholder="Default" />
-      <Textarea defaultValue="Filled" />
-      <Textarea disabled placeholder="Disabled" />
-      <Textarea error="Required" id="t-err" placeholder="With error" />
+      <Component placeholder="Default" />
+      <Component defaultValue="Filled" />
+      <Component disabled placeholder="Disabled" />
+      <Component error="Required" id="t-err" placeholder="With error" />
     </div>
   ),
-}
+})

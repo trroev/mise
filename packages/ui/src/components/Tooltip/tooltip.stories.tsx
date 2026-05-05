@@ -1,6 +1,8 @@
+import { preview } from "@mise/storybook-config/preview"
 import { Button } from "@mise/ui/components/Button"
-import { Tooltip, TooltipProvider } from "@mise/ui/components/Tooltip"
-import type { Decorator, Meta, StoryObj } from "@storybook/nextjs-vite"
+import type { Decorator } from "@storybook/nextjs-vite"
+
+import { Tooltip as Component, TooltipProvider } from "./tooltip"
 
 const withTooltipProvider: Decorator = (Story) => (
   <TooltipProvider>
@@ -8,31 +10,34 @@ const withTooltipProvider: Decorator = (Story) => (
   </TooltipProvider>
 )
 
-const meta = {
-  title: "Components/Tooltip",
-  parameters: { layout: "centered" },
+const meta = preview.meta({
+  args: {
+    content: "Tooltip content",
+    children: <Button variant="outline">Hover me</Button>,
+  },
+  argTypes: {
+    children: { table: { disable: true } },
+    side: {
+      control: "inline-radio",
+      options: ["top", "right", "bottom", "left"],
+    },
+  },
+  component: Component,
   decorators: [withTooltipProvider],
-} satisfies Meta
+  parameters: { layout: "centered" },
+  title: "Molecules/Tooltip",
+})
 
-export default meta
-type Story = StoryObj<typeof meta>
+export const Default = meta.story({})
 
-export const Default: Story = {
-  render: () => (
-    <Tooltip content="Tooltip content">
-      <Button variant="outline">Hover me</Button>
-    </Tooltip>
-  ),
-}
-
-export const Showcase: Story = {
+export const Showcase = meta.story({
   render: () => (
     <div className="flex gap-4">
       {(["top", "right", "bottom", "left"] as const).map((side) => (
-        <Tooltip content={`On ${side}`} key={side} side={side}>
+        <Component content={`On ${side}`} key={side} side={side}>
           <Button variant="outline">{side}</Button>
-        </Tooltip>
+        </Component>
       ))}
     </div>
   ),
-}
+})

@@ -1,16 +1,15 @@
-import { Checkbox } from "@mise/ui/components/Checkbox"
+import { preview } from "@mise/storybook-config/preview"
 import { Label } from "@mise/ui/components/Label"
-import type { Meta, StoryObj } from "@storybook/nextjs-vite"
 
-const meta = {
-  title: "Components/Checkbox",
-  component: Checkbox,
-} satisfies Meta<typeof Checkbox>
+import { Checkbox as Component } from "./checkbox"
 
-export default meta
-type Story = StoryObj<typeof meta>
+const meta = preview.meta({
+  component: Component,
+  parameters: { layout: "centered" },
+  title: "Atoms/Checkbox",
+})
 
-export const Default: Story = {}
+export const Default = meta.story({})
 
 type RowProps = {
   id: string
@@ -21,12 +20,12 @@ type RowProps = {
 
 const Row = ({ id, label, defaultChecked, disabled }: RowProps) => (
   <div className="flex items-center gap-2">
-    <Checkbox defaultChecked={defaultChecked} disabled={disabled} id={id} />
+    <Component defaultChecked={defaultChecked} disabled={disabled} id={id} />
     <Label htmlFor={id}>{label}</Label>
   </div>
 )
 
-export const Showcase: Story = {
+export const Showcase = meta.story({
   render: () => (
     <div className="flex flex-col gap-3">
       <Row id="cb-default" label="Default" />
@@ -40,4 +39,4 @@ export const Showcase: Story = {
       />
     </div>
   ),
-}
+})

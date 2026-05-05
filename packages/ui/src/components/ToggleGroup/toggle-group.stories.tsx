@@ -1,33 +1,31 @@
-import { ToggleGroup } from "@mise/ui/components/ToggleGroup"
-import type { Meta, StoryObj } from "@storybook/nextjs-vite"
+import { preview } from "@mise/storybook-config/preview"
 
-const meta = {
-  title: "Components/ToggleGroup",
+import { ToggleGroup as Component } from "."
+
+const meta = preview.meta({
   parameters: { layout: "centered" },
-} satisfies Meta
-
-export default meta
-type Story = StoryObj<typeof meta>
+  title: "Molecules/ToggleGroup",
+})
 
 const Demo = () => (
-  <ToggleGroup.Root defaultValue={["us"]}>
-    <ToggleGroup.Item value="us">US</ToggleGroup.Item>
-    <ToggleGroup.Item value="metric">Metric</ToggleGroup.Item>
-  </ToggleGroup.Root>
+  <Component.Root defaultValue={["us"]}>
+    <Component.Item value="us">US</Component.Item>
+    <Component.Item value="metric">Metric</Component.Item>
+  </Component.Root>
 )
 
-export const Default: Story = { render: () => <Demo /> }
-export const Showcase: Story = {
+export const Default = meta.story({ render: () => <Demo /> })
+export const Showcase = meta.story({
   render: () => (
     <div className="flex flex-col gap-3">
       <Demo />
-      <ToggleGroup.Root defaultValue={["main"]}>
-        <ToggleGroup.Item value="starter">Starter</ToggleGroup.Item>
-        <ToggleGroup.Item value="main">Main</ToggleGroup.Item>
-        <ToggleGroup.Item disabled value="dessert">
+      <Component.Root defaultValue={["main"]}>
+        <Component.Item value="starter">Starter</Component.Item>
+        <Component.Item value="main">Main</Component.Item>
+        <Component.Item disabled value="dessert">
           Dessert
-        </ToggleGroup.Item>
-      </ToggleGroup.Root>
+        </Component.Item>
+      </Component.Root>
     </div>
   ),
-}
+})

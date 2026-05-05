@@ -1,11 +1,14 @@
-import { Button } from "@mise/ui/components/Button"
+import { preview } from "@mise/storybook-config/preview"
 import { RiArrowRightLine } from "@remixicon/react"
-import type { Meta, StoryObj } from "@storybook/nextjs-vite"
+import { action } from "storybook/actions"
 
-const meta = {
-  title: "Components/Button",
-  component: Button,
-  args: { children: "Button" },
+import { Button as Component } from "./button"
+
+const meta = preview.meta({
+  args: {
+    children: "Button",
+    onClick: action("onClick"),
+  },
   argTypes: {
     variant: {
       control: "inline-radio",
@@ -16,38 +19,39 @@ const meta = {
       options: ["sm", "md", "lg", "icon"],
     },
     disabled: { control: "boolean" },
+    render: { table: { disable: true } },
   },
-} satisfies Meta<typeof Button>
+  component: Component,
+  parameters: { layout: "centered" },
+  title: "Atoms/Button",
+})
 
-export default meta
-type Story = StoryObj<typeof meta>
+export const Default = meta.story({})
 
-export const Default: Story = {}
-
-export const Showcase: Story = {
+export const Showcase = meta.story({
   render: () => (
     <div className="space-y-6">
       {(
         ["primary", "secondary", "outline", "ghost", "destructive"] as const
       ).map((variant) => (
         <div className="flex flex-wrap items-center gap-3" key={variant}>
-          <Button size="sm" variant={variant}>
+          <Component size="sm" variant={variant}>
             Small
-          </Button>
-          <Button size="md" variant={variant}>
+          </Component>
+          <Component size="md" variant={variant}>
             Medium
-          </Button>
-          <Button size="lg" variant={variant}>
+          </Component>
+          <Component size="lg" variant={variant}>
             Large
-          </Button>
-          <Button size="icon" variant={variant}>
+          </Component>
+          <Component size="icon" variant={variant}>
             <RiArrowRightLine aria-hidden="true" size={16} />
-          </Button>
-          <Button disabled variant={variant}>
+          </Component>
+          <Component disabled variant={variant}>
             Disabled
-          </Button>
+          </Component>
         </div>
       ))}
     </div>
   ),
-}
+})

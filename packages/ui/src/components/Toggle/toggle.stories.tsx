@@ -1,9 +1,8 @@
-import { Toggle } from "@mise/ui/components/Toggle"
-import type { Meta, StoryObj } from "@storybook/nextjs-vite"
+import { preview } from "@mise/storybook-config/preview"
 
-const meta = {
-  title: "Components/Toggle",
-  component: Toggle,
+import { Toggle as Component } from "./toggle"
+
+const meta = preview.meta({
   args: { children: "Toggle" },
   argTypes: {
     variant: {
@@ -14,23 +13,24 @@ const meta = {
       control: "inline-radio",
       options: ["sm", "md", "lg", "icon"],
     },
+    render: { table: { disable: true } },
   },
-} satisfies Meta<typeof Toggle>
+  component: Component,
+  parameters: { layout: "centered" },
+  title: "Atoms/Toggle",
+})
 
-export default meta
-type Story = StoryObj<typeof meta>
+export const Default = meta.story({})
 
-export const Default: Story = {}
-
-export const Showcase: Story = {
+export const Showcase = meta.story({
   render: () => (
     <div className="flex flex-wrap items-center gap-3">
-      <Toggle>Off</Toggle>
-      <Toggle defaultPressed>On</Toggle>
-      <Toggle disabled>Disabled</Toggle>
-      <Toggle defaultPressed disabled>
+      <Component>Off</Component>
+      <Component defaultPressed>On</Component>
+      <Component disabled>Disabled</Component>
+      <Component defaultPressed disabled>
         Disabled pressed
-      </Toggle>
+      </Component>
     </div>
   ),
-}
+})

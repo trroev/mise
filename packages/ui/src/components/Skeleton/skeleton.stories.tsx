@@ -1,32 +1,31 @@
-import { Skeleton, type SkeletonProps } from "@mise/ui/components/Skeleton"
-import type { Meta, StoryObj } from "@storybook/nextjs-vite"
+import { preview } from "@mise/storybook-config/preview"
 
-const meta: Meta<typeof Skeleton> = {
-  title: "Components/Skeleton",
-  component: Skeleton,
+import { Skeleton as Component } from "./skeleton"
+
+const meta = preview.meta({
   argTypes: {
     variant: { control: "inline-radio", options: ["block", "text"] },
   },
-}
+  component: Component,
+  parameters: { layout: "centered" },
+  title: "Atoms/Skeleton",
+})
 
-export default meta
-type Story = StoryObj<typeof Skeleton>
-
-export const Default: Story = {
-  render: (args: SkeletonProps) => (
+export const Default = meta.story({
+  render: (args) => (
     <div className="w-80">
-      <Skeleton {...args} />
+      <Component {...args} />
     </div>
   ),
-}
+})
 
-export const Showcase: Story = {
+export const Showcase = meta.story({
   render: () => (
     <div className="flex w-80 flex-col gap-3">
-      <Skeleton variant="block" />
-      <Skeleton variant="text" />
-      <Skeleton variant="text" />
-      <Skeleton variant="text" />
+      <Component variant="block" />
+      <Component variant="text" />
+      <Component variant="text" />
+      <Component variant="text" />
     </div>
   ),
-}
+})

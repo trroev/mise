@@ -1,25 +1,24 @@
-import { Badge } from "@mise/ui/components/Badge"
-import type { Meta, StoryObj } from "@storybook/nextjs-vite"
+import { preview } from "@mise/storybook-config/preview"
 
-const meta = {
-  title: "Components/Badge",
-  component: Badge,
+import { Badge as Component } from "./badge"
+
+const meta = preview.meta({
   args: { children: "Badge" },
   argTypes: {
     variant: { control: "inline-radio", options: ["default", "muted"] },
   },
-} satisfies Meta<typeof Badge>
+  component: Component,
+  parameters: { layout: "centered" },
+  title: "Atoms/Badge",
+})
 
-export default meta
-type Story = StoryObj<typeof meta>
+export const Default = meta.story({})
 
-export const Default: Story = {}
-
-export const Showcase: Story = {
+export const Showcase = meta.story({
   render: () => (
     <div className="flex flex-wrap items-center gap-3">
-      <Badge>Default</Badge>
-      <Badge variant="muted">Muted</Badge>
+      <Component>Default</Component>
+      <Component variant="muted">Muted</Component>
     </div>
   ),
-}
+})

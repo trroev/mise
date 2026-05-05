@@ -1,5 +1,7 @@
-import { Select } from "@mise/ui/components/Select"
-import type { Meta, StoryObj } from "@storybook/nextjs-vite"
+import { preview } from "@mise/storybook-config/preview"
+import { action } from "storybook/actions"
+
+import { Select as Component } from "./select"
 
 const COURSE_OPTIONS = [
   { value: "starter", label: "Starter" },
@@ -7,24 +9,29 @@ const COURSE_OPTIONS = [
   { value: "dessert", label: "Dessert" },
 ]
 
-const meta = {
-  title: "Components/Select",
-  component: Select,
-  args: { options: COURSE_OPTIONS, placeholder: "Choose a course" },
-} satisfies Meta<typeof Select>
+const meta = preview.meta({
+  args: {
+    options: COURSE_OPTIONS,
+    placeholder: "Choose a course",
+    onValueChange: action("onValueChange"),
+  },
+  argTypes: {
+    options: { table: { disable: true } },
+  },
+  component: Component,
+  parameters: { layout: "centered" },
+  title: "Molecules/Select",
+})
 
-export default meta
-type Story = StoryObj<typeof meta>
+export const Default = meta.story({})
 
-export const Default: Story = {}
-
-export const Showcase: Story = {
+export const Showcase = meta.story({
   render: () => (
     <div className="flex w-72 flex-col gap-3">
-      <Select options={COURSE_OPTIONS} placeholder="Default" />
-      <Select defaultValue="main" options={COURSE_OPTIONS} />
-      <Select disabled options={COURSE_OPTIONS} placeholder="Disabled" />
-      <Select
+      <Component options={COURSE_OPTIONS} placeholder="Default" />
+      <Component defaultValue="main" options={COURSE_OPTIONS} />
+      <Component disabled options={COURSE_OPTIONS} placeholder="Disabled" />
+      <Component
         error="Required"
         id="s-err"
         options={COURSE_OPTIONS}
@@ -32,4 +39,4 @@ export const Showcase: Story = {
       />
     </div>
   ),
-}
+})

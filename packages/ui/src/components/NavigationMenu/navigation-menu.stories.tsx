@@ -1,40 +1,49 @@
-import { NavigationMenu } from "@mise/ui/components/NavigationMenu"
-import type { Meta, StoryObj } from "@storybook/nextjs-vite"
+import { preview } from "@mise/storybook-config/preview"
 
-const meta = {
-  title: "Components/NavigationMenu",
-  parameters: { layout: "centered" },
-} satisfies Meta
+import { NavigationMenu as Component } from "."
 
-export default meta
-type Story = StoryObj<typeof meta>
+const meta = preview.meta({
+  parameters: { layout: "fullscreen" },
+  title: "Organisms/NavigationMenu",
+})
 
 const Demo = () => (
-  <NavigationMenu.Root>
-    <NavigationMenu.List className="gap-4">
-      <NavigationMenu.Item>
-        <NavigationMenu.Trigger className="px-3 py-2">
-          Recipes
-        </NavigationMenu.Trigger>
-        <NavigationMenu.Content className="rounded-md border border-border bg-surface p-4">
-          <NavigationMenu.Link href="#">All recipes</NavigationMenu.Link>
-        </NavigationMenu.Content>
-      </NavigationMenu.Item>
-      <NavigationMenu.Item>
-        <NavigationMenu.Link className="px-3 py-2" href="#about">
+  <Component.Root>
+    <Component.List className="gap-4">
+      <Component.Item>
+        <Component.Trigger className="px-3 py-2">Recipes</Component.Trigger>
+        <Component.Content className="rounded-md border border-border bg-surface p-4">
+          <Component.Link href="#all">All recipes</Component.Link>
+        </Component.Content>
+      </Component.Item>
+      <Component.Item>
+        <Component.Link className="px-3 py-2" href="#about">
           About
-        </NavigationMenu.Link>
-      </NavigationMenu.Item>
-    </NavigationMenu.List>
-    <NavigationMenu.Portal>
-      <NavigationMenu.Positioner>
-        <NavigationMenu.Popup>
-          <NavigationMenu.Viewport />
-        </NavigationMenu.Popup>
-      </NavigationMenu.Positioner>
-    </NavigationMenu.Portal>
-  </NavigationMenu.Root>
+        </Component.Link>
+      </Component.Item>
+    </Component.List>
+    <Component.Portal>
+      <Component.Positioner>
+        <Component.Popup>
+          <Component.Viewport />
+        </Component.Popup>
+      </Component.Positioner>
+    </Component.Portal>
+  </Component.Root>
 )
 
-export const Default: Story = { render: () => <Demo /> }
-export const Showcase: Story = { render: () => <Demo /> }
+export const Default = meta.story({
+  render: () => (
+    <div className="flex min-h-dvh items-center justify-center p-8">
+      <Demo />
+    </div>
+  ),
+})
+
+export const Showcase = meta.story({
+  render: () => (
+    <div className="flex min-h-dvh items-center justify-center p-8">
+      <Demo />
+    </div>
+  ),
+})

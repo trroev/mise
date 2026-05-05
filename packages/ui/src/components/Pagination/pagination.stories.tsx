@@ -1,25 +1,26 @@
-import { Pagination } from "@mise/ui/components/Pagination"
-import type { Meta, StoryObj } from "@storybook/nextjs-vite"
+import { preview } from "@mise/storybook-config/preview"
 import { useState } from "react"
+import { action } from "storybook/actions"
 
-const noop = () => undefined
+import { Pagination as Component } from "./pagination"
 
-const meta = {
-  title: "Components/Pagination",
-  component: Pagination,
+const meta = preview.meta({
+  args: {
+    currentPage: 3,
+    totalPages: 10,
+    onPageChange: action("onPageChange"),
+  },
+  component: Component,
   parameters: { layout: "centered" },
-  args: { currentPage: 3, totalPages: 10, onPageChange: noop },
-} satisfies Meta<typeof Pagination>
+  title: "Molecules/Pagination",
+})
 
-export default meta
-type Story = StoryObj<typeof meta>
-
-export const Default: Story = {}
+export const Default = meta.story({})
 
 const Interactive = ({ totalPages }: { totalPages: number }) => {
   const [page, setPage] = useState(1)
   return (
-    <Pagination
+    <Component
       currentPage={page}
       onPageChange={setPage}
       totalPages={totalPages}
@@ -27,7 +28,7 @@ const Interactive = ({ totalPages }: { totalPages: number }) => {
   )
 }
 
-export const Showcase: Story = {
+export const Showcase = meta.story({
   render: () => (
     <div className="flex flex-col gap-6">
       <Interactive totalPages={3} />
@@ -35,4 +36,4 @@ export const Showcase: Story = {
       <Interactive totalPages={50} />
     </div>
   ),
-}
+})

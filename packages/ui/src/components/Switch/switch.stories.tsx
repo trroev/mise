@@ -1,16 +1,15 @@
+import { preview } from "@mise/storybook-config/preview"
 import { Label } from "@mise/ui/components/Label"
-import { Switch } from "@mise/ui/components/Switch"
-import type { Meta, StoryObj } from "@storybook/nextjs-vite"
 
-const meta = {
-  title: "Components/Switch",
-  component: Switch,
-} satisfies Meta<typeof Switch>
+import { Switch as Component } from "./switch"
 
-export default meta
-type Story = StoryObj<typeof meta>
+const meta = preview.meta({
+  component: Component,
+  parameters: { layout: "centered" },
+  title: "Atoms/Switch",
+})
 
-export const Default: Story = {}
+export const Default = meta.story({})
 
 type RowProps = {
   id: string
@@ -21,12 +20,12 @@ type RowProps = {
 
 const Row = ({ id, label, defaultChecked, disabled }: RowProps) => (
   <div className="flex items-center gap-2">
-    <Switch defaultChecked={defaultChecked} disabled={disabled} id={id} />
+    <Component defaultChecked={defaultChecked} disabled={disabled} id={id} />
     <Label htmlFor={id}>{label}</Label>
   </div>
 )
 
-export const Showcase: Story = {
+export const Showcase = meta.story({
   render: () => (
     <div className="flex flex-col gap-3">
       <Row id="sw-off" label="Off" />
@@ -35,4 +34,4 @@ export const Showcase: Story = {
       <Row defaultChecked disabled id="sw-disabled-on" label="Disabled on" />
     </div>
   ),
-}
+})

@@ -1,11 +1,9 @@
+import { preview } from "@mise/storybook-config/preview"
 import { Badge } from "@mise/ui/components/Badge"
-import { Card } from "@mise/ui/components/Card"
-import type { Meta, StoryObj } from "@storybook/nextjs-vite"
 
-const meta = {
-  title: "Components/Card",
-  component: Card,
-  parameters: { layout: "centered" },
+import { Card as Component } from "./card"
+
+const meta = preview.meta({
   args: {
     href: "#",
     lockUp: {
@@ -13,31 +11,35 @@ const meta = {
       body: "A long-simmered classic of southern France.",
     },
   },
-} satisfies Meta<typeof Card>
+  argTypes: {
+    media: { table: { disable: true } },
+    badges: { table: { disable: true } },
+  },
+  component: Component,
+  parameters: { layout: "centered" },
+  title: "Molecules/Card",
+})
 
-export default meta
-type Story = StoryObj<typeof meta>
-
-export const Default: Story = {
+export const Default = meta.story({
   render: (args) => (
     <div className="w-72">
-      <Card {...args} />
+      <Component {...args} />
     </div>
   ),
-}
+})
 
-export const Showcase: Story = {
+export const Showcase = meta.story({
   render: () => (
     <div className="grid w-[40rem] grid-cols-2 gap-6">
-      <Card
+      <Component
         badges={<Badge variant="muted">Entrée</Badge>}
         href="#"
         lockUp={{ title: "Cassoulet de Toulouse", body: "Hearty bean stew." }}
       />
-      <Card
+      <Component
         href="#"
         lockUp={{ title: "Pâte brisée", body: "Tender all-butter dough." }}
       />
     </div>
   ),
-}
+})

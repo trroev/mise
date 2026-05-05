@@ -1,5 +1,7 @@
-import { RadioGroup } from "@mise/ui/components/RadioGroup"
-import type { Meta, StoryObj } from "@storybook/nextjs-vite"
+import { preview } from "@mise/storybook-config/preview"
+import { action } from "storybook/actions"
+
+import { RadioGroup as Component } from "./radio-group"
 
 const COURSE_OPTIONS = [
   { value: "starter", label: "Starter" },
@@ -7,29 +9,34 @@ const COURSE_OPTIONS = [
   { value: "dessert", label: "Dessert" },
 ] as const
 
-const meta = {
-  title: "Components/RadioGroup",
-  component: RadioGroup,
-  args: { options: COURSE_OPTIONS, defaultValue: "main" },
-} satisfies Meta<typeof RadioGroup>
+const meta = preview.meta({
+  args: {
+    options: COURSE_OPTIONS,
+    defaultValue: "main",
+    onValueChange: action("onValueChange"),
+  },
+  argTypes: {
+    options: { table: { disable: true } },
+  },
+  component: Component,
+  parameters: { layout: "centered" },
+  title: "Molecules/RadioGroup",
+})
 
-export default meta
-type Story = StoryObj<typeof meta>
+export const Default = meta.story({})
 
-export const Default: Story = {}
-
-export const Showcase: Story = {
+export const Showcase = meta.story({
   render: () => (
     <div className="flex flex-col gap-6">
-      <RadioGroup defaultValue="main" options={COURSE_OPTIONS} />
-      <RadioGroup
+      <Component defaultValue="main" options={COURSE_OPTIONS} />
+      <Component
         defaultValue="main"
         options={[
           ...COURSE_OPTIONS,
           { value: "dis", label: "Disabled", disabled: true },
         ]}
       />
-      <RadioGroup disabled options={COURSE_OPTIONS} />
+      <Component disabled options={COURSE_OPTIONS} />
     </div>
   ),
-}
+})
