@@ -2,10 +2,14 @@
  * Seed the Units collection with UNIT_SEEDS.
  *
  * Usage:
- *   dotenvx run --convention=nextjs -- pnpm tsx scripts/seed-units.ts
+ *   dotenvx run \
+ *     -f apps/web/.env.development.local \
+ *     -f apps/web/.env.development \
+ *     -- pnpm tsx scripts/seed-units.ts
  *
- * The `--convention=nextjs` flag is required so `.env.local` is loaded
- * (matches the convention used by the root `dev`/`build` scripts).
+ * The env files live under `apps/web/` (Next.js loads them from the app
+ * directory at runtime). When invoking from the repo root, point dotenvx
+ * at them explicitly with `-f`.
  *
  * Idempotent — skips units that already exist (matched by abbreviation).
  */

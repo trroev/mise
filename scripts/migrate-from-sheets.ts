@@ -5,13 +5,18 @@
  * Source-format & transformation contract: docs/migration-mapping.md (RECIPE-037).
  *
  * Usage:
- *   dotenvx run --convention=nextjs -- pnpm tsx scripts/migrate-from-sheets.ts \
- *     --input "/path/to/Trevor Recipe Database Savory.xlsx" \
- *     --env local \
- *     [--write] \
- *     [--limit 10]
+ *   dotenvx run \
+ *     -f apps/web/.env.development.local \
+ *     -f apps/web/.env.development \
+ *     -- pnpm tsx scripts/migrate-from-sheets.ts \
+ *       --input "/path/to/Trevor Recipe Database Savory.xlsx" \
+ *       --env local \
+ *       [--write] \
+ *       [--limit 10]
  *
- * The `--convention=nextjs` flag is required so `.env.local` is loaded.
+ * The env files live under `apps/web/` (Next.js loads them from the app
+ * directory at runtime). When invoking from the repo root, point dotenvx
+ * at them explicitly with `-f`.
  *
  * Defaults to dry-run. `--write` is required to persist. `--env production`
  * additionally requires a typed confirmation when combined with `--write`.
