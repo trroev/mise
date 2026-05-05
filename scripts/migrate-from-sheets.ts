@@ -5,11 +5,13 @@
  * Source-format & transformation contract: docs/migration-mapping.md (RECIPE-037).
  *
  * Usage:
- *   dotenvx run -- pnpm tsx scripts/migrate-from-sheets.ts \
+ *   dotenvx run --convention=nextjs -- pnpm tsx scripts/migrate-from-sheets.ts \
  *     --input "/path/to/Trevor Recipe Database Savory.xlsx" \
  *     --env local \
  *     [--write] \
  *     [--limit 10]
+ *
+ * The `--convention=nextjs` flag is required so `.env.local` is loaded.
  *
  * Defaults to dry-run. `--write` is required to persist. `--env production`
  * additionally requires a typed confirmation when combined with `--write`.
