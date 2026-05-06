@@ -368,6 +368,7 @@ function resolveIngredient(
 
 type RecipePayload = {
   title: string
+  slug: string
   description?: string
   author?: string
   yield?: { quantity: number; unit: string }
@@ -437,6 +438,7 @@ function buildRecipePayload(
     kind: "ok",
     payload: {
       title: source.title,
+      slug: slugify(source.title),
       ...(description ? { description } : {}),
       ...(source.attribution ? { author: source.attribution } : {}),
       ...(yieldField ? { yield: yieldField } : {}),
@@ -496,15 +498,18 @@ async function processSheet(
     return { kind: "fail", errors: built.errors }
   }
 
-  const slug = slugify(built.payload.title)
+  const slug = built.payload.slug
   if (!write) {
     return { kind: "dry", slug, title: built.payload.title }
   }
 
+  // Look up by title — sheet titles are unique in the source, and looking up
+  // by slug would miss records inserted by an earlier version of the script
+  // that didn't pass slug explicitly (Payload's auto-slug ≠ ours).
   const existing = await payload.find({
     collection: "recipes",
     limit: 1,
-    where: { slug: { equals: slug } },
+    where: { title: { equals: built.payload.title } },
   })
 
   try {
