@@ -238,11 +238,19 @@ Common mixes: `g` + `ea` (e.g. bay leaves), `g` + `L` (large stocks). The schema
 
 ## 5. Post-migration cleanup
 
-Once the migration has been run successfully against production and the chef has confirmed the results, remove the one-shot dependencies that are not used by the runtime app:
+Once the migration has been run successfully against production and the chef has confirmed the results, run the bulk-publish script and then remove the one-shot tooling:
 
 ```sh
+# Flip every imported draft to "published" (uses Payload local API so the
+# stampPublishedAt hook stamps each first-time publish):
+dotenvx run \
+  -f apps/web/.env.development.local \
+  -f apps/web/.env.development \
+  -- pnpm tsx scripts/publish-all-recipes.ts --env production --write
+
+# Then clean up:
 pnpm remove -w xlsx zod
-rm scripts/migrate-from-sheets.ts
+rm scripts/migrate-from-sheets.ts scripts/publish-all-recipes.ts
 ```
 
 `UNIT_SEEDS` and `scripts/seed-units.ts` stay — they are part of the regular environment bootstrap, not migration-only.
