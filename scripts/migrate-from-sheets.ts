@@ -168,7 +168,9 @@ function splitNamePrep(raw: string): {
   return { name, prepNote }
 }
 
-const NEEDS_REVISION_RE = /\s*\(needs\s+rev\.?\s*\)?\s*$/i
+// Matches both proper `(needs rev.)` and Excel-31-char-truncated forms like
+// `(needs rev.`, `(needs rev`, `(needs re`, `(needs r`, etc.
+const NEEDS_REVISION_RE = /\s*\(needs\b[^)]*\)?\s*$/i
 
 function stripNeedsRevision(title: string): {
   title: string
@@ -246,11 +248,16 @@ function parseSheet(
   rows: Array<Array<unknown>>
 ): SourceRecipe | null {
   // r0 col A: title; ingredient rows r3..r19 (A:C); method r24+ col A.
+  // The `(needs rev.)` marker is on the sheet name, not the A1 title — but
+  // strip it from both as a belt-and-braces fallback.
   const titleRaw = trimString(rows[0]?.[0])
   if (!titleRaw) {
     return null
   }
-  const { title, needsRevision } = stripNeedsRevision(titleRaw)
+  const fromSheet = stripNeedsRevision(sheetName)
+  const fromTitle = stripNeedsRevision(titleRaw)
+  const needsRevision = fromSheet.needsRevision || fromTitle.needsRevision
+  const title = fromTitle.title
   const ingredients = parseIngredients(rows)
   const { steps, attribution } = splitMethodAndAttribution(
     collectColARowsAfter(rows, 24)
