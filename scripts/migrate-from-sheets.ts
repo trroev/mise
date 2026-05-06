@@ -507,28 +507,53 @@ async function processSheet(
     where: { slug: { equals: slug } },
   })
 
-  return match(existing.totalDocs > 0)
-    .returnType<Promise<SheetOutcome>>()
-    .with(true, async () => {
-      const id = existing.docs[0]?.id
-      if (id == null) {
-        throw new Error("found existing doc with missing id")
-      }
-      await payload.update({
-        collection: "recipes",
-        id,
-        data: built.payload,
+  try {
+    return await match(existing.totalDocs > 0)
+      .returnType<Promise<SheetOutcome>>()
+      .with(true, async () => {
+        const id = existing.docs[0]?.id
+        if (id == null) {
+          throw new Error("found existing doc with missing id")
+        }
+        await payload.update({
+          collection: "recipes",
+          id,
+          data: built.payload,
+        })
+        return { kind: "update", slug }
       })
-      return { kind: "update", slug }
-    })
-    .with(false, async () => {
-      await payload.create({
-        collection: "recipes",
-        data: built.payload,
+      .with(false, async () => {
+        await payload.create({
+          collection: "recipes",
+          data: built.payload,
+        })
+        return { kind: "insert", slug }
       })
-      return { kind: "insert", slug }
-    })
-    .exhaustive()
+      .exhaustive()
+  } catch (err) {
+    return { kind: "fail", errors: [formatPayloadError(err)] }
+  }
+}
+
+function formatPayloadFieldError(e: unknown): string {
+  if (!e || typeof e !== "object") {
+    return String(e)
+  }
+  const path = "path" in e ? String((e as { path: unknown }).path) : ""
+  const message =
+    "message" in e ? String((e as { message: unknown }).message) : ""
+  return path ? `${path}: ${message}` : message
+}
+
+function formatPayloadError(err: unknown): string {
+  const errors =
+    err && typeof err === "object" && "data" in err
+      ? (err as { data?: { errors?: unknown } }).data?.errors
+      : undefined
+  if (Array.isArray(errors)) {
+    return errors.map(formatPayloadFieldError).join("; ")
+  }
+  return err instanceof Error ? err.message : String(err)
 }
 
 function recordOutcome(
