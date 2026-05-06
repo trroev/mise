@@ -238,19 +238,11 @@ Common mixes: `g` + `ea` (e.g. bay leaves), `g` + `L` (large stocks). The schema
 
 ## 5. Post-migration cleanup
 
-Once the migration has been run successfully against production and the chef has confirmed the results, run the bulk-publish script and then remove the one-shot tooling:
+The migration was completed against production on 2026-05-06. All imported drafts were flipped to `published` via a one-shot bulk-publish script that wrapped `payload.update({ data: { _status: "published" } })` in a loop, so the `stampPublishedAt` hook stamped each recipe's `publishedAt` on first publish.
 
-```sh
-# Flip every imported draft to "published" (uses Payload local API so the
-# stampPublishedAt hook stamps each first-time publish):
-dotenvx run \
-  -f apps/web/.env.development.local \
-  -f apps/web/.env.development \
-  -- pnpm tsx scripts/publish-all-recipes.ts --env production --write
+Once that was done, the one-shot tooling was removed:
 
-# Then clean up:
-pnpm remove -w xlsx zod
-rm scripts/migrate-from-sheets.ts scripts/publish-all-recipes.ts
-```
+- `xlsx` and `zod` removed from root devDependencies.
+- The entire `scripts/` directory was deleted (migration import + bulk publish + initial unit seed).
 
-`UNIT_SEEDS` and `scripts/seed-units.ts` stay — they are part of the regular environment bootstrap, not migration-only.
+`UNIT_SEEDS` itself remains in `packages/payload/src/collections/Units/index.ts`; if a fresh database needs to be seeded in future, reconstruct a small loop around it (see git history for the original `scripts/seed-units.ts`).
