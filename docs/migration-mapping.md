@@ -238,11 +238,16 @@ Common mixes: `g` + `ea` (e.g. bay leaves), `g` + `L` (large stocks). The schema
 
 ## 5. Post-migration cleanup
 
-The migration was completed against production on 2026-05-06. All imported drafts were flipped to `published` via a one-shot bulk-publish script that wrapped `payload.update({ data: { _status: "published" } })` in a loop, so the `stampPublishedAt` hook stamped each recipe's `publishedAt` on first publish.
+Two migrations have been completed against production using the tooling described above:
 
-Once that was done, the one-shot tooling was removed:
+- **2026-05-06** — `Trevor Recipe Database Savory.xlsx` (187 recipes).
+- **2026-05-08** — `Trevor Recipe Database Pastry_Sweet.xlsx` (88 recipes). Same workbook layout; the script gained two refinements for this run: a tighter footer heuristic (a single col-A row past `r24` is treated as a step rather than an attribution, so single-line methods like Pumpkin Spice Mix's "Mix spices until combined" survive) and a `bunches` → `ea` mapping with a prep-note prefix (matching the `drops` / inches pattern).
+
+After each migration, all imported drafts were flipped to `published` via a one-shot bulk-publish script that wrapped `payload.update({ data: { _status: "published" } })` in a loop, so the `stampPublishedAt` hook stamped each recipe's `publishedAt` on first publish.
+
+Once each migration was finished, the one-shot tooling was removed:
 
 - `xlsx` and `zod` removed from root devDependencies.
 - The entire `scripts/` directory was deleted (migration import + bulk publish + initial unit seed).
 
-`UNIT_SEEDS` itself remains in `packages/payload/src/collections/Units/index.ts`; if a fresh database needs to be seeded in future, reconstruct a small loop around it (see git history for the original `scripts/seed-units.ts`).
+`UNIT_SEEDS` itself remains in `packages/payload/src/collections/Units/index.ts`; if a fresh database needs to be seeded in future, reconstruct a small loop around it (see git history for the original `scripts/seed-units.ts`). If a third source workbook ever turns up, the prior migration script is recoverable from git (e.g. `git show c6a05ca:scripts/migrate-from-sheets.ts`).
