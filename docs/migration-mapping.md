@@ -238,10 +238,11 @@ Common mixes: `g` + `ea` (e.g. bay leaves), `g` + `L` (large stocks). The schema
 
 ## 5. Post-migration cleanup
 
-Two migrations have been completed against production using the tooling described above:
+Three migrations have been completed against production using the tooling described above:
 
 - **2026-05-06** — `Trevor Recipe Database Savory.xlsx` (187 recipes).
 - **2026-05-08** — `Trevor Recipe Database Pastry_Sweet.xlsx` (88 recipes). Same workbook layout; the script gained two refinements for this run: a tighter footer heuristic (a single col-A row past `r24` is treated as a step rather than an attribution, so single-line methods like Pumpkin Spice Mix's "Mix spices until combined" survive) and a `bunches` → `ea` mapping with a prep-note prefix (matching the `drops` / inches pattern).
+- **2026-05-08** — `Trevor Bread Formulas.xlsx` (12 recipes). **Different workbook layout**, so this run used a separate `scripts/migrate-bread-formulas.ts`. Notable shape differences vs. the savory/pastry workbooks: no `Template` sheet; per-sheet grid contains a `Base Total Formula` block plus an optional sub-recipe block (`Levain`, `Tangzhong`, or `Biga`) — both mapped to `ingredientGroups` with the sub-recipe's name as `groupLabel`; section headers detected via col E (`Desired <Name>`) since col A varies; the `Procedure` block uses col A for the step label and col B for the detail (concatenated as `<label>: <detail>`); yield is meaningful and uses real units like `1 loaf`, `12 muffins`, `30 rolls` (parenthetical weight suffixes like `(1240g)` are stripped); ingredient quantities are rounded to whole grams since bread formulas produce long decimals from batch division.
 
 After each migration, all imported drafts were flipped to `published` via a one-shot bulk-publish script that wrapped `payload.update({ data: { _status: "published" } })` in a loop, so the `stampPublishedAt` hook stamped each recipe's `publishedAt` on first publish.
 
@@ -250,4 +251,4 @@ Once each migration was finished, the one-shot tooling was removed:
 - `xlsx` and `zod` removed from root devDependencies.
 - The entire `scripts/` directory was deleted (migration import + bulk publish + initial unit seed).
 
-`UNIT_SEEDS` itself remains in `packages/payload/src/collections/Units/index.ts`; if a fresh database needs to be seeded in future, reconstruct a small loop around it (see git history for the original `scripts/seed-units.ts`). If a third source workbook ever turns up, the prior migration script is recoverable from git (e.g. `git show c6a05ca:scripts/migrate-from-sheets.ts`).
+`UNIT_SEEDS` itself remains in `packages/payload/src/collections/Units/index.ts`; if a fresh database needs to be seeded in future, reconstruct a small loop around it (see git history for the original `scripts/seed-units.ts`). If another source workbook turns up, the prior migration scripts are recoverable from git history (`git log --oneline -- scripts/`).
