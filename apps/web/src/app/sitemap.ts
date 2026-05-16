@@ -2,14 +2,14 @@ import { env } from "@mise/env/app"
 import type { MetadataRoute } from "next"
 import { getPublishedRecipes } from "~/lib/queries/published-recipes"
 
+export const revalidate = 3600
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const recipes = await getPublishedRecipes()
 
   const recipeEntries: MetadataRoute.Sitemap = recipes.map((recipe) => ({
     url: `${env.BASE_URL}/recipes/${recipe.slug}`,
-    lastModified: recipe.publishedAt
-      ? new Date(recipe.publishedAt)
-      : new Date(),
+    lastModified: new Date(recipe.updatedAt),
     changeFrequency: "weekly",
     priority: 0.8,
   }))
