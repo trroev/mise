@@ -1,6 +1,21 @@
 {
   "$schema": "https://turborepo.dev/schema.json",
   "ui": "tui",
+  "globalEnv": [
+    "BASE_URL",
+    "BETTER_AUTH_SECRET",
+    "BETTER_AUTH_URL",
+    "CLOUDINARY_API_KEY",
+    "CLOUDINARY_API_SECRET",
+    "CLOUDINARY_CLOUD_NAME",
+    "CLOUDINARY_URL",
+    "MONGODB_URI",
+    "NODE_ENV",
+    "PAYLOAD_ADMIN_EMAIL",
+    "PAYLOAD_ADMIN_PASSWORD",
+    "PAYLOAD_ADMIN_PREFILL_ONLY",
+    "PAYLOAD_SECRET"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
