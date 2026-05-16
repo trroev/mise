@@ -2,6 +2,7 @@ import {
   COURSE_LABELS,
   DIFFICULTY_LABELS,
 } from "@mise/features/utils/recipeLabels"
+import { transformCloudinary } from "@mise/features/utils/transformCloudinary"
 import type { Recipe } from "@mise/payload/payload-types"
 import { Badge } from "@mise/ui/components/Badge"
 import { Card } from "@mise/ui/components/Card"
@@ -61,7 +62,10 @@ export const RecipeCard = ({ recipe, className }: RecipeCardProps) => {
             className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
             fill
             sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-            src={heroUrl}
+            src={transformCloudinary({
+              url: heroUrl,
+              transform: "f_auto,q_auto",
+            })}
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-text-muted">

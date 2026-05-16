@@ -42,7 +42,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .otherwise(() => undefined)
 
   const ogImage = rawImageUrl
-    ? transformCloudinary(rawImageUrl, "c_fill,g_auto,w_1200,h_630")
+    ? transformCloudinary({
+        url: rawImageUrl,
+        transform: "f_auto,q_auto,c_fill,g_auto,w_1200,h_630",
+      })
     : undefined
 
   return {
@@ -95,7 +98,10 @@ export default async function RecipeDetailPage({ params }: Props) {
             fill
             priority
             sizes="100vw"
-            src={heroUrl}
+            src={transformCloudinary({
+              url: heroUrl,
+              transform: "f_auto,q_auto",
+            })}
           />
         </div>
       )}
