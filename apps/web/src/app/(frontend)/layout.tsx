@@ -1,10 +1,15 @@
 import { env } from "@mise/env/app"
 import { AppShell } from "@mise/features/components/AppShell"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import type React from "react"
 import { cormorant, manrope } from "~/fonts"
 
 import "../globals.css"
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+}
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.BASE_URL),
