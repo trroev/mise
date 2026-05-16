@@ -2,7 +2,15 @@ import { match } from "ts-pattern"
 
 const CLOUDINARY_UPLOAD_RE = /\/image\/upload\//
 
-export const transformCloudinary = (url: string, transform: string): string =>
+type TransformCloudinaryOptions = {
+  url: string
+  transform: string
+}
+
+export const transformCloudinary = ({
+  url,
+  transform,
+}: TransformCloudinaryOptions): string =>
   match(url)
     .when(
       (u) => CLOUDINARY_UPLOAD_RE.test(u),
