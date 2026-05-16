@@ -6,9 +6,23 @@ import { getPublishedRecipes } from "~/lib/queries/published-recipes"
 export const revalidate = 60
 
 export const metadata: Metadata = {
-  title: "Recipes | Mise",
+  title: "Recipes",
   description:
     "Browse the recipe collection — seasonal dishes, techniques, and the kitchen notes behind them.",
+  openGraph: {
+    title: "Recipes",
+    description:
+      "Browse the recipe collection — seasonal dishes, techniques, and the kitchen notes behind them.",
+    images: [
+      {
+        url: "/og-listing.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Mise recipe collection",
+      },
+    ],
+  },
+  twitter: { card: "summary_large_image" },
 }
 
 export default async function RecipesPage() {

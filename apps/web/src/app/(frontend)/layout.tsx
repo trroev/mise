@@ -1,3 +1,4 @@
+import { env } from "@mise/env/app"
 import { AppShell } from "@mise/features/components/AppShell"
 import type { Metadata } from "next"
 import type React from "react"
@@ -6,7 +7,8 @@ import { cormorant, manrope } from "~/fonts"
 import "../globals.css"
 
 export const metadata: Metadata = {
-  title: "Mise",
+  metadataBase: new URL(env.BASE_URL),
+  title: { template: "%s | Mise", default: "Mise" },
   description: "A personal recipe collection.",
 }
 

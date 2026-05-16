@@ -1,32 +1,26 @@
 import { COURSE_LABELS } from "@mise/features/utils/recipeLabels"
+import { transformCloudinary } from "@mise/features/utils/transformCloudinary"
 import type { Recipe } from "@mise/payload/payload-types"
 import type { Recipe as RecipeSchema, WithContext } from "schema-dts"
+import { match, P } from "ts-pattern"
 
 const DEFAULT_AUTHOR_NAME = "Trevor Mathiak"
-
-const CLOUDINARY_UPLOAD_RE = /\/image\/upload\//
-
-const transformCloudinary = (url: string, transform: string): string =>
-  CLOUDINARY_UPLOAD_RE.test(url)
-    ? url.replace(CLOUDINARY_UPLOAD_RE, `/image/upload/${transform}/`)
-    : url
 
 const minutesToIso8601 = (minutes: number): string => {
   const hours = Math.floor(minutes / 60)
   const mins = minutes % 60
-  if (hours === 0) {
-    return `PT${mins}M`
-  }
-  if (mins === 0) {
-    return `PT${hours}H`
-  }
-  return `PT${hours}H${mins}M`
+  return match({ hours, mins })
+    .with({ hours: 0 }, () => `PT${mins}M`)
+    .with({ mins: 0 }, () => `PT${hours}H`)
+    .otherwise(() => `PT${hours}H${mins}M`)
 }
 
 const formatIngredient = (
   ingredient: Recipe["ingredientGroups"][number]["ingredients"][number]
 ): string => {
-  const unit = typeof ingredient.unit === "object" ? ingredient.unit : null
+  const unit = match(ingredient.unit)
+    .with({ abbreviation: P.string }, (u) => u)
+    .otherwise(() => null)
   const isCount = unit?.type === "count"
   const segments = [
     String(ingredient.quantity),
@@ -34,7 +28,9 @@ const formatIngredient = (
     ingredient.name,
   ].filter((s): s is string => Boolean(s))
   const base = segments.join(" ")
-  return ingredient.prepNote ? `${base}, ${ingredient.prepNote}` : base
+  return match(ingredient.prepNote)
+    .with(P.string, (note) => `${base}, ${note}`)
+    .otherwise(() => base)
 }
 
 const SENTENCE_SPLIT_RE = /(?<=[.!?])\s/
@@ -50,10 +46,9 @@ const truncateForName = (text: string, maxLength = 80): string => {
 export const buildRecipeJsonLd = (
   recipe: Recipe
 ): WithContext<RecipeSchema> => {
-  const heroUrl =
-    recipe.heroImage && typeof recipe.heroImage === "object"
-      ? (recipe.heroImage.url ?? null)
-      : null
+  const heroUrl = match(recipe.heroImage)
+    .with({ url: P.string }, (img) => img.url)
+    .otherwise(() => null)
 
   const image = heroUrl
     ? [
@@ -63,10 +58,9 @@ export const buildRecipeJsonLd = (
       ]
     : undefined
 
-  const cuisineName =
-    recipe.cuisine && typeof recipe.cuisine === "object"
-      ? recipe.cuisine.name
-      : undefined
+  const cuisineName = match(recipe.cuisine)
+    .with({ name: P.string }, (c) => c.name)
+    .otherwise(() => undefined)
 
   const recipeIngredient = recipe.ingredientGroups.flatMap((group) =>
     group.ingredients.map(formatIngredient)
@@ -83,14 +77,13 @@ export const buildRecipeJsonLd = (
     )
   )
 
-  const yieldQuantity = recipe.yield?.quantity
-  const yieldUnit = recipe.yield?.unit
-  let yieldString: string | undefined
-  if (yieldQuantity != null) {
-    yieldString = yieldUnit
-      ? `${yieldQuantity} ${yieldUnit}`
-      : String(yieldQuantity)
-  }
+  const yieldString = match(recipe.yield)
+    .with(
+      { quantity: P.number, unit: P.string },
+      ({ quantity, unit }) => `${quantity} ${unit}`
+    )
+    .with({ quantity: P.number }, ({ quantity }) => String(quantity))
+    .otherwise(() => undefined)
 
   return {
     "@context": "https://schema.org",
@@ -103,14 +96,19 @@ export const buildRecipeJsonLd = (
       name: recipe.author?.trim() || DEFAULT_AUTHOR_NAME,
     },
     datePublished: recipe.publishedAt ?? undefined,
-    prepTime:
-      recipe.prepTime == null ? undefined : minutesToIso8601(recipe.prepTime),
-    cookTime:
-      recipe.cookTime == null ? undefined : minutesToIso8601(recipe.cookTime),
-    totalTime:
-      recipe.totalTime == null ? undefined : minutesToIso8601(recipe.totalTime),
+    prepTime: match(recipe.prepTime)
+      .with(P.number, minutesToIso8601)
+      .otherwise(() => undefined),
+    cookTime: match(recipe.cookTime)
+      .with(P.number, minutesToIso8601)
+      .otherwise(() => undefined),
+    totalTime: match(recipe.totalTime)
+      .with(P.number, minutesToIso8601)
+      .otherwise(() => undefined),
     recipeYield: yieldString,
-    recipeCategory: recipe.course ? COURSE_LABELS[recipe.course] : undefined,
+    recipeCategory: match(recipe.course)
+      .with(P.not(P.nullish), (course) => COURSE_LABELS[course])
+      .otherwise(() => undefined),
     recipeCuisine: cuisineName,
     recipeIngredient,
     recipeInstructions,

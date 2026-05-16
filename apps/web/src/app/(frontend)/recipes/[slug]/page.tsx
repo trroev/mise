@@ -4,6 +4,7 @@ import {
   DIETARY_TAG_LABELS,
   DIFFICULTY_LABELS,
 } from "@mise/features/utils/recipeLabels"
+import { transformCloudinary } from "@mise/features/utils/transformCloudinary"
 import { Badge } from "@mise/ui/components/Badge"
 import { formatDuration } from "@mise/utils/formatDuration"
 import { RiTimerLine } from "@remixicon/react"
@@ -13,6 +14,7 @@ import { notFound } from "next/navigation"
 import { Suspense } from "react"
 import { JsonLd } from "react-schemaorg"
 import type { Recipe as RecipeSchema } from "schema-dts"
+import { match, P } from "ts-pattern"
 import { RecipeControls } from "~/components/RecipeControls"
 import { getPublishedRecipes } from "~/lib/queries/published-recipes"
 import { getRecipeBySlug } from "~/lib/queries/recipe-by-slug"
@@ -31,17 +33,28 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {}
   }
 
-  let ogImage: string | undefined
-  if (recipe.meta?.image && typeof recipe.meta.image === "object") {
-    ogImage = recipe.meta.image.url ?? undefined
-  } else if (recipe.heroImage && typeof recipe.heroImage === "object") {
-    ogImage = recipe.heroImage.url ?? undefined
-  }
+  const rawImageUrl = match({
+    metaImage: recipe.meta?.image,
+    heroImage: recipe.heroImage,
+  })
+    .with({ metaImage: { url: P.string } }, ({ metaImage }) => metaImage.url)
+    .with({ heroImage: { url: P.string } }, ({ heroImage }) => heroImage.url)
+    .otherwise(() => undefined)
+
+  const ogImage = rawImageUrl
+    ? transformCloudinary(rawImageUrl, "c_fill,g_auto,w_1200,h_630")
+    : undefined
 
   return {
-    title: recipe.meta?.title ?? `${recipe.title} | Mise`,
+    title: recipe.meta?.title ?? recipe.title,
     description: recipe.meta?.description ?? recipe.description ?? undefined,
-    openGraph: ogImage ? { images: [{ url: ogImage }] } : undefined,
+    openGraph: ogImage
+      ? {
+          type: "article",
+          images: [{ url: ogImage, width: 1200, height: 630 }],
+        }
+      : undefined,
+    twitter: { card: "summary_large_image" },
   }
 }
 
@@ -52,25 +65,24 @@ export default async function RecipeDetailPage({ params }: Props) {
     notFound()
   }
 
-  const heroUrl =
-    recipe.heroImage && typeof recipe.heroImage === "object"
-      ? (recipe.heroImage.url ?? null)
-      : null
+  const { heroUrl, heroAlt } = match(recipe.heroImage)
+    .with({ url: P.string }, (img) => ({ heroUrl: img.url, heroAlt: img.alt }))
+    .otherwise(() => ({ heroUrl: null, heroAlt: recipe.title }))
 
-  const heroAlt =
-    recipe.heroImage && typeof recipe.heroImage === "object"
-      ? recipe.heroImage.alt
-      : recipe.title
+  const cuisineName = match(recipe.cuisine)
+    .with({ name: P.string }, (c) => c.name)
+    .otherwise(() => null)
 
-  const cuisineName =
-    recipe.cuisine && typeof recipe.cuisine === "object"
-      ? recipe.cuisine.name
-      : null
-
-  const hasTime =
-    recipe.prepTime != null ||
-    recipe.cookTime != null ||
-    recipe.totalTime != null
+  const hasTime = match(recipe)
+    .with(
+      P.union(
+        { prepTime: P.not(P.nullish) },
+        { cookTime: P.not(P.nullish) },
+        { totalTime: P.not(P.nullish) }
+      ),
+      () => true
+    )
+    .otherwise(() => false)
 
   return (
     <article>
