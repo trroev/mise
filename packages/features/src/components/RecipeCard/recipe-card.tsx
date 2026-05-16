@@ -73,6 +73,7 @@ export const RecipeCard = ({ recipe, className }: RecipeCardProps) => {
           </div>
         )
       }
+      titleAs="h2"
     />
   )
 }

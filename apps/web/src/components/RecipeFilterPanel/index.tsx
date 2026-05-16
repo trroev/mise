@@ -82,6 +82,7 @@ export const RecipeFilterPanel = ({
               Course
             </Label>
             <Select
+              aria-label="Course"
               onValueChange={(v) => onCourseChange(v as string)}
               options={[
                 { label: "All courses", value: "" },
@@ -105,6 +106,7 @@ export const RecipeFilterPanel = ({
               Cuisine
             </Label>
             <Select
+              aria-label="Cuisine"
               onValueChange={(v) => onCuisineChange(v as string)}
               options={[
                 { label: "All cuisines", value: "" },
@@ -128,6 +130,7 @@ export const RecipeFilterPanel = ({
               Difficulty
             </Label>
             <Select
+              aria-label="Difficulty"
               onValueChange={(v) => onDifficultyChange(v as string)}
               options={[
                 { label: "All difficulties", value: "" },
@@ -150,6 +153,7 @@ export const RecipeFilterPanel = ({
             Total time
           </Label>
           <Select
+            aria-label="Total time"
             onValueChange={(v) => onTimeRangeChange(v as string)}
             options={TIME_RANGE_OPTIONS.map((o) => ({
               label: o.label,

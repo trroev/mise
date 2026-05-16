@@ -11,9 +11,17 @@ export type CardProps = {
     body?: string
   }
   className?: string
+  titleAs?: "h2" | "h3"
 }
 
-export const Card = ({ href, media, badges, lockUp, className }: CardProps) => (
+export const Card = ({
+  href,
+  media,
+  badges,
+  lockUp,
+  className,
+  titleAs: Title = "h3",
+}: CardProps) => (
   <Link
     className={cn(
       "group flex flex-col space-y-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background",
@@ -28,9 +36,9 @@ export const Card = ({ href, media, badges, lockUp, className }: CardProps) => (
       <div className="flex flex-wrap items-center gap-2">{badges}</div>
     )}
     <div className="flex flex-col space-y-1">
-      <h3 className="font-display text-heading-md text-text-primary">
+      <Title className="font-display text-heading-md text-text-primary">
         {lockUp.title}
-      </h3>
+      </Title>
       {lockUp.body && (
         <p className="font-sans text-body-sm text-text-secondary">
           {lockUp.body}

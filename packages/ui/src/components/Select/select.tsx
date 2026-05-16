@@ -17,6 +17,7 @@ export type SelectProps = React.ComponentProps<typeof BaseSelect.Root> & {
   className?: string
   id?: string
   triggerClassName?: string
+  "aria-label"?: string
 }
 
 export const Select = ({
@@ -26,6 +27,7 @@ export const Select = ({
   error,
   options,
   id,
+  "aria-label": ariaLabel,
   ...props
 }: SelectProps) => {
   const errorId = error && id ? `${id}-error` : undefined
@@ -35,6 +37,7 @@ export const Select = ({
         <BaseSelect.Trigger
           aria-describedby={errorId}
           aria-invalid={error ? "true" : undefined}
+          aria-label={ariaLabel}
           className={cn(
             "flex h-10 w-full items-center justify-between rounded-md border bg-surface px-3 py-2 font-sans text-body text-text-primary",
             "data-placeholder:text-text-muted",
