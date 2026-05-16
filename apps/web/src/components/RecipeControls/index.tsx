@@ -125,12 +125,14 @@ export const RecipeControls = ({
             )}
           </div>
           <ToggleGroup.Root
+            aria-label="Unit system"
             onValueChange={(values) => {
               const next = values[0]
               if (next) {
                 handleUnitChange(next)
               }
             }}
+            role="toolbar"
             value={[unitSystem]}
           >
             <ToggleGroup.Item value="metric">Metric</ToggleGroup.Item>
