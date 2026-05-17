@@ -14,7 +14,8 @@
     "PAYLOAD_ADMIN_EMAIL",
     "PAYLOAD_ADMIN_PASSWORD",
     "PAYLOAD_ADMIN_PREFILL_ONLY",
-    "PAYLOAD_SECRET"
+    "PAYLOAD_SECRET",
+    "VERCEL_URL"
   ],
   "tasks": {
     "build": {
