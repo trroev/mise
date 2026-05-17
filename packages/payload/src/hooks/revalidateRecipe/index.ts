@@ -1,4 +1,3 @@
-import { env } from "@mise/env/app"
 import type { CollectionAfterChangeHook } from "payload"
 
 export const revalidateRecipe: CollectionAfterChangeHook = async ({ doc }) => {
@@ -6,12 +5,22 @@ export const revalidateRecipe: CollectionAfterChangeHook = async ({ doc }) => {
     return doc
   }
 
+  const baseUrl = process.env.BASE_URL
+  const secret = process.env.REVALIDATION_SECRET
+
+  if (!(baseUrl && secret)) {
+    console.warn(
+      "[revalidateRecipe] BASE_URL or REVALIDATION_SECRET not configured — skipping revalidation"
+    )
+    return doc
+  }
+
   try {
-    const res = await fetch(`${env.BASE_URL}/api/revalidate`, {
+    const res = await fetch(`${baseUrl}/api/revalidate`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${env.REVALIDATION_SECRET}`,
+        Authorization: `Bearer ${secret}`,
       },
       body: JSON.stringify({ slug: doc.slug }),
     })
