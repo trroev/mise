@@ -1,6 +1,7 @@
 import { everyone } from "@mise/payload/access/everyone"
 import { isAdmin } from "@mise/payload/access/isAdmin"
 import { computeTotalTime } from "@mise/payload/hooks/computeTotalTime"
+import { revalidateRecipe } from "@mise/payload/hooks/revalidateRecipe"
 import { stampPublishedAt } from "@mise/payload/hooks/stampPublishedAt"
 import { type CollectionConfig, slugField } from "payload"
 
@@ -238,6 +239,7 @@ export const Recipes: CollectionConfig = {
     },
   ],
   hooks: {
+    afterChange: [revalidateRecipe],
     beforeChange: [computeTotalTime, stampPublishedAt],
   },
   labels: {

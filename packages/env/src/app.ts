@@ -27,6 +27,7 @@ if (resolvedBase !== undefined) {
 const env = createEnv({
   server: {
     BASE_URL: z.string().url(),
+    REVALIDATION_SECRET: z.string(),
   },
   shared: {
     NODE_ENV: z.enum(["development", "production", "test"]),
