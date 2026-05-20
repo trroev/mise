@@ -4,16 +4,13 @@ import { NavigationMenu } from "@mise/ui/components/NavigationMenu"
 import { cn } from "@mise/ui/utils/cn"
 import { RiCloseLine, RiMenuLine } from "@remixicon/react"
 import Link from "next/link"
-import type React from "react"
 import { useEffect, useState } from "react"
 
 export type SiteHeaderProps = {
   className?: string
 }
 
-export const SiteHeader = ({
-  className,
-}: SiteHeaderProps): React.JSX.Element => {
+export const SiteHeader = ({ className }: SiteHeaderProps) => {
   const [isScrolled, setIsScrolled] = useState(false)
   const [navValue, setNavValue] = useState<string | null>(null)
 

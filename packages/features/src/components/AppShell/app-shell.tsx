@@ -6,7 +6,7 @@ export type AppShellProps = {
   children: React.ReactNode
 }
 
-export const AppShell = ({ children }: AppShellProps): React.JSX.Element => (
+export const AppShell = ({ children }: AppShellProps) => (
   <>
     <SiteHeader />
     <main className="flex-1">{children}</main>
