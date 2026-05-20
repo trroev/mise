@@ -40,10 +40,18 @@ export const Recipes: CollectionConfig = {
     {
       admin: {
         description:
-          "Recipe author name. Surfaced in JSON-LD structured data. TODO: convert to a relationship to `users` once user-submitted recipes ship.",
+          "Author display name. Used in JSON-LD structured data. Prefer linking via `authorUser` for registered users.",
       },
       name: "author",
       type: "text",
+    },
+    {
+      admin: {
+        description: "Link to the registered user who authored this recipe.",
+      },
+      name: "authorUser",
+      relationTo: "users",
+      type: "relationship",
     },
     {
       name: "course",
