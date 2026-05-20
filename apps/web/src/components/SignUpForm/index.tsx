@@ -4,47 +4,83 @@ import { Button } from "@mise/ui/components/Button"
 import { Field } from "@mise/ui/components/Field"
 import { Input } from "@mise/ui/components/Input"
 import { useForm } from "@tanstack/react-form"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useState } from "react"
+import { match } from "ts-pattern"
+import { z } from "zod"
 import { authClient } from "~/lib/auth-client"
+
+const signUpSchema = z
+  .object({
+    name: z.string().trim().min(1, "Name is required."),
+    email: z.email("Enter a valid email address."),
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters.")
+      .max(128, "Password is too long."),
+    confirmPassword: z.string().min(1, "Please confirm your password."),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match.",
+    path: ["confirmPassword"],
+  })
+
+const isSafeCallbackUrl = (value: string | null): value is string =>
+  value?.startsWith("/") === true && !value.startsWith("//")
+
+const friendlySignUpError = (code?: string, message?: string): string =>
+  match(code)
+    .with(
+      "USER_ALREADY_EXISTS",
+      "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL",
+      () => "An account with that email already exists."
+    )
+    .with("PASSWORD_TOO_SHORT", () => "Password must be at least 8 characters.")
+    .with("INVALID_EMAIL", () => "Enter a valid email address.")
+    .otherwise(() => message ?? "Sign up failed. Please try again.")
 
 export const SignUpForm = () => {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const rawCallback = searchParams.get("callbackUrl")
+  const callbackUrl = isSafeCallbackUrl(rawCallback) ? rawCallback : "/"
   const [serverError, setServerError] = useState<string | undefined>()
 
   const form = useForm({
-    defaultValues: { name: "", email: "", password: "" },
+    defaultValues: { name: "", email: "", password: "", confirmPassword: "" },
+    validators: { onChange: signUpSchema },
     onSubmit: async ({ value }) => {
       setServerError(undefined)
-      const { error } = await authClient.signUp.email(value)
+      const { error } = await authClient.signUp.email({
+        name: value.name,
+        email: value.email,
+        password: value.password,
+      })
       if (error) {
-        setServerError(error.message ?? "Sign up failed.")
+        setServerError(friendlySignUpError(error.code, error.message))
         return
       }
-      router.push("/recipes")
+      router.push(callbackUrl)
+      router.refresh()
     },
   })
 
   return (
     <form
       className="flex flex-col gap-4"
+      noValidate
       onSubmit={(e) => {
         e.preventDefault()
         e.stopPropagation()
         form.handleSubmit()
       }}
     >
-      <form.Field
-        name="name"
-        validators={{
-          onChange: ({ value }) => (value ? undefined : "Name is required."),
-        }}
-      >
+      <form.Field name="name">
         {(field) => (
           <Field
             error={
               field.state.meta.isTouched
-                ? field.state.meta.errors[0]
+                ? field.state.meta.errors[0]?.message
                 : undefined
             }
             label="Name"
@@ -55,23 +91,19 @@ export const SignUpForm = () => {
               name={field.name}
               onBlur={field.handleBlur}
               onChange={(e) => field.handleChange(e.target.value)}
+              required
               type="text"
               value={field.state.value}
             />
           </Field>
         )}
       </form.Field>
-      <form.Field
-        name="email"
-        validators={{
-          onChange: ({ value }) => (value ? undefined : "Email is required."),
-        }}
-      >
+      <form.Field name="email">
         {(field) => (
           <Field
             error={
               field.state.meta.isTouched
-                ? field.state.meta.errors[0]
+                ? field.state.meta.errors[0]?.message
                 : undefined
             }
             label="Email"
@@ -82,26 +114,22 @@ export const SignUpForm = () => {
               name={field.name}
               onBlur={field.handleBlur}
               onChange={(e) => field.handleChange(e.target.value)}
+              required
               type="email"
               value={field.state.value}
             />
           </Field>
         )}
       </form.Field>
-      <form.Field
-        name="password"
-        validators={{
-          onChange: ({ value }) =>
-            value ? undefined : "Password is required.",
-        }}
-      >
+      <form.Field name="password">
         {(field) => (
           <Field
             error={
               field.state.meta.isTouched
-                ? field.state.meta.errors[0]
+                ? field.state.meta.errors[0]?.message
                 : undefined
             }
+            hint="At least 8 characters."
             label="Password"
           >
             <Input
@@ -110,6 +138,30 @@ export const SignUpForm = () => {
               name={field.name}
               onBlur={field.handleBlur}
               onChange={(e) => field.handleChange(e.target.value)}
+              required
+              type="password"
+              value={field.state.value}
+            />
+          </Field>
+        )}
+      </form.Field>
+      <form.Field name="confirmPassword">
+        {(field) => (
+          <Field
+            error={
+              field.state.meta.isTouched
+                ? field.state.meta.errors[0]?.message
+                : undefined
+            }
+            label="Confirm password"
+          >
+            <Input
+              autoComplete="new-password"
+              id="confirmPassword"
+              name={field.name}
+              onBlur={field.handleBlur}
+              onChange={(e) => field.handleChange(e.target.value)}
+              required
               type="password"
               value={field.state.value}
             />
@@ -117,7 +169,13 @@ export const SignUpForm = () => {
         )}
       </form.Field>
       {serverError && (
-        <p className="font-sans text-body-sm text-destructive">{serverError}</p>
+        <p
+          aria-live="polite"
+          className="font-sans text-body-sm text-destructive"
+          role="alert"
+        >
+          {serverError}
+        </p>
       )}
       <form.Subscribe
         selector={(state) => ({
