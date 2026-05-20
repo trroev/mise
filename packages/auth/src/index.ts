@@ -9,6 +9,7 @@ export const auth = betterAuth({
   database: mongodbAdapter(client.db(), { transaction: false }),
   secret: env.BETTER_AUTH_SECRET,
   baseURL: env.BETTER_AUTH_URL,
+  emailAndPassword: { enabled: true },
 })
 
 export type Session = typeof auth.$Infer.Session.session
