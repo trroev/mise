@@ -76,6 +76,10 @@ export default async function RecipeDetailPage({ params }: Props) {
     .with({ name: P.string }, (c) => c.name)
     .otherwise(() => null)
 
+  const authorName = match(recipe.authorUser)
+    .with({ name: P.string.select() }, (name) => name.trim() || null)
+    .otherwise(() => null)
+
   const hasTime = match(recipe)
     .with(
       P.union(
@@ -114,6 +118,11 @@ export default async function RecipeDetailPage({ params }: Props) {
           {recipe.description && (
             <p className="max-w-prose font-sans text-body-lg text-text-secondary">
               {recipe.description}
+            </p>
+          )}
+          {authorName && (
+            <p className="font-sans text-body-sm text-text-muted">
+              Submitted by {authorName}
             </p>
           )}
           <div className="flex flex-wrap items-center gap-2">
