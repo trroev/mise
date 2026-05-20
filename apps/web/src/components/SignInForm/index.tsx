@@ -4,12 +4,18 @@ import { Button } from "@mise/ui/components/Button"
 import { Field } from "@mise/ui/components/Field"
 import { Input } from "@mise/ui/components/Input"
 import { useForm } from "@tanstack/react-form"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useState } from "react"
 import { authClient } from "~/lib/auth-client"
 
+const isSafeCallbackUrl = (value: string | null): value is string =>
+  value?.startsWith("/") === true && !value.startsWith("//")
+
 export const SignInForm = () => {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const rawCallback = searchParams.get("callbackUrl")
+  const callbackUrl = isSafeCallbackUrl(rawCallback) ? rawCallback : "/recipes"
   const [serverError, setServerError] = useState<string | undefined>()
 
   const form = useForm({
@@ -21,7 +27,7 @@ export const SignInForm = () => {
         setServerError(error.message ?? "Sign in failed.")
         return
       }
-      router.push("/recipes")
+      router.push(callbackUrl)
     },
   })
 
