@@ -46,6 +46,8 @@ export const AvatarManager = ({ avatarUrl, email }: AvatarManagerProps) => {
   const [selection, setSelection] = useState<Selection | undefined>()
   const [status, setStatus] = useState<DialogStatus>({ kind: "idle" })
   const [isRemoving, startRemove] = useTransition()
+  const [failedUrl, setFailedUrl] = useState<string | null>(null)
+  const hasImageFailed = failedUrl !== null && failedUrl === avatarUrl
 
   useEffect(
     () => () => {
@@ -122,12 +124,13 @@ export const AvatarManager = ({ avatarUrl, email }: AvatarManagerProps) => {
     })
   }
 
-  const displayUrl = avatarUrl
-    ? transformCloudinary({
-        url: avatarUrl,
-        transform: "c_thumb,g_face,w_192,h_192,f_auto,q_auto",
-      })
-    : null
+  const displayUrl =
+    avatarUrl && !hasImageFailed
+      ? transformCloudinary({
+          url: avatarUrl,
+          transform: "c_thumb,g_face,w_192,h_192,f_auto,q_auto",
+        })
+      : null
 
   return (
     <div className="flex items-center gap-4">
@@ -137,6 +140,7 @@ export const AvatarManager = ({ avatarUrl, email }: AvatarManagerProps) => {
             alt="Profile photo"
             className="object-cover"
             fill
+            onError={() => setFailedUrl(avatarUrl)}
             sizes="96px"
             src={displayUrl}
           />
