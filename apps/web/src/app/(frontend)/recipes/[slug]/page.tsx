@@ -22,12 +22,12 @@ import { RecipeControls } from "~/components/RecipeControls"
 import { RefreshRouteOnSave } from "~/components/RefreshRouteOnSave"
 import { auth } from "~/lib/auth.server"
 import { getPayloadUserByBetterAuthId } from "~/lib/queries/payload-user-by-better-auth-id"
-import config from "~/payload.config"
 import { getPublishedRecipes } from "~/lib/queries/published-recipes"
 import {
   getDraftRecipeBySlug,
   getRecipeBySlug,
 } from "~/lib/queries/recipe-by-slug"
+import config from "~/payload.config"
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -97,7 +97,9 @@ export default async function RecipeDetailPage({
         return null
       }
       const payload = await getPayload({ config })
-      const { user: adminUser } = await payload.auth({ headers: requestHeaders })
+      const { user: adminUser } = await payload.auth({
+        headers: requestHeaders,
+      })
       if (adminUser?.collection === "admins") {
         return draft
       }
