@@ -76,8 +76,12 @@ export default async function RecipeDetailPage({ params }: Props) {
     .with({ name: P.string }, (c) => c.name)
     .otherwise(() => null)
 
-  const authorName = match(recipe.authorUser)
-    .with({ name: P.string.select() }, (name) => name.trim() || null)
+  const authorName = match(recipe)
+    .with(
+      { authorUser: { name: P.string.select() } },
+      (name) => name.trim() ?? null
+    )
+    .with({ author: P.string.select() }, (name) => name.trim() ?? null)
     .otherwise(() => null)
 
   const hasTime = match(recipe)
@@ -122,7 +126,7 @@ export default async function RecipeDetailPage({ params }: Props) {
           )}
           {authorName && (
             <p className="font-sans text-body-sm text-text-muted">
-              Submitted by {authorName}
+              By {authorName}
             </p>
           )}
           <div className="flex flex-wrap items-center gap-2">

@@ -104,9 +104,9 @@ export const buildRecipeJsonLd = (
       "@type": "Person",
       name:
         match(recipe.authorUser)
-          .with({ name: P.string.select() }, (name) => name.trim() || null)
-          .otherwise(() => null) ||
-        recipe.author?.trim() ||
+          .with({ name: P.string.select() }, (name) => name.trim() ?? null)
+          .otherwise(() => null) ??
+        recipe.author?.trim() ??
         DEFAULT_AUTHOR_NAME,
     },
     datePublished: recipe.publishedAt ?? undefined,
