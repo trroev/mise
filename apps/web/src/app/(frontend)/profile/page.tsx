@@ -1,8 +1,13 @@
+import { Badge } from "@mise/ui/components/Badge"
 import type { Metadata } from "next"
 import { headers } from "next/headers"
+import Link from "next/link"
 import { redirect } from "next/navigation"
+import { match } from "ts-pattern"
 import { SignOutButton } from "~/components/SignOutButton"
 import { auth } from "~/lib/auth.server"
+import { getPayloadUserByBetterAuthId } from "~/lib/queries/payload-user-by-better-auth-id"
+import { getRecipesByAuthorUser } from "~/lib/queries/recipes-by-author"
 
 export const metadata: Metadata = {
   title: "Profile",
@@ -22,6 +27,10 @@ export default async function ProfilePage() {
   }
 
   const { user } = session
+  const payloadUser = await getPayloadUserByBetterAuthId(user.id)
+  const recipes = payloadUser
+    ? await getRecipesByAuthorUser(payloadUser.id)
+    : []
 
   return (
     <section className="constrainer flex flex-col space-y-10 py-10">
@@ -60,9 +69,48 @@ export default async function ProfilePage() {
         >
           My recipes
         </h2>
-        <p className="text-body text-text-secondary">
-          Recipes you submit will appear here.
-        </p>
+        {recipes.length === 0 ? (
+          <p className="text-body text-text-secondary">
+            You haven&apos;t submitted any recipes yet.{" "}
+            <Link className="underline" href="/submit">
+              Submit one now
+            </Link>
+            .
+          </p>
+        ) : (
+          <ul className="divide-y divide-border/40">
+            {recipes.map((recipe) => {
+              const isDraft = recipe._status !== "published"
+              const href = isDraft
+                ? `/recipes/${recipe.slug}?preview=draft`
+                : `/recipes/${recipe.slug}`
+              return (
+                <li
+                  className="flex flex-col gap-2 py-4 sm:flex-row sm:items-center sm:justify-between"
+                  key={recipe.id}
+                >
+                  <div className="space-y-1">
+                    <Link
+                      className="font-display text-heading-md text-text-primary hover:underline"
+                      href={href}
+                    >
+                      {recipe.title}
+                    </Link>
+                    <p className="text-body-sm text-text-secondary">
+                      Submitted{" "}
+                      {dateFormatter.format(new Date(recipe.createdAt))}
+                    </p>
+                  </div>
+                  {match(recipe._status)
+                    .with("published", () => <Badge>Published</Badge>)
+                    .otherwise(() => (
+                      <Badge variant="muted">Draft</Badge>
+                    ))}
+                </li>
+              )
+            })}
+          </ul>
+        )}
       </section>
     </section>
   )

@@ -19,3 +19,18 @@ export const getRecipeBySlug = cache(
     return docs[0] ?? null
   }
 )
+
+export const getDraftRecipeBySlug = cache(
+  async (slug: string): Promise<Recipe | null> => {
+    const payload = await getPayload({ config })
+    const { docs } = await payload.find({
+      collection: "recipes",
+      where: { slug: { equals: slug } },
+      depth: 2,
+      limit: 1,
+      draft: true,
+      overrideAccess: true,
+    })
+    return docs[0] ?? null
+  }
+)

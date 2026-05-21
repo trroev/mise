@@ -9,6 +9,7 @@ import { Badge } from "@mise/ui/components/Badge"
 import { formatDuration } from "@mise/utils/formatDuration"
 import { RiTimerLine } from "@remixicon/react"
 import type { Metadata } from "next"
+import { headers } from "next/headers"
 import Image from "next/image"
 import { notFound } from "next/navigation"
 import { Suspense } from "react"
@@ -16,18 +17,33 @@ import { JsonLd } from "react-schemaorg"
 import type { Recipe as RecipeSchema } from "schema-dts"
 import { match, P } from "ts-pattern"
 import { RecipeControls } from "~/components/RecipeControls"
+import { auth } from "~/lib/auth.server"
+import { getPayloadUserByBetterAuthId } from "~/lib/queries/payload-user-by-better-auth-id"
 import { getPublishedRecipes } from "~/lib/queries/published-recipes"
-import { getRecipeBySlug } from "~/lib/queries/recipe-by-slug"
+import {
+  getDraftRecipeBySlug,
+  getRecipeBySlug,
+} from "~/lib/queries/recipe-by-slug"
 
-type Props = { params: Promise<{ slug: string }> }
+type Props = {
+  params: Promise<{ slug: string }>
+  searchParams: Promise<{ preview?: string }>
+}
 
 export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
   const recipes = await getPublishedRecipes()
   return recipes.map((recipe) => ({ slug: recipe.slug }))
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+  searchParams,
+}: Props): Promise<Metadata> {
   const { slug } = await params
+  const { preview } = await searchParams
+  if (preview === "draft") {
+    return { title: "Preview", robots: { index: false, follow: false } }
+  }
   const recipe = await getRecipeBySlug(slug)
   if (!recipe) {
     return {}
@@ -61,9 +77,36 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default async function RecipeDetailPage({ params }: Props) {
+export default async function RecipeDetailPage({
+  params,
+  searchParams,
+}: Props) {
   const { slug } = await params
-  const recipe = await getRecipeBySlug(slug)
+  const { preview } = await searchParams
+  const isPreview = preview === "draft"
+
+  const recipe = await match(isPreview)
+    .with(true, async () => {
+      const session = await auth.api.getSession({ headers: await headers() })
+      if (!session) {
+        return null
+      }
+      const draft = await getDraftRecipeBySlug(slug)
+      if (!draft) {
+        return null
+      }
+      const authorUserId = match(draft.authorUser)
+        .with(P.string, (id) => id)
+        .with({ id: P.string }, (u) => u.id)
+        .otherwise(() => null)
+      if (!authorUserId) {
+        return null
+      }
+      const viewer = await getPayloadUserByBetterAuthId(session.user.id)
+      return viewer?.id === authorUserId ? draft : null
+    })
+    .otherwise(() => getRecipeBySlug(slug))
+
   if (!recipe) {
     notFound()
   }
