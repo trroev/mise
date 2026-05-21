@@ -169,6 +169,9 @@ importers:
       better-auth:
         specifier: ^1.2.8
         version: 1.6.9(mongodb@6.21.0)(next@16.2.4(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.77.4))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(vitest@3.2.4(@types/node@22.15.3)(jiti@2.6.1)(jsdom@29.1.1(@noble/hashes@2.2.0))(lightningcss@1.32.0)(sass@1.77.4)(tsx@4.21.0)(yaml@2.8.3))
+      cloudinary:
+        specifier: ^2.10.0
+        version: 2.10.0
       minisearch:
         specifier: ^7.2.0
         version: 7.2.0
