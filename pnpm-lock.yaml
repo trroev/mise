@@ -200,6 +200,9 @@ importers:
         specifier: ^4.3.6
         version: 4.3.6
     devDependencies:
+      '@mise/testing':
+        specifier: workspace:*
+        version: link:../../packages/testing
       '@mise/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
@@ -221,6 +224,9 @@ importers:
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
+      vitest:
+        specifier: ^3.2.4
+        version: 3.2.4(@types/node@22.15.3)(jiti@2.6.1)(jsdom@29.1.1(@noble/hashes@2.2.0))(lightningcss@1.32.0)(sass@1.77.4)(tsx@4.21.0)(yaml@2.8.3)
 
   packages/auth:
     dependencies:

@@ -12,6 +12,7 @@ import { Recipes } from "@mise/payload/collections/Recipes"
 import { Tags } from "@mise/payload/collections/Tags"
 import { Units } from "@mise/payload/collections/Units"
 import { Users } from "@mise/payload/collections/Users"
+import { Homepage } from "@mise/payload/globals/Homepage"
 import type { Recipe } from "@mise/payload/payload-types"
 import { mongooseAdapter } from "@payloadcms/db-mongodb"
 import { cloudStoragePlugin } from "@payloadcms/plugin-cloud-storage"
@@ -57,6 +58,7 @@ export function createPayloadConfig({ baseDir }: CreatePayloadConfigOptions) {
     db: mongooseAdapter({
       url: authEnv.MONGODB_URI,
     }),
+    globals: [Homepage],
     plugins: [
       cloudStoragePlugin({
         collections: {

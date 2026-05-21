@@ -99,8 +99,12 @@ export interface Config {
     defaultIDType: string;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    homepage: Homepage;
+  };
+  globalsSelect: {
+    homepage: HomepageSelect<false> | HomepageSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -669,6 +673,56 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * Curate the homepage hero copy and featured recipe without a deploy.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "homepage".
+ */
+export interface Homepage {
+  id: string;
+  /**
+   * Headline shown in the homepage hero.
+   */
+  heroHeadline: string;
+  /**
+   * Optional supporting line shown beneath the headline.
+   */
+  heroTagline?: string | null;
+  /**
+   * Label for the primary call-to-action button.
+   */
+  heroCtaLabel?: string | null;
+  /**
+   * Destination for the primary call-to-action button.
+   */
+  heroCtaHref?: string | null;
+  /**
+   * Optional hero background image.
+   */
+  heroImage?: (string | null) | Media;
+  /**
+   * The recipe featured on the homepage.
+   */
+  featuredRecipe: string | Recipe;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "homepage_select".
+ */
+export interface HomepageSelect<T extends boolean = true> {
+  heroHeadline?: T;
+  heroTagline?: T;
+  heroCtaLabel?: T;
+  heroCtaHref?: T;
+  heroImage?: T;
+  featuredRecipe?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
