@@ -25,6 +25,7 @@ if (resolvedBase !== undefined) {
 }
 
 const env = createEnv({
+  skipValidation: !!process.env.SKIP_ENV_VALIDATION,
   server: {
     BASE_URL: z.string().url(),
     REVALIDATION_SECRET: z.string(),
