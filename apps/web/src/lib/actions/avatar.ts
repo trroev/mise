@@ -13,7 +13,6 @@ import config from "~/payload.config"
 //   c_thumb,g_face,w_96,h_96
 // Compose by inserting after `/upload/` in the stored secure URL, or via
 // `cloudinary.url(publicId, { transformation: [{ crop: "thumb", gravity: "face", width: 96, height: 96 }] })`.
-export const AVATAR_THUMB_TRANSFORM = "c_thumb,g_face,w_96,h_96" as const
 
 const MAX_AVATAR_BYTES = 5 * 1024 * 1024
 

@@ -162,7 +162,7 @@ export const AvatarManager = ({ avatarUrl, email }: AvatarManagerProps) => {
 
               <div className="mt-6 flex flex-col gap-4">
                 <label
-                  className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-md border border-border border-dashed bg-surface p-6 text-body-sm text-text-secondary transition-colors hover:bg-secondary"
+                  className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-md border border-border border-dashed bg-surface p-6 text-body-sm text-text-secondary transition-colors hover:bg-secondary/75"
                   htmlFor={fileInputId}
                 >
                   <RiUploadLine aria-hidden="true" size={20} />
