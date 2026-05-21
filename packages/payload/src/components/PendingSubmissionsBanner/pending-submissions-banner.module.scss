@@ -1,0 +1,17 @@
+.banner {
+  align-items: center;
+  background: var(--theme-warning-100, #fff4d6);
+  border: 1px solid var(--theme-warning-500, #e0a800);
+  border-radius: var(--style-radius-m, 4px);
+  color: var(--theme-warning-900, #5a3e00);
+  display: flex;
+  gap: var(--base, 1rem);
+  justify-content: space-between;
+  margin-bottom: var(--base, 1rem);
+  padding: var(--base, 1rem);
+}
+
+.link {
+  color: inherit;
+  text-decoration: underline;
+}

@@ -1,5 +1,7 @@
 import type { BeforeListTableServerProps } from "payload"
 
+import classNames from "./pending-submissions-banner.module.scss"
+
 export async function PendingSubmissionsBanner({
   collectionSlug,
   payload,
@@ -25,27 +27,11 @@ export async function PendingSubmissionsBanner({
   const label = totalDocs === 1 ? "submission" : "submissions"
 
   return (
-    <div
-      style={{
-        alignItems: "center",
-        background: "var(--theme-warning-100, #fff4d6)",
-        border: "1px solid var(--theme-warning-500, #e0a800)",
-        borderRadius: "var(--style-radius-s, 4px)",
-        color: "var(--theme-warning-900, #5a3e00)",
-        display: "flex",
-        gap: "var(--base, 1rem)",
-        justifyContent: "space-between",
-        marginBottom: "var(--base, 1rem)",
-        padding: "var(--base, 1rem)",
-      }}
-    >
+    <div className={classNames.banner}>
       <span>
         <strong>{totalDocs}</strong> pending {label} awaiting review.
       </span>
-      <a
-        href={filterHref}
-        style={{ color: "inherit", textDecoration: "underline" }}
-      >
+      <a className={classNames.link} href={filterHref}>
         Review pending submissions →
       </a>
     </div>
