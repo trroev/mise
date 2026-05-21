@@ -55,7 +55,7 @@ const dietaryTagValues = [
   "nut-free",
 ] as const satisfies ReadonlyArray<string>
 
-export const submitRecipeSchema = z.object({
+const submitRecipeSchema = z.object({
   title: z.string().trim().min(1, "Title is required."),
   description: z.string().trim().optional(),
   cuisine: z.string().optional(),
@@ -78,7 +78,7 @@ export const submitRecipeSchema = z.object({
     .min(1, "Add at least one instruction group."),
 })
 
-export type SubmitRecipeInput = z.infer<typeof submitRecipeSchema>
+type SubmitRecipeInput = z.infer<typeof submitRecipeSchema>
 
 export type SubmitRecipeResult =
   | { status: "success"; recipeId: string; slug: string }

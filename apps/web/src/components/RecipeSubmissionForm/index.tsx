@@ -139,6 +139,7 @@ export const RecipeSubmissionForm = ({
         </p>
         <div className="flex flex-wrap gap-3">
           <Button
+            nativeButton={false}
             render={
               <Link href={`/recipes/${submitted.slug}?preview=draft`}>
                 Preview submission
