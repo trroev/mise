@@ -1,10 +1,9 @@
 "use client"
 
-import { transformCloudinary } from "@mise/features/utils/transformCloudinary"
+import { Avatar } from "@mise/ui/components/Avatar"
 import { Button } from "@mise/ui/components/Button"
 import { Dialog } from "@mise/ui/components/Dialog"
 import { RiUploadLine } from "@remixicon/react"
-import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useEffect, useId, useRef, useState, useTransition } from "react"
 import { match } from "ts-pattern"
@@ -46,8 +45,6 @@ export const AvatarManager = ({ avatarUrl, email }: AvatarManagerProps) => {
   const [selection, setSelection] = useState<Selection | undefined>()
   const [status, setStatus] = useState<DialogStatus>({ kind: "idle" })
   const [isRemoving, startRemove] = useTransition()
-  const [failedUrl, setFailedUrl] = useState<string | null>(null)
-  const hasImageFailed = failedUrl !== null && failedUrl === avatarUrl
 
   useEffect(
     () => () => {
@@ -124,35 +121,14 @@ export const AvatarManager = ({ avatarUrl, email }: AvatarManagerProps) => {
     })
   }
 
-  const displayUrl =
-    avatarUrl && !hasImageFailed
-      ? transformCloudinary({
-          url: avatarUrl,
-          transform: "c_thumb,g_face,w_192,h_192,f_auto,q_auto",
-        })
-      : null
-
   return (
     <div className="flex items-center gap-4">
-      <div className="relative size-24 shrink-0 overflow-hidden rounded-full border border-border bg-surface">
-        {displayUrl ? (
-          <Image
-            alt="Profile photo"
-            className="object-cover"
-            fill
-            onError={() => setFailedUrl(avatarUrl)}
-            sizes="96px"
-            src={displayUrl}
-          />
-        ) : (
-          <span
-            aria-hidden="true"
-            className="flex h-full w-full items-center justify-center font-display text-heading-md text-text-secondary"
-          >
-            {buildInitial(email)}
-          </span>
-        )}
-      </div>
+      <Avatar
+        alt="Profile photo"
+        initials={buildInitial(email)}
+        size="lg"
+        src={avatarUrl}
+      />
 
       <div className="flex flex-col gap-2">
         <Dialog.Root onOpenChange={handleOpenChange} open={isOpen}>
