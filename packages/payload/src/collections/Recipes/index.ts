@@ -13,6 +13,11 @@ export const Recipes: CollectionConfig = {
     update: isAdmin,
   },
   admin: {
+    components: {
+      beforeListTable: [
+        "@mise/payload/components/PendingSubmissionsBanner#PendingSubmissionsBanner",
+      ],
+    },
     defaultColumns: ["title", "_status", "course", "difficulty", "publishedAt"],
     useAsTitle: "title",
   },

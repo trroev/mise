@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "jsx": "react-jsx",
     "paths": {
       "@mise/payload/access/*": ["./src/access/*/index.ts"],
       "@mise/payload/adapters/*": ["./src/adapters/*/index.ts"],
