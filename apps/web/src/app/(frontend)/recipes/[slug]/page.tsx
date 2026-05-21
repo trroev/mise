@@ -1,3 +1,4 @@
+import { env as appEnv } from "@mise/env/app"
 import { buildRecipeJsonLd } from "@mise/features/utils/buildRecipeJsonLd"
 import {
   COURSE_LABELS,
@@ -12,13 +13,16 @@ import type { Metadata } from "next"
 import { headers } from "next/headers"
 import Image from "next/image"
 import { notFound } from "next/navigation"
+import { getPayload } from "payload"
 import { Suspense } from "react"
 import { JsonLd } from "react-schemaorg"
 import type { Recipe as RecipeSchema } from "schema-dts"
 import { match, P } from "ts-pattern"
 import { RecipeControls } from "~/components/RecipeControls"
+import { RefreshRouteOnSave } from "~/components/RefreshRouteOnSave"
 import { auth } from "~/lib/auth.server"
 import { getPayloadUserByBetterAuthId } from "~/lib/queries/payload-user-by-better-auth-id"
+import config from "~/payload.config"
 import { getPublishedRecipes } from "~/lib/queries/published-recipes"
 import {
   getDraftRecipeBySlug,
@@ -87,12 +91,18 @@ export default async function RecipeDetailPage({
 
   const recipe = await match(isPreview)
     .with(true, async () => {
-      const session = await auth.api.getSession({ headers: await headers() })
-      if (!session) {
-        return null
-      }
+      const requestHeaders = await headers()
       const draft = await getDraftRecipeBySlug(slug)
       if (!draft) {
+        return null
+      }
+      const payload = await getPayload({ config })
+      const { user: adminUser } = await payload.auth({ headers: requestHeaders })
+      if (adminUser?.collection === "admins") {
+        return draft
+      }
+      const session = await auth.api.getSession({ headers: requestHeaders })
+      if (!session) {
         return null
       }
       const authorUserId = match(draft.authorUser)
@@ -140,6 +150,7 @@ export default async function RecipeDetailPage({
 
   return (
     <article>
+      {isPreview && <RefreshRouteOnSave serverURL={appEnv.BASE_URL} />}
       <JsonLd<RecipeSchema> item={buildRecipeJsonLd(recipe)} />
       {heroUrl && (
         <div className="relative aspect-video w-full overflow-hidden bg-surface">

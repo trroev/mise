@@ -1,9 +1,21 @@
+import { env as appEnv } from "@mise/env/app"
 import { everyone } from "@mise/payload/access/everyone"
 import { isAdmin } from "@mise/payload/access/isAdmin"
 import { computeTotalTime } from "@mise/payload/hooks/computeTotalTime"
 import { revalidateRecipe } from "@mise/payload/hooks/revalidateRecipe"
 import { stampPublishedAt } from "@mise/payload/hooks/stampPublishedAt"
 import { type CollectionConfig, slugField } from "payload"
+
+const LIVE_PREVIEW_BREAKPOINTS = [
+  { name: "mobile", label: "Mobile", width: 375, height: 667 },
+  { name: "tablet", label: "Tablet", width: 768, height: 1024 },
+  { name: "desktop", label: "Desktop", width: 1440, height: 900 },
+] as const satisfies ReadonlyArray<{
+  name: string
+  label: string
+  width: number
+  height: number
+}>
 
 export const Recipes: CollectionConfig = {
   access: {
@@ -19,6 +31,13 @@ export const Recipes: CollectionConfig = {
       ],
     },
     defaultColumns: ["title", "_status", "course", "difficulty", "publishedAt"],
+    livePreview: {
+      breakpoints: [...LIVE_PREVIEW_BREAKPOINTS],
+      url: ({ data }) => {
+        const slug = typeof data?.slug === "string" ? data.slug : ""
+        return `${appEnv.BASE_URL}/recipes/${slug}?preview=draft`
+      },
+    },
     useAsTitle: "title",
   },
   fields: [

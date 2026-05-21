@@ -23,6 +23,7 @@
     "@mise/ui": "workspace:*",
     "@mise/utils": "workspace:*",
     "@payloadcms/db-mongodb": "^3.84.1",
+    "@payloadcms/live-preview-react": "^3.84.1",
     "@payloadcms/next": "^3.84.1",
     "@payloadcms/plugin-seo": "^3.84.1",
     "@remixicon/react": "^4.9.0",
