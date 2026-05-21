@@ -4,6 +4,8 @@ A personal recipe application built by a former 2-Michelin-star chef. Fine-dinin
 
 Built on a Turborepo monorepo with Next.js 16 and PayloadCMS 3 embedded in a single Vercel deployment.
 
+**Live:** [mise-wine.vercel.app](https://mise-wine.vercel.app)
+
 ---
 
 ## Stack
@@ -11,16 +13,19 @@ Built on a Turborepo monorepo with Next.js 16 and PayloadCMS 3 embedded in a sin
 | Concern | Choice |
 |---|---|
 | Framework | Next.js 16 (App Router) |
-| CMS | PayloadCMS 3 (embedded) |
+| CMS | PayloadCMS 3 (embedded) + `@payloadcms/plugin-seo` + live preview |
 | Database | MongoDB Atlas |
+| Auth | better-auth |
 | Search | MiniSearch (in-browser, client-side index) |
-| Images | Cloudinary |
+| Images | Cloudinary (custom Payload storage adapter) |
 | Styling | TailwindCSS v4 |
 | Headless UI | Base UI |
-| Client data | TanStack Query |
+| Forms | TanStack Form |
 | Validation | Zod |
+| Pattern matching | ts-pattern |
 | Linting / formatting | Biome (via ultracite) |
-| Testing | Vitest + Playwright (planned) |
+| Component workshop | Storybook |
+| Testing | Vitest |
 | Hosting | Vercel |
 
 ---
@@ -30,15 +35,22 @@ Built on a Turborepo monorepo with Next.js 16 and PayloadCMS 3 embedded in a sin
 ```
 mise/
 ├── apps/
-│   └── web/              # Next.js 16 + PayloadCMS (single deployment)
+│   ├── web/                # Next.js 16 + PayloadCMS (single deployment)
+│   ├── docs/               # Project documentation site
+│   └── storybook/          # Component workshop for @mise/ui
 ├── packages/
-│   ├── payload/          # Payload collections, hooks, and background jobs
-│   ├── ui/               # Shared React components + Tailwind design tokens
-│   ├── utils/            # Unit conversion and yield scaling utilities
-│   ├── types/            # Shared TypeScript types
-│   └── tsconfig/         # Shared TypeScript configs
-└── scripts/
-    └── migrate-from-sheets.ts   # CSV → Payload import
+│   ├── auth/               # better-auth configuration
+│   ├── env/                # Shared env loading + zod schema
+│   ├── features/           # Feature-level modules (server actions, queries)
+│   ├── payload/            # Payload collections, hooks, adapters
+│   ├── tailwind/           # Tailwind v4 preset + design tokens
+│   ├── testing/            # Shared Vitest config
+│   ├── tsconfig/           # Shared TypeScript configs
+│   ├── types/              # Shared TypeScript types
+│   ├── ui/                 # Shared React components (Base UI wrappers)
+│   ├── utils/              # Unit conversion and yield scaling utilities
+│   └── storybook-config/   # Shared Storybook config
+└── docs/                   # Operational runbooks and design docs
 ```
 
 ---
@@ -138,19 +150,69 @@ pnpm build
 
 ---
 
-## Data Migration
+## ISR Revalidation
 
-Recipes are imported from Google Sheets via a one-time script:
+Recipe pages are statically rendered and revalidated on demand. The Payload Recipes collection has an `afterChange` hook that POSTs to the app's revalidation endpoint whenever a recipe is published or updated, so the live site reflects edits within a few seconds.
+
+### Endpoint
+
+`POST /api/revalidate`
+
+- **Header:** `Authorization: Bearer $REVALIDATION_SECRET`
+- **Body:** `{ "slug": "<recipe-slug>" }`
+- **Effect:** revalidates `/recipes` and `/recipes/<slug>`
+
+### Trigger manually
+
+When a cache looks stale (e.g. after a manual DB edit that bypassed the hook), curl the endpoint directly:
 
 ```sh
-# Validate without writing
-pnpm tsx scripts/migrate-from-sheets.ts --input ./recipes.csv --dry-run
-
-# Import to local Payload instance
-pnpm tsx scripts/migrate-from-sheets.ts --input ./recipes.csv --env local
+curl -X POST https://mise-wine.vercel.app/api/revalidate \
+  -H "Authorization: Bearer $REVALIDATION_SECRET" \
+  -H "Content-Type: application/json" \
+  -d '{"slug":"almond-cream"}'
 ```
 
-See `docs/migration-mapping.md` for the Google Sheets → Payload field mapping.
+`REVALIDATION_SECRET` is stored in Vercel project env vars (Production scope). To get its value locally, run `vercel env pull` from `apps/web/`.
+
+Revalidation failures are logged but do not fail the originating Payload save — the page just stays on its old static copy until the next time-based or manual revalidate.
+
+---
+
+## Data Migration (historical)
+
+Three one-shot imports were run against the production database to seed the recipe corpus. The import tooling has since been removed; this section captures what was done and how to recover it if a fourth import is needed.
+
+### Completed imports
+
+| Date | Workbook | Recipes | Notes |
+|---|---|--:|---|
+| 2026-05-06 | `Trevor Recipe Database Savory.xlsx` | 187 | First run; established the shared transformations documented in [`docs/migration-mapping.md`](./docs/migration-mapping.md). |
+| 2026-05-08 | `Trevor Recipe Database Pastry_Sweet.xlsx` | 88 | Same workbook layout; script gained a tighter footer heuristic and a `bunches → ea` mapping. |
+| 2026-05-08 | `Trevor Bread Formulas.xlsx` | 12 | Different layout (sub-recipe blocks, col-E section headers, real human-unit yields); ran via a dedicated `scripts/migrate-bread-formulas.ts`. |
+
+### Workflow that was used
+
+1. Seed the `units` collection (`UNIT_SEEDS` in `packages/payload/src/collections/Units/index.ts`, plus a one-off `Sprig` unit added during the first run).
+2. Run the migration script with `--dry-run` against the local Payload instance to validate transformations.
+3. Re-run without `--dry-run` to insert all recipes as `_status: "draft"`.
+4. Bulk-publish drafts via a one-shot script that wrapped `payload.update({ data: { _status: "published" } })` in a loop, allowing the `stampPublishedAt` hook to fire on first publish.
+5. Spot-check in the admin and hand-fix any quirky entries.
+
+Production imports were performed by pointing the script at the production `MONGODB_URI` (pulled from 1Password) on a workstation, not from CI.
+
+### Recovering the scripts
+
+The `scripts/` directory was deleted after the third import (along with the root `xlsx` and `zod` dev dependencies). To resurrect a script:
+
+```sh
+git log --oneline -- scripts/                  # find the relevant commit
+git show <sha>:scripts/migrate-from-sheets.ts  # inspect
+git checkout <sha> -- scripts/                 # restore the whole directory
+pnpm add -DW xlsx zod                          # re-add deps
+```
+
+The field-by-field mapping and data-quality decisions live in [`docs/migration-mapping.md`](./docs/migration-mapping.md) — that document is the source of truth for any future import that follows the savory/pastry workbook shape.
 
 ---
 
@@ -190,7 +252,7 @@ gh api repos/trroev/mise/branches/main/protection \
 
 ## Deployment
 
-The app deploys as a single Vercel project. Payload's embedded architecture means no separate server process.
+The app deploys as a single Vercel project at [mise-wine.vercel.app](https://mise-wine.vercel.app). Payload's embedded architecture means no separate server process.
 
 ```sh
 turbo run build --filter=web
