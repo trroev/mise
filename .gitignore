@@ -6,7 +6,7 @@ node_modules
 .pnp.js
 
 # Encryption keys — contains private decryption keys, never commit
-/.env.keys
+.env.keys
 
 # Testing
 coverage
