@@ -47,7 +47,7 @@ export default async function HomePage() {
     .otherwise((recipe) => recipe)
 
   return (
-    <main>
+    <>
       <section className="constrainer py-10 lg:py-16">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
           <div className="space-y-6">
@@ -86,7 +86,7 @@ export default async function HomePage() {
       </section>
 
       {featured && <FeaturedRecipe recipe={featured} />}
-    </main>
+    </>
   )
 }
 
@@ -103,8 +103,8 @@ function FeaturedRecipe({ recipe }: { recipe: Recipe }) {
     .otherwise(() => null)
 
   return (
-    <section className="constrainer pb-16">
-      <p className="mb-4 font-sans text-caption text-text-muted uppercase tracking-widest">
+    <section className="constrainer space-y-4 pb-16">
+      <p className="font-sans text-caption text-text-muted uppercase tracking-widest">
         Featured recipe
       </p>
       <Link
