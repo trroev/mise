@@ -353,6 +353,13 @@ export interface User {
    * BetterAuth user ID. Set automatically on sign-up.
    */
   betterAuthId?: string | null;
+  /**
+   * Cloudinary-backed avatar. Written by the uploadAvatar server action (overrides access) or by admins.
+   */
+  avatar?: {
+    url?: string | null;
+    publicId?: string | null;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -631,6 +638,12 @@ export interface UsersSelect<T extends boolean = true> {
   email?: T;
   name?: T;
   betterAuthId?: T;
+  avatar?:
+    | T
+    | {
+        url?: T;
+        publicId?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }
