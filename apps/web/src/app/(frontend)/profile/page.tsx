@@ -4,6 +4,7 @@ import { headers } from "next/headers"
 import Link from "next/link"
 import { redirect } from "next/navigation"
 import { match } from "ts-pattern"
+import { AvatarManager } from "~/components/AvatarManager"
 import { SignOutButton } from "~/components/SignOutButton"
 import { auth } from "~/lib/auth.server"
 import { getPayloadUserByBetterAuthId } from "~/lib/queries/payload-user-by-better-auth-id"
@@ -44,6 +45,10 @@ export default async function ProfilePage() {
       </div>
 
       <div className="space-y-6">
+        <AvatarManager
+          avatarUrl={payloadUser?.avatar?.url ?? null}
+          email={user.email}
+        />
         <dl className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-1">
             <dt className="text-body-sm text-text-secondary">Email</dt>
