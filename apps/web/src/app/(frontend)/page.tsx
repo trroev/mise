@@ -68,7 +68,10 @@ export default async function HomePage() {
             )}
             {homepage.heroCtaLabel && homepage.heroCtaHref && (
               <div>
-                <Button render={<Link href={homepage.heroCtaHref} />}>
+                <Button
+                  nativeButton={false}
+                  render={<Link href={homepage.heroCtaHref} />}
+                >
                   {homepage.heroCtaLabel}
                 </Button>
               </div>
