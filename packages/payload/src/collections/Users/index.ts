@@ -2,10 +2,6 @@ import type { CollectionConfig, FieldAccess } from "payload"
 
 const isAdminField: FieldAccess = ({ req: { user } }) => Boolean(user)
 
-// Cloudinary transform string for header/profile thumbnail use:
-// c_thumb,g_face,w_96,h_96
-// Apply via `cloudinary.url(publicId, { transformation: [{ crop: "thumb", gravity: "face", width: 96, height: 96 }] })`
-// or by inserting the string after `/upload/` in the secure_url.
 export const Users: CollectionConfig = {
   admin: {
     useAsTitle: "email",
@@ -37,20 +33,14 @@ export const Users: CollectionConfig = {
       },
       admin: {
         description:
-          "Cloudinary-backed avatar. Written by the uploadAvatar server action (overrides access) or by admins.",
+          "Avatar image. Written by the uploadAvatar server action (overrides access) or by admins.",
       },
-      fields: [
-        {
-          name: "url",
-          type: "text",
-        },
-        {
-          name: "publicId",
-          type: "text",
-        },
-      ],
+      filterOptions: {
+        mimeType: { in: ["image/jpeg", "image/png", "image/webp"] },
+      },
       name: "avatar",
-      type: "group",
+      relationTo: "media",
+      type: "upload",
     },
   ],
   slug: "users",

@@ -354,12 +354,9 @@ export interface User {
    */
   betterAuthId?: string | null;
   /**
-   * Cloudinary-backed avatar. Written by the uploadAvatar server action (overrides access) or by admins.
+   * Avatar image. Written by the uploadAvatar server action (overrides access) or by admins.
    */
-  avatar?: {
-    url?: string | null;
-    publicId?: string | null;
-  };
+  avatar?: (string | null) | Media;
   updatedAt: string;
   createdAt: string;
 }
@@ -638,12 +635,7 @@ export interface UsersSelect<T extends boolean = true> {
   email?: T;
   name?: T;
   betterAuthId?: T;
-  avatar?:
-    | T
-    | {
-        url?: T;
-        publicId?: T;
-      };
+  avatar?: T;
   updatedAt?: T;
   createdAt?: T;
 }

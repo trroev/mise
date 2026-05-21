@@ -46,7 +46,11 @@ export default async function ProfilePage() {
 
       <div className="space-y-6">
         <AvatarManager
-          avatarUrl={payloadUser?.avatar?.url ?? null}
+          avatarUrl={
+            typeof payloadUser?.avatar === "object" && payloadUser.avatar
+              ? (payloadUser.avatar.url ?? null)
+              : null
+          }
           email={user.email}
         />
         <dl className="grid gap-4 sm:grid-cols-2">

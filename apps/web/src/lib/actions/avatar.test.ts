@@ -3,9 +3,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 const getSession = vi.fn()
 const find = vi.fn()
 const update = vi.fn()
-const uploadStream = vi.fn()
-const destroy = vi.fn()
-const cloudinaryConfig = vi.fn()
+const create = vi.fn()
+const deleteFn = vi.fn()
 
 vi.mock("server-only", () => ({}))
 
@@ -14,31 +13,18 @@ vi.mock("next/headers", () => ({
 }))
 
 vi.mock("payload", () => ({
-  getPayload: vi.fn(async () => ({ find, update })),
+  getPayload: vi.fn(async () => ({
+    find,
+    update,
+    create,
+    delete: deleteFn,
+  })),
 }))
 
 vi.mock("~/payload.config", () => ({ default: {} }))
 
 vi.mock("~/lib/auth.server", () => ({
   auth: { api: { getSession } },
-}))
-
-vi.mock("@mise/env/cloudinary", () => ({
-  env: {
-    CLOUDINARY_CLOUD_NAME: "test-cloud",
-    CLOUDINARY_API_KEY: "test-key",
-    CLOUDINARY_API_SECRET: "test-secret",
-  },
-}))
-
-vi.mock("cloudinary", () => ({
-  v2: {
-    config: cloudinaryConfig,
-    uploader: {
-      upload_stream: uploadStream,
-      destroy,
-    },
-  },
 }))
 
 const makeFile = (
@@ -53,33 +39,21 @@ const makeFile = (
 }
 
 const stubSession = (userId = "ba-user-1") => {
-  getSession.mockResolvedValueOnce({ user: { id: userId, email: "u@e.co" } })
+  getSession.mockResolvedValueOnce({
+    user: { id: userId, email: "u@e.co" },
+  })
+}
+
+type StubUser = {
+  id: string
+  name?: string
+  avatar?: string | { id: string } | null
 }
 
 const stubUserLookup = (
-  docs: Array<{ id: string; avatar?: { publicId?: string | null } }> = [
-    { id: "payload-user-1" },
-  ]
+  docs: ReadonlyArray<StubUser> = [{ id: "payload-user-1" }]
 ) => {
   find.mockResolvedValueOnce({ docs })
-}
-
-const stubSuccessfulUpload = () => {
-  uploadStream.mockImplementationOnce(
-    (
-      _options: unknown,
-      callback: (
-        error: unknown,
-        result: { secure_url: string; public_id: string } | null
-      ) => void
-    ) => ({
-      end: () =>
-        callback(null, {
-          secure_url: "https://cdn.example/avatar.jpg",
-          public_id: "user-avatars/payload-user-1/abc",
-        }),
-    })
-  )
 }
 
 describe("uploadAvatar", () => {
@@ -87,8 +61,8 @@ describe("uploadAvatar", () => {
     getSession.mockReset()
     find.mockReset()
     update.mockReset()
-    uploadStream.mockReset()
-    cloudinaryConfig.mockReset()
+    create.mockReset()
+    deleteFn.mockReset()
   })
 
   afterEach(() => {
@@ -103,7 +77,7 @@ describe("uploadAvatar", () => {
       status: "error",
       message: "You must be signed in.",
     })
-    expect(uploadStream).not.toHaveBeenCalled()
+    expect(create).not.toHaveBeenCalled()
   })
 
   it("rejects missing files", async () => {
@@ -111,7 +85,7 @@ describe("uploadAvatar", () => {
     const { uploadAvatar } = await import("./avatar")
     const result = await uploadAvatar(new FormData())
     expect(result.status).toBe("error")
-    expect(uploadStream).not.toHaveBeenCalled()
+    expect(create).not.toHaveBeenCalled()
   })
 
   it("rejects files over 5 MB", async () => {
@@ -151,41 +125,67 @@ describe("uploadAvatar", () => {
     })
   })
 
-  it("uploads to user-avatars/{userId} and persists the URL", async () => {
+  it("creates a media doc and links it to the user", async () => {
     stubSession()
-    stubUserLookup()
-    stubSuccessfulUpload()
+    stubUserLookup([{ id: "payload-user-1", name: "Ada" }])
+    create.mockResolvedValueOnce({
+      id: "media-1",
+      url: "https://cdn.example/avatar.jpg",
+    })
     update.mockResolvedValueOnce({})
+
     const formData = new FormData()
     formData.set("avatar", makeFile("a.jpg", "image/jpeg", 1024))
 
     const { uploadAvatar } = await import("./avatar")
     const result = await uploadAvatar(formData)
 
-    expect(cloudinaryConfig).toHaveBeenCalledWith({
-      cloud_name: "test-cloud",
-      api_key: "test-key",
-      api_secret: "test-secret",
-    })
-    expect(uploadStream).toHaveBeenCalledWith(
-      expect.objectContaining({ folder: "user-avatars/payload-user-1" }),
-      expect.any(Function)
+    expect(create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        collection: "media",
+        data: { alt: "Ada profile photo" },
+        file: expect.objectContaining({
+          mimetype: "image/jpeg",
+          name: "a.jpg",
+          size: 1024,
+        }),
+        overrideAccess: true,
+      })
     )
     expect(update).toHaveBeenCalledWith({
       collection: "users",
       id: "payload-user-1",
-      data: {
-        avatar: {
-          url: "https://cdn.example/avatar.jpg",
-          publicId: "user-avatars/payload-user-1/abc",
-        },
-      },
+      data: { avatar: "media-1" },
       overrideAccess: true,
     })
+    expect(deleteFn).not.toHaveBeenCalled()
     expect(result).toEqual({
       status: "success",
+      mediaId: "media-1",
       url: "https://cdn.example/avatar.jpg",
-      publicId: "user-avatars/payload-user-1/abc",
+    })
+  })
+
+  it("deletes the previous media doc when replacing an avatar", async () => {
+    stubSession()
+    stubUserLookup([{ id: "payload-user-1", avatar: { id: "media-old" } }])
+    create.mockResolvedValueOnce({
+      id: "media-new",
+      url: "https://cdn.example/new.jpg",
+    })
+    update.mockResolvedValueOnce({})
+    deleteFn.mockResolvedValueOnce({})
+
+    const formData = new FormData()
+    formData.set("avatar", makeFile("a.jpg", "image/jpeg", 1024))
+
+    const { uploadAvatar } = await import("./avatar")
+    await uploadAvatar(formData)
+
+    expect(deleteFn).toHaveBeenCalledWith({
+      collection: "media",
+      id: "media-old",
+      overrideAccess: true,
     })
   })
 })
@@ -195,7 +195,7 @@ describe("removeAvatar", () => {
     getSession.mockReset()
     find.mockReset()
     update.mockReset()
-    destroy.mockReset()
+    deleteFn.mockReset()
   })
 
   it("rejects unauthenticated requests", async () => {
@@ -206,33 +206,33 @@ describe("removeAvatar", () => {
       status: "error",
       message: "You must be signed in.",
     })
-    expect(destroy).not.toHaveBeenCalled()
+    expect(deleteFn).not.toHaveBeenCalled()
   })
 
-  it("destroys the Cloudinary asset and clears the field", async () => {
+  it("clears the relationship and deletes the media doc", async () => {
     stubSession()
-    stubUserLookup([
-      { id: "payload-user-1", avatar: { publicId: "user-avatars/p1/abc" } },
-    ])
-    destroy.mockResolvedValueOnce({ result: "ok" })
+    stubUserLookup([{ id: "payload-user-1", avatar: { id: "media-1" } }])
     update.mockResolvedValueOnce({})
+    deleteFn.mockResolvedValueOnce({})
 
     const { removeAvatar } = await import("./avatar")
     const result = await removeAvatar()
 
-    expect(destroy).toHaveBeenCalledWith("user-avatars/p1/abc", {
-      resource_type: "image",
-    })
     expect(update).toHaveBeenCalledWith({
       collection: "users",
       id: "payload-user-1",
-      data: { avatar: { url: null, publicId: null } },
+      data: { avatar: null },
+      overrideAccess: true,
+    })
+    expect(deleteFn).toHaveBeenCalledWith({
+      collection: "media",
+      id: "media-1",
       overrideAccess: true,
     })
     expect(result).toEqual({ status: "success" })
   })
 
-  it("skips Cloudinary destroy when no publicId is stored", async () => {
+  it("clears the relationship even when no avatar was set", async () => {
     stubSession()
     stubUserLookup([{ id: "payload-user-1" }])
     update.mockResolvedValueOnce({})
@@ -240,8 +240,8 @@ describe("removeAvatar", () => {
     const { removeAvatar } = await import("./avatar")
     const result = await removeAvatar()
 
-    expect(destroy).not.toHaveBeenCalled()
     expect(update).toHaveBeenCalled()
+    expect(deleteFn).not.toHaveBeenCalled()
     expect(result).toEqual({ status: "success" })
   })
 })

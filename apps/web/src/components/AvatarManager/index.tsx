@@ -1,5 +1,6 @@
 "use client"
 
+import { transformCloudinary } from "@mise/features/utils/transformCloudinary"
 import { Button } from "@mise/ui/components/Button"
 import { Dialog } from "@mise/ui/components/Dialog"
 import { RiUploadLine } from "@remixicon/react"
@@ -33,9 +34,6 @@ type DialogStatus =
   | { kind: "idle" }
   | { kind: "uploading" }
   | { kind: "error"; message: string }
-
-const buildDisplayUrl = (url: string): string =>
-  url.replace("/upload/", "/upload/c_thumb,g_face,w_192,h_192/")
 
 const buildInitial = (email: string): string =>
   email.charAt(0).toUpperCase() || "?"
@@ -124,7 +122,12 @@ export const AvatarManager = ({ avatarUrl, email }: AvatarManagerProps) => {
     })
   }
 
-  const displayUrl = avatarUrl ? buildDisplayUrl(avatarUrl) : null
+  const displayUrl = avatarUrl
+    ? transformCloudinary({
+        url: avatarUrl,
+        transform: "c_thumb,g_face,w_192,h_192,f_auto,q_auto",
+      })
+    : null
 
   return (
     <div className="flex items-center gap-4">
