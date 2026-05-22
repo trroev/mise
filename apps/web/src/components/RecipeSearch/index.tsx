@@ -8,11 +8,14 @@ import { Input } from "@mise/ui/components/Input"
 import { Pagination } from "@mise/ui/components/Pagination"
 import { cn } from "@mise/ui/utils/cn"
 import { RiCloseLine, RiFilter3Line, RiSearchLine } from "@remixicon/react"
+import { captureException } from "@sentry/nextjs"
 import MiniSearch from "minisearch"
 import { useSearchParams } from "next/navigation"
 import { useEffect, useMemo, useRef, useState } from "react"
+import { ErrorBoundary } from "react-error-boundary"
 import { match } from "ts-pattern"
 import { RecipeFilterPanel } from "~/components/RecipeFilterPanel"
+import { WidgetErrorFallback } from "~/components/WidgetErrorFallback"
 import { applyFacetFilters, getNoResultsMessage } from "./recipe-search.helpers"
 import { useRecipeFilters } from "./use-recipe-filters"
 
@@ -22,9 +25,7 @@ export type RecipeSearchProps = {
   recipes: Array<Recipe>
 }
 
-export const RecipeSearch = ({
-  recipes: initialRecipes,
-}: RecipeSearchProps) => {
+const RecipeSearchInner = ({ recipes: initialRecipes }: RecipeSearchProps) => {
   const searchParams = useSearchParams()
   const [isFiltersOpen, setIsFiltersOpen] = useState(false)
   const [localQuery, setLocalQuery] = useState(searchParams.get("q") ?? "")
@@ -323,3 +324,18 @@ export const RecipeSearch = ({
     </div>
   )
 }
+
+export const RecipeSearch = (props: RecipeSearchProps) => (
+  <ErrorBoundary
+    fallbackRender={({ resetErrorBoundary }) => (
+      <WidgetErrorFallback
+        description="We couldn't load the recipe search. The rest of the page should still work."
+        resetErrorBoundary={resetErrorBoundary}
+        title="Couldn't load recipe search"
+      />
+    )}
+    onError={(error) => captureException(error)}
+  >
+    <RecipeSearchInner {...props} />
+  </ErrorBoundary>
+)

@@ -9,9 +9,12 @@ import { Label } from "@mise/ui/components/Label"
 import { Select } from "@mise/ui/components/Select"
 import { Textarea } from "@mise/ui/components/Textarea"
 import { RiAddLine, RiDeleteBinLine } from "@remixicon/react"
+import { captureException } from "@sentry/nextjs"
 import { useForm } from "@tanstack/react-form"
 import Link from "next/link"
 import { useState } from "react"
+import { ErrorBoundary } from "react-error-boundary"
+import { WidgetErrorFallback } from "~/components/WidgetErrorFallback"
 import { submitRecipeAction } from "~/lib/actions/submit-recipe"
 import {
   COURSE_OPTIONS,
@@ -36,7 +39,7 @@ type RecipeSubmissionFormProps = {
 
 type SubmittedRecipe = { slug: string; title: string }
 
-export const RecipeSubmissionForm = ({
+const RecipeSubmissionFormInner = ({
   cuisines,
   units,
 }: RecipeSubmissionFormProps) => {
@@ -765,3 +768,18 @@ export const RecipeSubmissionForm = ({
     </form>
   )
 }
+
+export const RecipeSubmissionForm = (props: RecipeSubmissionFormProps) => (
+  <ErrorBoundary
+    fallbackRender={({ resetErrorBoundary }) => (
+      <WidgetErrorFallback
+        description="We couldn't load the submission form. Try again to reload it without leaving the page."
+        resetErrorBoundary={resetErrorBoundary}
+        title="Couldn't load the submission form"
+      />
+    )}
+    onError={(error) => captureException(error)}
+  >
+    <RecipeSubmissionFormInner {...props} />
+  </ErrorBoundary>
+)

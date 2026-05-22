@@ -36,6 +36,7 @@
     "payload": "^3.84.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-error-boundary": "^6.1.1",
     "react-schemaorg": "^2.0.1",
     "schema-dts": "^2.0.0",
     "server-only": "^0.0.1",

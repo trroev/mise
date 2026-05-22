@@ -4,9 +4,12 @@ import { Avatar } from "@mise/ui/components/Avatar"
 import { Button } from "@mise/ui/components/Button"
 import { Dialog } from "@mise/ui/components/Dialog"
 import { RiUploadLine } from "@remixicon/react"
+import { captureException } from "@sentry/nextjs"
 import { useRouter } from "next/navigation"
 import { useEffect, useId, useRef, useState, useTransition } from "react"
+import { ErrorBoundary } from "react-error-boundary"
 import { match } from "ts-pattern"
+import { WidgetErrorFallback } from "~/components/WidgetErrorFallback"
 import { removeAvatar, uploadAvatar } from "~/lib/actions/avatar"
 
 const MAX_AVATAR_BYTES = 5 * 1024 * 1024
@@ -37,7 +40,7 @@ type DialogStatus =
 const buildInitial = (email: string): string =>
   email.charAt(0).toUpperCase() || "?"
 
-export const AvatarManager = ({ avatarUrl, email }: AvatarManagerProps) => {
+const AvatarManagerInner = ({ avatarUrl, email }: AvatarManagerProps) => {
   const router = useRouter()
   const fileInputId = useId()
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -220,3 +223,18 @@ export const AvatarManager = ({ avatarUrl, email }: AvatarManagerProps) => {
     </div>
   )
 }
+
+export const AvatarManager = (props: AvatarManagerProps) => (
+  <ErrorBoundary
+    fallbackRender={({ resetErrorBoundary }) => (
+      <WidgetErrorFallback
+        description="We couldn't load the profile photo controls. The rest of your profile is still available."
+        resetErrorBoundary={resetErrorBoundary}
+        title="Couldn't load profile photo controls"
+      />
+    )}
+    onError={(error) => captureException(error)}
+  >
+    <AvatarManagerInner {...props} />
+  </ErrorBoundary>
+)
