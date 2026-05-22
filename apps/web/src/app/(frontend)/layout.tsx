@@ -62,7 +62,11 @@ export default async function FrontendLayout({
   }
 
   return (
-    <html className={`${cormorant.variable} ${manrope.variable}`} lang="en">
+    <html
+      className={`${cormorant.variable} ${manrope.variable}`}
+      data-scroll-behavior="smooth"
+      lang="en"
+    >
       <body className="flex min-h-dvh flex-col font-sans">
         <SessionProvider initialUser={session?.user ?? null}>
           <AppShell auth={headerAuth}>{children}</AppShell>
