@@ -29,11 +29,18 @@ const env = createEnv({
   server: {
     BASE_URL: z.string().url(),
     REVALIDATION_SECRET: z.string(),
+    SENTRY_AUTH_TOKEN: z.string().optional(),
+    SENTRY_ORG: z.string().optional(),
+    SENTRY_PROJECT: z.string().optional(),
+  },
+  client: {
+    NEXT_PUBLIC_SENTRY_DSN: z.string().url().optional(),
   },
   shared: {
     NODE_ENV: z.enum(["development", "production", "test"]),
   },
   experimental__runtimeEnv: {
+    NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
     NODE_ENV: process.env.NODE_ENV,
   },
 })

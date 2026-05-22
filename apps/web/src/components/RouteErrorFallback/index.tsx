@@ -1,6 +1,7 @@
 "use client"
 
 import { Button } from "@mise/ui/components/Button"
+import { captureException } from "@sentry/nextjs"
 import { useEffect } from "react"
 
 type RouteErrorFallbackProps = {
@@ -17,7 +18,7 @@ export const RouteErrorFallback = ({
   description = "We hit an unexpected error while loading this page. Please try again in a moment.",
 }: RouteErrorFallbackProps) => {
   useEffect(() => {
-    console.error(error)
+    captureException(error)
   }, [error])
 
   return (

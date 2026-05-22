@@ -1,4 +1,5 @@
 import { withPayload } from "@payloadcms/next/withPayload"
+import { withSentryConfig } from "@sentry/nextjs"
 import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
@@ -21,4 +22,11 @@ const nextConfig: NextConfig = {
   ],
 }
 
-export default withPayload(nextConfig)
+export default withSentryConfig(withPayload(nextConfig), {
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  silent: !process.env.CI,
+  widenClientFileUpload: true,
+  sourcemaps: { deleteSourcemapsAfterUpload: true },
+  telemetry: false,
+})

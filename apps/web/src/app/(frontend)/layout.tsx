@@ -4,6 +4,7 @@ import { AppShell } from "@mise/features/components/AppShell"
 import type { Metadata, Viewport } from "next"
 import { headers } from "next/headers"
 import type React from "react"
+import { SentryUser } from "~/components/SentryUser"
 import { cormorant, manrope } from "~/fonts"
 import { signOutAction } from "~/lib/actions/sign-out"
 import { auth } from "~/lib/auth.server"
@@ -69,6 +70,7 @@ export default async function FrontendLayout({
     >
       <body className="flex min-h-dvh flex-col font-sans">
         <SessionProvider initialUser={session?.user ?? null}>
+          <SentryUser />
           <AppShell auth={headerAuth}>{children}</AppShell>
         </SessionProvider>
       </body>
