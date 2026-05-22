@@ -1,11 +1,13 @@
 import { Badge } from "@mise/ui/components/Badge"
 import type { Metadata } from "next"
+import { headers } from "next/headers"
 import Link from "next/link"
 import { redirect } from "next/navigation"
 import { match } from "ts-pattern"
 import { AvatarManager } from "~/components/AvatarManager"
 import { SignOutButton } from "~/components/SignOutButton"
-import { getCurrentViewer } from "~/lib/queries/current-viewer"
+import { auth } from "~/lib/auth.server"
+import { getPayloadUserByBetterAuthId } from "~/lib/queries/payload-user-by-better-auth-id"
 import { getRecipesByAuthorUser } from "~/lib/queries/recipes-by-author"
 
 export const metadata: Metadata = {
@@ -20,13 +22,16 @@ const dateFormatter = new Intl.DateTimeFormat("en-US", {
 })
 
 export default async function ProfilePage() {
-  const viewer = await getCurrentViewer()
-  if (viewer?.kind !== "user") {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) {
     redirect("/sign-in?callbackUrl=/profile")
   }
 
-  const payloadUser = viewer.user
-  const recipes = await getRecipesByAuthorUser(payloadUser.id)
+  const { user } = session
+  const payloadUser = await getPayloadUserByBetterAuthId(user.id)
+  const recipes = payloadUser
+    ? await getRecipesByAuthorUser(payloadUser.id)
+    : []
 
   return (
     <section className="constrainer flex flex-col space-y-10 py-10">
@@ -46,17 +51,17 @@ export default async function ProfilePage() {
               ? (payloadUser.avatar.url ?? null)
               : null
           }
-          email={payloadUser.email}
+          email={user.email}
         />
         <dl className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-1">
             <dt className="text-body-sm text-text-secondary">Email</dt>
-            <dd className="text-body text-text-primary">{payloadUser.email}</dd>
+            <dd className="text-body text-text-primary">{user.email}</dd>
           </div>
           <div className="space-y-1">
             <dt className="text-body-sm text-text-secondary">Member since</dt>
             <dd className="text-body text-text-primary">
-              {dateFormatter.format(new Date(payloadUser.createdAt))}
+              {dateFormatter.format(new Date(user.createdAt))}
             </dd>
           </div>
         </dl>
