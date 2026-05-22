@@ -7,8 +7,7 @@ import { mergeConfig } from "vitest/config"
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
 export default mergeConfig(sharedConfig, {
-  // biome-ignore lint/suspicious/noExplicitAny: vite version mismatch in types
-  plugins: [react() as any],
+  plugins: [react()],
   esbuild: {
     jsx: "automatic",
   },
