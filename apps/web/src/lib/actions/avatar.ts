@@ -2,10 +2,10 @@
 
 import "server-only"
 
-import { headers } from "next/headers"
-import { getPayload } from "payload"
-import { auth } from "~/lib/auth.server"
-import config from "~/payload.config"
+import { match, P } from "ts-pattern"
+import { getCurrentViewer } from "~/lib/queries/current-viewer"
+import { createMediaAsset, deleteMediaAsset } from "~/lib/queries/media"
+import { updateUserAvatar } from "~/lib/queries/update-user-avatar"
 
 const MAX_AVATAR_BYTES = 5 * 1024 * 1024
 
@@ -49,125 +49,62 @@ const validateAvatarFile = (formData: FormData): AvatarFileValidation => {
   return { ok: true, file }
 }
 
-const extractAvatarId = (avatar: unknown): string | null => {
-  if (typeof avatar === "string" || typeof avatar === "number") {
-    return String(avatar)
-  }
-  if (
-    avatar &&
-    typeof avatar === "object" &&
-    "id" in avatar &&
-    (typeof avatar.id === "string" || typeof avatar.id === "number")
-  ) {
-    return String(avatar.id)
-  }
-  return null
-}
+const extractAvatarId = (avatar: unknown): string | null =>
+  match(avatar)
+    .with(P.string, (id) => id)
+    .with(P.number, (id) => String(id))
+    .with({ id: P.string }, ({ id }) => id)
+    .with({ id: P.number }, ({ id }) => String(id))
+    .otherwise(() => null)
 
 export async function uploadAvatar(
   formData: FormData
 ): Promise<UploadAvatarResult> {
-  const session = await auth.api.getSession({ headers: await headers() })
-  if (!session) {
+  const viewer = await getCurrentViewer()
+  if (viewer?.kind !== "user") {
     return { status: "error", message: "You must be signed in." }
   }
+  const userDoc = viewer.user
 
   const validation = validateAvatarFile(formData)
   if (!validation.ok) {
     return { status: "error", message: validation.message }
   }
 
-  const payload = await getPayload({ config })
-  const userDocs = await payload.find({
-    collection: "users",
-    where: { betterAuthId: { equals: session.user.id } },
-    limit: 1,
-    overrideAccess: true,
-  })
-  const userDoc = userDocs.docs[0]
-  if (!userDoc) {
-    return { status: "error", message: "User record not found." }
-  }
-
   const previousAvatarId = extractAvatarId(userDoc.avatar)
-
-  const buffer = Buffer.from(await validation.file.arrayBuffer())
-  const altLabel = userDoc.name || session.user.email
-  const media = await payload.create({
-    collection: "media",
-    data: { alt: `${altLabel} profile photo` },
-    file: {
-      data: buffer,
-      mimetype: validation.file.type,
-      name: validation.file.name || "avatar",
-      size: validation.file.size,
-    },
-    overrideAccess: true,
+  const altLabel = userDoc.name || userDoc.email
+  const media = await createMediaAsset({
+    file: validation.file,
+    alt: `${altLabel} profile photo`,
+    fallbackName: "avatar",
   })
 
-  await payload.update({
-    collection: "users",
-    id: userDoc.id,
-    data: { avatar: media.id },
-    overrideAccess: true,
-  })
+  await updateUserAvatar({ userId: userDoc.id, mediaId: media.id })
 
-  if (previousAvatarId && previousAvatarId !== String(media.id)) {
-    await payload
-      .delete({
-        collection: "media",
-        id: previousAvatarId,
-        overrideAccess: true,
-      })
-      .catch(() => {
-        // Best-effort cleanup: don't fail the upload if the old asset is gone.
-      })
+  if (previousAvatarId && previousAvatarId !== media.id) {
+    await deleteMediaAsset(previousAvatarId)
   }
 
   return {
     status: "success",
-    mediaId: String(media.id),
+    mediaId: media.id,
     url: media.url ?? "",
   }
 }
 
 export async function removeAvatar(): Promise<RemoveAvatarResult> {
-  const session = await auth.api.getSession({ headers: await headers() })
-  if (!session) {
+  const viewer = await getCurrentViewer()
+  if (viewer?.kind !== "user") {
     return { status: "error", message: "You must be signed in." }
   }
-
-  const payload = await getPayload({ config })
-  const userDocs = await payload.find({
-    collection: "users",
-    where: { betterAuthId: { equals: session.user.id } },
-    limit: 1,
-    overrideAccess: true,
-  })
-  const userDoc = userDocs.docs[0]
-  if (!userDoc) {
-    return { status: "error", message: "User record not found." }
-  }
+  const userDoc = viewer.user
 
   const avatarId = extractAvatarId(userDoc.avatar)
 
-  await payload.update({
-    collection: "users",
-    id: userDoc.id,
-    data: { avatar: null },
-    overrideAccess: true,
-  })
+  await updateUserAvatar({ userId: userDoc.id, mediaId: null })
 
   if (avatarId) {
-    await payload
-      .delete({
-        collection: "media",
-        id: avatarId,
-        overrideAccess: true,
-      })
-      .catch(() => {
-        // Best-effort: relation is already cleared.
-      })
+    await deleteMediaAsset(avatarId)
   }
 
   return { status: "success" }

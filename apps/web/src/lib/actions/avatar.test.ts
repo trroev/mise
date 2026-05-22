@@ -1,10 +1,11 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
+import { beforeEach, describe, expect, it, vi } from "vitest"
 
 const getSession = vi.fn()
 const find = vi.fn()
 const update = vi.fn()
 const create = vi.fn()
 const deleteFn = vi.fn()
+const payloadAuth = vi.fn(async () => ({ user: null }))
 
 vi.mock("server-only", () => ({}))
 
@@ -14,6 +15,7 @@ vi.mock("next/headers", () => ({
 
 vi.mock("payload", () => ({
   getPayload: vi.fn(async () => ({
+    auth: payloadAuth,
     find,
     update,
     create,
@@ -58,15 +60,14 @@ const stubUserLookup = (
 
 describe("uploadAvatar", () => {
   beforeEach(() => {
+    vi.resetModules()
     getSession.mockReset()
     find.mockReset()
     update.mockReset()
     create.mockReset()
     deleteFn.mockReset()
-  })
-
-  afterEach(() => {
-    vi.resetModules()
+    payloadAuth.mockReset()
+    payloadAuth.mockResolvedValue({ user: null })
   })
 
   it("rejects unauthenticated requests", async () => {
@@ -82,6 +83,7 @@ describe("uploadAvatar", () => {
 
   it("rejects missing files", async () => {
     stubSession()
+    stubUserLookup()
     const { uploadAvatar } = await import("./avatar")
     const result = await uploadAvatar(new FormData())
     expect(result.status).toBe("error")
@@ -90,6 +92,7 @@ describe("uploadAvatar", () => {
 
   it("rejects files over 5 MB", async () => {
     stubSession()
+    stubUserLookup()
     const formData = new FormData()
     formData.set("avatar", makeFile("big.jpg", "image/jpeg", 6 * 1024 * 1024))
     const { uploadAvatar } = await import("./avatar")
@@ -102,6 +105,7 @@ describe("uploadAvatar", () => {
 
   it("rejects disallowed mime types", async () => {
     stubSession()
+    stubUserLookup()
     const formData = new FormData()
     formData.set("avatar", makeFile("evil.gif", "image/gif", 1024))
     const { uploadAvatar } = await import("./avatar")
@@ -121,7 +125,7 @@ describe("uploadAvatar", () => {
     const result = await uploadAvatar(formData)
     expect(result).toEqual({
       status: "error",
-      message: "User record not found.",
+      message: "You must be signed in.",
     })
   })
 
@@ -192,10 +196,13 @@ describe("uploadAvatar", () => {
 
 describe("removeAvatar", () => {
   beforeEach(() => {
+    vi.resetModules()
     getSession.mockReset()
     find.mockReset()
     update.mockReset()
     deleteFn.mockReset()
+    payloadAuth.mockReset()
+    payloadAuth.mockResolvedValue({ user: null })
   })
 
   it("rejects unauthenticated requests", async () => {

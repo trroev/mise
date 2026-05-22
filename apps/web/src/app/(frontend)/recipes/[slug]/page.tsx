@@ -10,24 +10,21 @@ import { Badge } from "@mise/ui/components/Badge"
 import { formatDuration } from "@mise/utils/formatDuration"
 import { RiTimerLine } from "@remixicon/react"
 import type { Metadata } from "next"
-import { headers } from "next/headers"
 import Image from "next/image"
 import { notFound } from "next/navigation"
-import { getPayload } from "payload"
 import { Suspense } from "react"
 import { JsonLd } from "react-schemaorg"
 import type { Recipe as RecipeSchema } from "schema-dts"
 import { match, P } from "ts-pattern"
 import { RecipeControls } from "~/components/RecipeControls"
 import { RefreshRouteOnSave } from "~/components/RefreshRouteOnSave"
-import { auth } from "~/lib/auth.server"
-import { getPayloadUserByBetterAuthId } from "~/lib/queries/payload-user-by-better-auth-id"
+import { canViewDraft } from "~/lib/policies/can-view-draft"
+import { getCurrentViewer } from "~/lib/queries/current-viewer"
 import { getPublishedRecipes } from "~/lib/queries/published-recipes"
 import {
   getDraftRecipeBySlug,
   getRecipeBySlug,
 } from "~/lib/queries/recipe-by-slug"
-import config from "~/payload.config"
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -91,31 +88,12 @@ export default async function RecipeDetailPage({
 
   const recipe = await match(isPreview)
     .with(true, async () => {
-      const requestHeaders = await headers()
       const draft = await getDraftRecipeBySlug(slug)
       if (!draft) {
         return null
       }
-      const payload = await getPayload({ config })
-      const { user: adminUser } = await payload.auth({
-        headers: requestHeaders,
-      })
-      if (adminUser?.collection === "admins") {
-        return draft
-      }
-      const session = await auth.api.getSession({ headers: requestHeaders })
-      if (!session) {
-        return null
-      }
-      const authorUserId = match(draft.authorUser)
-        .with(P.string, (id) => id)
-        .with({ id: P.string }, (u) => u.id)
-        .otherwise(() => null)
-      if (!authorUserId) {
-        return null
-      }
-      const viewer = await getPayloadUserByBetterAuthId(session.user.id)
-      return viewer?.id === authorUserId ? draft : null
+      const viewer = await getCurrentViewer()
+      return canViewDraft(viewer, draft) ? draft : null
     })
     .otherwise(() => getRecipeBySlug(slug))
 

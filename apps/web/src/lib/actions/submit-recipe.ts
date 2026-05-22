@@ -3,11 +3,11 @@
 import "server-only"
 
 import type { Recipe } from "@mise/payload/payload-types"
-import { headers } from "next/headers"
-import { getPayload } from "payload"
 import { z } from "zod"
-import { auth } from "~/lib/auth.server"
-import config from "~/payload.config"
+import { canSubmitRecipe } from "~/lib/policies/can-submit-recipe"
+import { createDraftRecipe } from "~/lib/queries/create-draft-recipe"
+import { getCurrentViewer } from "~/lib/queries/current-viewer"
+import { createMediaAsset } from "~/lib/queries/media"
 
 const ingredientSchema = z.object({
   name: z.string().trim().min(1, "Ingredient name is required."),
@@ -140,36 +140,17 @@ const readHeroImage = (formData: FormData): HeroImageInput => {
   return { kind: "valid", file: heroImage, alt: heroImageAlt.trim() }
 }
 
-const uploadHeroImage = async (
-  payload: Awaited<ReturnType<typeof getPayload>>,
-  file: File,
-  alt: string
-): Promise<string> => {
-  const buffer = Buffer.from(await file.arrayBuffer())
-  const media = await payload.create({
-    collection: "media",
-    data: { alt },
-    file: {
-      data: buffer,
-      mimetype: file.type || "application/octet-stream",
-      name: file.name || "hero-image",
-      size: file.size,
-    },
-    overrideAccess: true,
-  })
-  return String(media.id)
-}
-
 export async function submitRecipeAction(
   formData: FormData
 ): Promise<SubmitRecipeResult> {
-  const session = await auth.api.getSession({ headers: await headers() })
-  if (!session) {
+  const viewer = await getCurrentViewer()
+  if (!canSubmitRecipe(viewer) || viewer?.kind !== "user") {
     return {
       status: "error",
       message: "You must be signed in to submit a recipe.",
     }
   }
+  const authorUser = viewer.user
 
   const parsed = parseSubmissionPayload(formData)
   if (!parsed.ok) {
@@ -182,25 +163,15 @@ export async function submitRecipeAction(
     return { status: "error", message: hero.message }
   }
 
-  const payload = await getPayload({ config })
-
-  const userDocs = await payload.find({
-    collection: "users",
-    where: { betterAuthId: { equals: session.user.id } },
-    limit: 1,
-    overrideAccess: true,
-  })
-  const authorUser = userDocs.docs[0]
-  if (!authorUser) {
-    return {
-      status: "error",
-      message: "Your user record is not linked. Try signing out and back in.",
-    }
-  }
-
   const heroImageId =
     hero.kind === "valid"
-      ? await uploadHeroImage(payload, hero.file, hero.alt)
+      ? (
+          await createMediaAsset({
+            file: hero.file,
+            alt: hero.alt,
+            fallbackName: "hero-image",
+          })
+        ).id
       : undefined
 
   const recipeData: Partial<Recipe> = {
@@ -215,22 +186,16 @@ export async function submitRecipeAction(
     yield: input.yield,
     ingredientGroups: input.ingredientGroups,
     instructionGroups: input.instructionGroups,
-    author: authorUser.name || session.user.name || session.user.email,
+    author: authorUser.name || authorUser.email,
     authorUser: authorUser.id,
     heroImage: heroImageId,
   }
 
-  const created = await payload.create({
-    collection: "recipes",
-    // biome-ignore lint/suspicious/noExplicitAny: Payload's create signature is overly strict for our partial shape
-    data: recipeData as any,
-    draft: true,
-    overrideAccess: true,
-  })
+  const created = await createDraftRecipe({ data: recipeData })
 
   return {
     status: "success",
-    recipeId: String(created.id),
-    slug: created.slug ?? String(created.id),
+    recipeId: created.id,
+    slug: created.slug ?? created.id,
   }
 }
