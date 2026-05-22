@@ -4,7 +4,7 @@ import {
   COURSE_LABELS,
   DIETARY_TAG_LABELS,
   DIFFICULTY_LABELS,
-} from "@mise/features/utils/recipeLabels"
+} from "@mise/chrome/utils/recipeLabels"
 import type { Recipe } from "@mise/payload/payload-types"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useMemo } from "react"

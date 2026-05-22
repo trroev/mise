@@ -1,4 +1,4 @@
-import { RecipeCard } from "@mise/features/components/RecipeCard"
+import { RecipeCard } from "@mise/chrome/components/RecipeCard"
 import type { Recipe } from "@mise/payload/payload-types"
 import Link from "next/link"
 

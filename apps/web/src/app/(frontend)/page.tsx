@@ -1,4 +1,4 @@
-import { transformCloudinary } from "@mise/features/utils/transformCloudinary"
+import { transformCloudinary } from "@mise/chrome/utils/transformCloudinary"
 import { Button } from "@mise/ui/components/Button"
 import type { Metadata } from "next"
 import Image from "next/image"

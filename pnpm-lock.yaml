@@ -127,12 +127,12 @@ importers:
       '@mise/auth':
         specifier: workspace:*
         version: link:../../packages/auth
+      '@mise/chrome':
+        specifier: workspace:*
+        version: link:../../packages/chrome
       '@mise/env':
         specifier: workspace:*
         version: link:../../packages/env
-      '@mise/features':
-        specifier: workspace:*
-        version: link:../../packages/features
       '@mise/payload':
         specifier: workspace:*
         version: link:../../packages/payload
@@ -268,29 +268,7 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
 
-  packages/env:
-    dependencies:
-      '@t3-oss/env-nextjs':
-        specifier: ^0.13.10
-        version: 0.13.11(typescript@6.0.3)(zod@4.3.6)
-      ts-pattern:
-        specifier: ^5.9.0
-        version: 5.9.0
-      zod:
-        specifier: ^4.3.6
-        version: 4.3.6
-    devDependencies:
-      '@mise/tsconfig':
-        specifier: workspace:*
-        version: link:../tsconfig
-      '@types/node':
-        specifier: ^22.15.3
-        version: 22.15.3
-      typescript:
-        specifier: ^6.0.3
-        version: 6.0.3
-
-  packages/features:
+  packages/chrome:
     dependencies:
       '@mise/payload':
         specifier: workspace:*
@@ -335,6 +313,28 @@ importers:
       payload:
         specifier: ^3.84.1
         version: 3.84.1(graphql@16.13.2)(typescript@6.0.3)
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+
+  packages/env:
+    dependencies:
+      '@t3-oss/env-nextjs':
+        specifier: ^0.13.10
+        version: 0.13.11(typescript@6.0.3)(zod@4.3.6)
+      ts-pattern:
+        specifier: ^5.9.0
+        version: 5.9.0
+      zod:
+        specifier: ^4.3.6
+        version: 4.3.6
+    devDependencies:
+      '@mise/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: ^22.15.3
+        version: 22.15.3
       typescript:
         specifier: ^6.0.3
         version: 6.0.3

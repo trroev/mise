@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
   },
   transpilePackages: [
     "@mise/auth",
+    "@mise/chrome",
     "@mise/env",
     "@mise/payload",
     "@mise/tailwind",

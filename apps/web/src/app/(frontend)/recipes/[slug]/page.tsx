@@ -1,11 +1,11 @@
-import { env as appEnv } from "@mise/env/app"
-import { buildRecipeJsonLd } from "@mise/features/utils/buildRecipeJsonLd"
+import { buildRecipeJsonLd } from "@mise/chrome/utils/buildRecipeJsonLd"
 import {
   COURSE_LABELS,
   DIETARY_TAG_LABELS,
   DIFFICULTY_LABELS,
-} from "@mise/features/utils/recipeLabels"
-import { transformCloudinary } from "@mise/features/utils/transformCloudinary"
+} from "@mise/chrome/utils/recipeLabels"
+import { transformCloudinary } from "@mise/chrome/utils/transformCloudinary"
+import { env as appEnv } from "@mise/env/app"
 import { Badge } from "@mise/ui/components/Badge"
 import { formatDuration } from "@mise/utils/formatDuration"
 import { RiTimerLine } from "@remixicon/react"

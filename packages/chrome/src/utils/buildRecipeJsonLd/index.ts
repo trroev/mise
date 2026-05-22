@@ -1,5 +1,5 @@
-import { COURSE_LABELS } from "@mise/features/utils/recipeLabels"
-import { transformCloudinary } from "@mise/features/utils/transformCloudinary"
+import { COURSE_LABELS } from "@mise/chrome/utils/recipeLabels"
+import { transformCloudinary } from "@mise/chrome/utils/transformCloudinary"
 import type { Recipe } from "@mise/payload/payload-types"
 import type { Recipe as RecipeSchema, WithContext } from "schema-dts"
 import { match, P } from "ts-pattern"

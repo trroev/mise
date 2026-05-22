@@ -1,6 +1,6 @@
 "use client"
 
-import { RecipeCard } from "@mise/features/components/RecipeCard"
+import { RecipeCard } from "@mise/chrome/components/RecipeCard"
 import type { Recipe } from "@mise/payload/payload-types"
 import { Badge } from "@mise/ui/components/Badge"
 import { Button } from "@mise/ui/components/Button"

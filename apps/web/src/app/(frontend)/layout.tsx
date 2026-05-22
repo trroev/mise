@@ -1,6 +1,6 @@
+import type { HeaderAuth } from "@mise/chrome/components/AppShell"
+import { AppShell } from "@mise/chrome/components/AppShell"
 import { env } from "@mise/env/app"
-import type { HeaderAuth } from "@mise/features/components/AppShell"
-import { AppShell } from "@mise/features/components/AppShell"
 import type { Metadata, Viewport } from "next"
 import { headers } from "next/headers"
 import type React from "react"

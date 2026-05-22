@@ -1,5 +1,5 @@
-import { COURSE_LABELS } from "@mise/features/utils/recipeLabels"
-import { transformCloudinary } from "@mise/features/utils/transformCloudinary"
+import { COURSE_LABELS } from "@mise/chrome/utils/recipeLabels"
+import { transformCloudinary } from "@mise/chrome/utils/transformCloudinary"
 import type { Recipe } from "@mise/payload/payload-types"
 import { Badge } from "@mise/ui/components/Badge"
 import Image from "next/image"
