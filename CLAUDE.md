@@ -29,7 +29,7 @@ chore(deps): install ts-pattern in packages/utils
 ```
 
 ### TypeScript
-Full conventions are documented in [`docs/typescript-conventions.md`](./docs/typescript-conventions.md). Key rules enforced by Biome:
+Full conventions are loaded via the `typescript-conventions` skill (`~/.claude/skills/typescript-conventions/`). Key rules enforced by Biome:
 
 | Rule | Enforcement |
 |---|---|
