@@ -1,29 +1,23 @@
 "use client"
 
-import { Avatar } from "@mise/ui/components/Avatar"
-import { Menu } from "@mise/ui/components/Menu"
 import { NavigationMenu } from "@mise/ui/components/NavigationMenu"
 import { cn } from "@mise/ui/utils/cn"
 import { RiCloseLine, RiMenuLine } from "@remixicon/react"
 import Link from "next/link"
+import type React from "react"
 import { useEffect, useState } from "react"
 
-export type HeaderAuth =
-  | {
-      status: "signed-in"
-      displayName: string
-      initials: string
-      avatarUrl: string | null
-    }
-  | { status: "anonymous" }
-
 export type SiteHeaderProps = {
-  auth: HeaderAuth
-  onSignOut?: () => void | Promise<void>
+  authSlot: React.ReactNode
+  mobileAuthSlot: React.ReactNode
   className?: string
 }
 
-export const SiteHeader = ({ auth, onSignOut, className }: SiteHeaderProps) => {
+export const SiteHeader = ({
+  authSlot,
+  mobileAuthSlot,
+  className,
+}: SiteHeaderProps) => {
   const [isScrolled, setIsScrolled] = useState(false)
   const [navValue, setNavValue] = useState<string | null>(null)
 
@@ -103,7 +97,7 @@ export const SiteHeader = ({ auth, onSignOut, className }: SiteHeaderProps) => {
                       )}
                     >
                       <ul className="flex flex-col space-y-4">
-                        <li>
+                        <NavigationMenu.Item>
                           <NavigationMenu.Link
                             className="text-heading-md text-text-primary hover:text-text-secondary"
                             closeOnClick
@@ -111,51 +105,8 @@ export const SiteHeader = ({ auth, onSignOut, className }: SiteHeaderProps) => {
                           >
                             Recipes
                           </NavigationMenu.Link>
-                        </li>
-                        {auth.status === "signed-in" ? (
-                          <>
-                            <li>
-                              <NavigationMenu.Link
-                                className="text-heading-md text-text-primary hover:text-text-secondary"
-                                closeOnClick
-                                render={<Link href="/profile" />}
-                              >
-                                Profile
-                              </NavigationMenu.Link>
-                            </li>
-                            <li>
-                              <NavigationMenu.Link
-                                className="text-heading-md text-text-primary hover:text-text-secondary"
-                                closeOnClick
-                                render={<Link href="/submit" />}
-                              >
-                                Submit recipe
-                              </NavigationMenu.Link>
-                            </li>
-                            <li>
-                              <button
-                                className="text-left text-heading-md text-text-primary hover:text-text-secondary"
-                                onClick={() => {
-                                  setNavValue(null)
-                                  onSignOut?.()
-                                }}
-                                type="button"
-                              >
-                                Sign out
-                              </button>
-                            </li>
-                          </>
-                        ) : (
-                          <li>
-                            <NavigationMenu.Link
-                              className="text-heading-md text-text-primary hover:text-text-secondary"
-                              closeOnClick
-                              render={<Link href="/sign-in" />}
-                            >
-                              Sign in
-                            </NavigationMenu.Link>
-                          </li>
-                        )}
+                        </NavigationMenu.Item>
+                        {mobileAuthSlot}
                       </ul>
                     </NavigationMenu.Popup>
                   </NavigationMenu.Positioner>
@@ -164,50 +115,7 @@ export const SiteHeader = ({ auth, onSignOut, className }: SiteHeaderProps) => {
             </NavigationMenu.List>
           </NavigationMenu.Root>
 
-          <div className="hidden md:flex">
-            {auth.status === "signed-in" ? (
-              <Menu.Root>
-                <Menu.Trigger
-                  aria-label={`Account menu for ${auth.displayName}`}
-                  className="rounded-full"
-                >
-                  <Avatar
-                    alt=""
-                    initials={auth.initials}
-                    size="sm"
-                    src={auth.avatarUrl}
-                  />
-                </Menu.Trigger>
-                <Menu.Portal>
-                  <Menu.Positioner align="end">
-                    <Menu.Popup>
-                      <Menu.LinkItem render={<Link href="/profile" />}>
-                        Profile
-                      </Menu.LinkItem>
-                      <Menu.LinkItem render={<Link href="/submit" />}>
-                        Submit recipe
-                      </Menu.LinkItem>
-                      <Menu.Separator />
-                      <Menu.Item
-                        onClick={() => {
-                          onSignOut?.()
-                        }}
-                      >
-                        Sign out
-                      </Menu.Item>
-                    </Menu.Popup>
-                  </Menu.Positioner>
-                </Menu.Portal>
-              </Menu.Root>
-            ) : (
-              <Link
-                className="text-body text-text-secondary hover:text-text-primary"
-                href="/sign-in"
-              >
-                Sign in
-              </Link>
-            )}
-          </div>
+          <div className="hidden md:flex">{authSlot}</div>
         </div>
       </div>
     </header>

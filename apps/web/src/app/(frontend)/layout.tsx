@@ -57,6 +57,7 @@ export default async function FrontendLayout({
       displayName,
       initials: buildInitials(displayName),
       avatarUrl,
+      onSignOut: signOutAction,
     }
   }
 
@@ -64,9 +65,7 @@ export default async function FrontendLayout({
     <html className={`${cormorant.variable} ${manrope.variable}`} lang="en">
       <body className="flex min-h-dvh flex-col font-sans">
         <SessionProvider initialUser={session?.user ?? null}>
-          <AppShell auth={headerAuth} onSignOut={signOutAction}>
-            {children}
-          </AppShell>
+          <AppShell auth={headerAuth}>{children}</AppShell>
         </SessionProvider>
       </body>
     </html>
