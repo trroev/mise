@@ -1,6 +1,7 @@
 "use client"
 
 import { NavigationMenu } from "@mise/ui/components/NavigationMenu"
+import { Separator } from "@mise/ui/components/Separator"
 import { cn } from "@mise/ui/utils/cn"
 import { RiCloseLine, RiMenuLine } from "@remixicon/react"
 import Link from "next/link"
@@ -106,6 +107,7 @@ export const SiteHeader = ({
                             Recipes
                           </NavigationMenu.Link>
                         </NavigationMenu.Item>
+                        <Separator />
                         {mobileAuthSlot}
                       </ul>
                     </NavigationMenu.Popup>
@@ -115,7 +117,10 @@ export const SiteHeader = ({
             </NavigationMenu.List>
           </NavigationMenu.Root>
 
-          <div className="hidden md:flex">{authSlot}</div>
+          <div className="hidden md:flex md:gap-2">
+            <Separator orientation="vertical" />
+            {authSlot}
+          </div>
         </div>
       </div>
     </header>
