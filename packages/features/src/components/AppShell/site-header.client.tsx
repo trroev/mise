@@ -3,10 +3,10 @@
 import { NavigationMenu } from "@mise/ui/components/NavigationMenu"
 import { Separator } from "@mise/ui/components/Separator"
 import { cn } from "@mise/ui/utils/cn"
-import { RiCloseLine, RiMenuLine } from "@remixicon/react"
 import Link from "next/link"
 import type React from "react"
 import { useEffect, useState } from "react"
+import { MobileNav } from "../MobileNav"
 
 export type SiteHeaderProps = {
   authSlot: React.ReactNode
@@ -21,6 +21,7 @@ export const SiteHeader = ({
 }: SiteHeaderProps) => {
   const [isScrolled, setIsScrolled] = useState(false)
   const [navValue, setNavValue] = useState<string | null>(null)
+  const isMobileNavOpen = navValue === "mobile"
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 0)
@@ -64,57 +65,7 @@ export const SiteHeader = ({
               </NavigationMenu.Item>
             </NavigationMenu.List>
 
-            {/* Mobile hamburger */}
-            <NavigationMenu.List className="flex md:hidden">
-              <NavigationMenu.Item value="mobile">
-                <NavigationMenu.Trigger
-                  aria-label={
-                    navValue ? "Close navigation menu" : "Open navigation menu"
-                  }
-                  className="h-9 w-9"
-                >
-                  {navValue ? (
-                    <RiCloseLine aria-hidden size={20} />
-                  ) : (
-                    <RiMenuLine aria-hidden size={20} />
-                  )}
-                </NavigationMenu.Trigger>
-                <NavigationMenu.Portal>
-                  <NavigationMenu.Positioner
-                    className={cn(
-                      "z-30 size-full",
-                      "transition-[top,left,right,bottom] duration-350 ease-[cubic-bezier(0.22,1,0.36,1)]",
-                      "data-instant:transition-none"
-                    )}
-                    collisionPadding={0}
-                  >
-                    <NavigationMenu.Popup
-                      className={cn(
-                        "flex size-full flex-col bg-background p-6",
-                        "transition-[opacity,translate] duration-350 ease-[cubic-bezier(0.22,1,0.36,1)]",
-                        "data-starting-style:-translate-y-16 data-starting-style:opacity-0",
-                        "data-ending-style:-translate-y-16 data-ending-style:opacity-0",
-                        "data-ending-style:duration-150 data-ending-style:ease-in"
-                      )}
-                    >
-                      <ul className="flex flex-col space-y-4">
-                        <NavigationMenu.Item>
-                          <NavigationMenu.Link
-                            className="text-heading-md text-text-primary hover:text-text-secondary"
-                            closeOnClick
-                            render={<Link href="/recipes" />}
-                          >
-                            Recipes
-                          </NavigationMenu.Link>
-                        </NavigationMenu.Item>
-                        <Separator />
-                        {mobileAuthSlot}
-                      </ul>
-                    </NavigationMenu.Popup>
-                  </NavigationMenu.Positioner>
-                </NavigationMenu.Portal>
-              </NavigationMenu.Item>
-            </NavigationMenu.List>
+            <MobileNav authSlot={mobileAuthSlot} isOpen={isMobileNavOpen} />
           </NavigationMenu.Root>
 
           <div className="hidden md:flex md:gap-2">
