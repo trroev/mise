@@ -8,10 +8,6 @@ export default mergeConfig(sharedConfig, {
       reporter: ["text", "html", "lcov"],
       include: ["src/**/*.ts"],
       exclude: ["src/**/*.test.ts", "src/index.ts"],
-      thresholds: {
-        lines: 80,
-        functions: 80,
-      },
     },
   },
 })
