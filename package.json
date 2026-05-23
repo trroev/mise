@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "build": "dotenvx run --convention=nextjs -- turbo run build",
+    "coverage": "turbo run coverage",
     "dev": "dotenvx run --convention=nextjs -- turbo run dev",
     "format": "pnpm exec biome format",
     "format:fix": "pnpm exec biome format --write",

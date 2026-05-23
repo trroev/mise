@@ -13,6 +13,7 @@ Mise is a personal recipe app built by a former 2-Michelin-star chef. Work ticke
 - **Formatter/Linter:** Biome (extends `ultracite/biome/core|react|next`). Run `pnpm lint` and `pnpm format` from root.
 - **Type checking:** `pnpm typecheck` from root.
 - **Tests:** Vitest via `pnpm test`. Shared config in `packages/testing`.
+- **Coverage:** `pnpm coverage` from root runs `turbo run coverage` across all packages that define the script. Thresholds live in each package's `vitest.config.ts` under `test.coverage.thresholds`. CI runs the same command and fails the build if any threshold drops. To raise the bar per release, bump the `lines`/`functions`/`branches`/`statements` values in the relevant `vitest.config.ts` — never lower them. New packages opt in by adding a `coverage` script and a `coverage` block to their vitest config.
 - **Package manager:** pnpm. Always use `pnpm add`, never `npm install`.
 
 ---

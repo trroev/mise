@@ -48,3 +48,12 @@ jobs:
       - name: Test
         if: env.ACT != 'true'
         uses: ./tooling/github/ci/test
+
+  coverage:
+    runs-on: ubuntu-latest
+    name: Coverage
+    steps:
+      - uses: actions/checkout@v6
+      - name: Coverage
+        if: env.ACT != 'true'
+        uses: ./tooling/github/ci/coverage
