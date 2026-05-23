@@ -7,10 +7,13 @@ import {
 } from "@testing-library/react"
 import type { ComponentType, ReactElement, ReactNode } from "react"
 
+export { default as userEvent } from "@testing-library/user-event"
 export {
-  mockNextImage,
-  mockNextLink,
-  mockNextNavigation,
+  createNextNavigationState,
+  type NextNavigationState,
+  nextImageFactory,
+  nextLinkFactory,
+  nextNavigationFactory,
 } from "./next-mocks"
 
 type RenderWithProvidersOptions = {
