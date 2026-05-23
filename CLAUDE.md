@@ -28,6 +28,8 @@ fix(web): correct ISR revalidation path for recipe detail
 chore(deps): install ts-pattern in packages/utils
 ```
 
+A Husky pre-commit hook runs `biome check --write` on staged `.ts`/`.tsx`/`.json` files via lint-staged, followed by `turbo run typecheck --affected`. **Never bypass the hook with `git commit --no-verify`** — fix the underlying lint or type error instead.
+
 ### TypeScript
 Full conventions are loaded via the `typescript-conventions` skill (`~/.claude/skills/typescript-conventions/`). Key rules enforced by Biome:
 

@@ -11,11 +11,14 @@
     "lint:fix": "pnpm exec ultracite fix",
     "preinstall": "only-allow pnpm",
     "test": "turbo run test",
-    "typecheck": "turbo run typecheck"
+    "typecheck": "turbo run typecheck",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.13",
     "@dotenvx/dotenvx": "^1.39.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.5",
     "only-allow": "^1.2.1",
     "turbo": "^2.9.6",
     "typescript": "^6.0.3",
@@ -32,5 +35,8 @@
       "esbuild",
       "sharp"
     ]
+  },
+  "lint-staged": {
+    "*.{ts,tsx,json}": "pnpm exec biome check --write --no-errors-on-unmatched"
   }
 }
