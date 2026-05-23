@@ -106,21 +106,27 @@ const AvatarManagerInner = ({ avatarUrl, email }: AvatarManagerProps) => {
     const formData = new FormData()
     formData.set("avatar", selection.file)
     const result = await uploadAvatar(formData)
-    if (result.status === "error") {
-      setStatus({ kind: "error", message: result.message })
-      return
-    }
-    resetDialog()
-    setIsOpen(false)
-    router.refresh()
+    match(result)
+      .with({ status: "error" }, ({ message }) => {
+        setStatus({ kind: "error", message })
+      })
+      .with({ status: "success" }, () => {
+        resetDialog()
+        setIsOpen(false)
+        router.refresh()
+      })
+      .exhaustive()
   }
 
   const handleRemove = () => {
     startRemove(async () => {
       const result = await removeAvatar()
-      if (result.status === "success") {
-        router.refresh()
-      }
+      match(result)
+        .with({ status: "success" }, () => {
+          router.refresh()
+        })
+        .with({ status: "error" }, () => undefined)
+        .exhaustive()
     })
   }
 

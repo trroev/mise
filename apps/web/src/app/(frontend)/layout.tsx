@@ -58,7 +58,10 @@ export default async function FrontendLayout({
       displayName,
       initials: buildInitials(displayName),
       avatarUrl,
-      onSignOut: signOutAction,
+      onSignOut: async () => {
+        "use server"
+        await signOutAction()
+      },
     }
   }
 

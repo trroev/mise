@@ -3,11 +3,13 @@
 import "server-only"
 
 import type { Recipe } from "@mise/payload/payload-types"
+import type { ActionResult } from "@mise/types/ActionResult"
 import { z } from "zod"
 import { createDraftRecipe } from "~/features/recipes/api/create-draft-recipe"
 import { canSubmitRecipe } from "~/lib/policies/can-submit-recipe"
 import { getCurrentViewer } from "~/lib/queries/current-viewer"
 import { createMediaAsset } from "~/lib/queries/media"
+import { serverAction } from "~/lib/server-action"
 
 const ingredientSchema = z.object({
   name: z.string().trim().min(1, "Ingredient name is required."),
@@ -80,9 +82,8 @@ const submitRecipeSchema = z.object({
 
 type SubmitRecipeInput = z.infer<typeof submitRecipeSchema>
 
-export type SubmitRecipeResult =
-  | { status: "success"; recipeId: string; slug: string }
-  | { status: "error"; message: string }
+export type SubmitRecipeData = { recipeId: string; slug: string }
+export type SubmitRecipeResult = ActionResult<SubmitRecipeData>
 
 const MAX_IMAGE_BYTES = 8 * 1024 * 1024
 
@@ -140,9 +141,9 @@ const readHeroImage = (formData: FormData): HeroImageInput => {
   return { kind: "valid", file: heroImage, alt: heroImageAlt.trim() }
 }
 
-export async function submitRecipeAction(
+const submitRecipeImpl = async (
   formData: FormData
-): Promise<SubmitRecipeResult> {
+): Promise<SubmitRecipeResult> => {
   const viewer = await getCurrentViewer()
   if (!canSubmitRecipe(viewer) || viewer?.kind !== "user") {
     return {
@@ -195,7 +196,11 @@ export async function submitRecipeAction(
 
   return {
     status: "success",
-    recipeId: created.id,
-    slug: created.slug ?? created.id,
+    data: {
+      recipeId: created.id,
+      slug: created.slug ?? created.id,
+    },
   }
 }
+
+export const submitRecipeAction = serverAction(submitRecipeImpl)

@@ -2,10 +2,12 @@
 
 import "server-only"
 
+import type { ActionResult } from "@mise/types/ActionResult"
 import { match, P } from "ts-pattern"
 import { getCurrentViewer } from "~/lib/queries/current-viewer"
 import { createMediaAsset, deleteMediaAsset } from "~/lib/queries/media"
 import { updateUserAvatar } from "~/lib/queries/update-user-avatar"
+import { serverAction } from "~/lib/server-action"
 
 const MAX_AVATAR_BYTES = 5 * 1024 * 1024
 
@@ -20,13 +22,9 @@ type AllowedAvatarMimeType = (typeof ALLOWED_AVATAR_MIME_TYPES)[number]
 const isAllowedMimeType = (value: string): value is AllowedAvatarMimeType =>
   (ALLOWED_AVATAR_MIME_TYPES as ReadonlyArray<string>).includes(value)
 
-export type UploadAvatarResult =
-  | { status: "success"; mediaId: string; url: string }
-  | { status: "error"; message: string }
-
-export type RemoveAvatarResult =
-  | { status: "success" }
-  | { status: "error"; message: string }
+export type UploadAvatarData = { mediaId: string; url: string }
+export type UploadAvatarResult = ActionResult<UploadAvatarData>
+export type RemoveAvatarResult = ActionResult<void>
 
 type AvatarFileValidation =
   | { ok: true; file: File }
@@ -57,9 +55,9 @@ const extractAvatarId = (avatar: unknown): string | null =>
     .with({ id: P.number }, ({ id }) => String(id))
     .otherwise(() => null)
 
-export async function uploadAvatar(
+const uploadAvatarImpl = async (
   formData: FormData
-): Promise<UploadAvatarResult> {
+): Promise<UploadAvatarResult> => {
   const viewer = await getCurrentViewer()
   if (viewer?.kind !== "user") {
     return { status: "error", message: "You must be signed in." }
@@ -87,12 +85,14 @@ export async function uploadAvatar(
 
   return {
     status: "success",
-    mediaId: media.id,
-    url: media.url ?? "",
+    data: {
+      mediaId: media.id,
+      url: media.url ?? "",
+    },
   }
 }
 
-export async function removeAvatar(): Promise<RemoveAvatarResult> {
+const removeAvatarImpl = async (): Promise<RemoveAvatarResult> => {
   const viewer = await getCurrentViewer()
   if (viewer?.kind !== "user") {
     return { status: "error", message: "You must be signed in." }
@@ -107,5 +107,8 @@ export async function removeAvatar(): Promise<RemoveAvatarResult> {
     await deleteMediaAsset(avatarId)
   }
 
-  return { status: "success" }
+  return { status: "success", data: undefined }
 }
+
+export const uploadAvatar = serverAction(uploadAvatarImpl)
+export const removeAvatar = serverAction(removeAvatarImpl)

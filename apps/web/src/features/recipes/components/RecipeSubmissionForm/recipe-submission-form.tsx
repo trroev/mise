@@ -6,6 +6,7 @@ import { captureException } from "@sentry/nextjs"
 import Link from "next/link"
 import { useState } from "react"
 import { ErrorBoundary } from "react-error-boundary"
+import { match } from "ts-pattern"
 import { WidgetErrorFallback } from "~/components/WidgetErrorFallback"
 import { submitRecipeAction } from "~/features/recipes/actions/submit-recipe"
 import { DietaryTagsField } from "./dietary-tags-field"
@@ -97,11 +98,14 @@ const RecipeSubmissionFormInner = ({
       }
 
       const result = await submitRecipeAction(formData)
-      if (result.status === "error") {
-        setServerError(result.message)
-        return
-      }
-      setSubmitted({ slug: result.slug, title: value.title })
+      match(result)
+        .with({ status: "error" }, ({ message }) => {
+          setServerError(message)
+        })
+        .with({ status: "success" }, ({ data }) => {
+          setSubmitted({ slug: data.slug, title: value.title })
+        })
+        .exhaustive()
     },
   })
 

@@ -165,8 +165,10 @@ describe("uploadAvatar", () => {
     expect(deleteFn).not.toHaveBeenCalled()
     expect(result).toEqual({
       status: "success",
-      mediaId: "media-1",
-      url: "https://cdn.example/avatar.jpg",
+      data: {
+        mediaId: "media-1",
+        url: "https://cdn.example/avatar.jpg",
+      },
     })
   })
 
@@ -236,7 +238,7 @@ describe("removeAvatar", () => {
       id: "media-1",
       overrideAccess: true,
     })
-    expect(result).toEqual({ status: "success" })
+    expect(result).toEqual({ status: "success", data: undefined })
   })
 
   it("clears the relationship even when no avatar was set", async () => {
@@ -249,6 +251,6 @@ describe("removeAvatar", () => {
 
     expect(update).toHaveBeenCalled()
     expect(deleteFn).not.toHaveBeenCalled()
-    expect(result).toEqual({ status: "success" })
+    expect(result).toEqual({ status: "success", data: undefined })
   })
 })
