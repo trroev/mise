@@ -2,7 +2,7 @@ import "server-only"
 
 import { headers } from "next/headers"
 import { getPayload } from "payload"
-import { auth } from "~/lib/auth.server"
+import { auth } from "~/features/auth/auth.server"
 import type { Viewer } from "~/lib/policies/viewer"
 import config from "~/payload.config"
 import { getPayloadUserByBetterAuthId } from "./payload-user-by-better-auth-id"

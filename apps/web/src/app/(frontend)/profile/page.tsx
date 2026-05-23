@@ -5,9 +5,9 @@ import Link from "next/link"
 import { redirect } from "next/navigation"
 import { match } from "ts-pattern"
 import { AvatarManager } from "~/components/AvatarManager"
-import { SignOutButton } from "~/components/SignOutButton"
+import { auth } from "~/features/auth/auth.server"
+import { SignOutButton } from "~/features/auth/components/SignOutButton"
 import { getRecipesByAuthorUser } from "~/features/recipes/api/recipes-by-author"
-import { auth } from "~/lib/auth.server"
 import { getPayloadUserByBetterAuthId } from "~/lib/queries/payload-user-by-better-auth-id"
 
 export const metadata: Metadata = {

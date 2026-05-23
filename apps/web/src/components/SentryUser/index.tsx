@@ -2,7 +2,7 @@
 
 import { setUser } from "@sentry/nextjs"
 import { useEffect } from "react"
-import { useSession } from "~/lib/session"
+import { useSession } from "~/features/auth/session"
 
 export const SentryUser = (): null => {
   const { user } = useSession()

@@ -8,13 +8,13 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 
 const useSessionMock = vi.fn()
 
-vi.mock("~/lib/auth-client", () => ({
+vi.mock("~/features/auth/auth-client", () => ({
   authClient: {
     useSession: () => useSessionMock(),
   },
 }))
 
-const { SessionProvider, useSession } = await import("~/lib/session")
+const { SessionProvider, useSession } = await import("~/features/auth/session")
 
 const TestUser = ({ label }: { label: string }) => {
   const { user, isAuthenticated, isLoading } = useSession()

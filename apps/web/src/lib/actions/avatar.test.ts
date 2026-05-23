@@ -25,7 +25,7 @@ vi.mock("payload", () => ({
 
 vi.mock("~/payload.config", () => ({ default: {} }))
 
-vi.mock("~/lib/auth.server", () => ({
+vi.mock("~/features/auth/auth.server", () => ({
   auth: { api: { getSession } },
 }))
 

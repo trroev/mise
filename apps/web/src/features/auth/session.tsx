@@ -2,7 +2,7 @@
 
 import type { User } from "@mise/auth"
 import { createContext, type ReactNode, useContext } from "react"
-import { authClient } from "~/lib/auth-client"
+import { authClient } from "~/features/auth/auth-client"
 
 type SessionContextValue = {
   initialUser: User | null

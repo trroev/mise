@@ -8,31 +8,38 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { useState } from "react"
 import { match } from "ts-pattern"
 import { z } from "zod"
-import { authClient } from "~/lib/auth-client"
+import { authClient } from "~/features/auth/auth-client"
 
-const signInSchema = z.object({
-  email: z.email("Enter a valid email address."),
-  password: z.string().min(1, "Password is required."),
-})
+const signUpSchema = z
+  .object({
+    name: z.string().trim().min(1, "Name is required."),
+    email: z.email("Enter a valid email address."),
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters.")
+      .max(128, "Password is too long."),
+    confirmPassword: z.string().min(1, "Please confirm your password."),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match.",
+    path: ["confirmPassword"],
+  })
 
 const isSafeCallbackUrl = (value: string | null): value is string =>
   value?.startsWith("/") === true && !value.startsWith("//")
 
-const friendlySignInError = (code?: string, message?: string): string =>
+const friendlySignUpError = (code?: string, message?: string): string =>
   match(code)
     .with(
-      "INVALID_EMAIL_OR_PASSWORD",
-      "INVALID_PASSWORD",
-      () => "The email or password you entered is incorrect."
+      "USER_ALREADY_EXISTS",
+      "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL",
+      () => "An account with that email already exists."
     )
-    .with("USER_NOT_FOUND", () => "No account found for that email.")
-    .with(
-      "EMAIL_NOT_VERIFIED",
-      () => "Please verify your email before signing in."
-    )
-    .otherwise(() => message ?? "Sign in failed. Please try again.")
+    .with("PASSWORD_TOO_SHORT", () => "Password must be at least 8 characters.")
+    .with("INVALID_EMAIL", () => "Enter a valid email address.")
+    .otherwise(() => message ?? "Sign up failed. Please try again.")
 
-export const SignInForm = () => {
+export const SignUpForm = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const rawCallback = searchParams.get("callbackUrl")
@@ -40,13 +47,17 @@ export const SignInForm = () => {
   const [serverError, setServerError] = useState<string | undefined>()
 
   const form = useForm({
-    defaultValues: { email: "", password: "" },
-    validators: { onChange: signInSchema },
+    defaultValues: { name: "", email: "", password: "", confirmPassword: "" },
+    validators: { onChange: signUpSchema },
     onSubmit: async ({ value }) => {
       setServerError(undefined)
-      const { error } = await authClient.signIn.email(value)
+      const { error } = await authClient.signUp.email({
+        name: value.name,
+        email: value.email,
+        password: value.password,
+      })
       if (error) {
-        setServerError(friendlySignInError(error.code, error.message))
+        setServerError(friendlySignUpError(error.code, error.message))
         return
       }
       router.push(callbackUrl)
@@ -64,6 +75,29 @@ export const SignInForm = () => {
         form.handleSubmit()
       }}
     >
+      <form.Field name="name">
+        {(field) => (
+          <Field
+            error={
+              field.state.meta.isTouched
+                ? field.state.meta.errors[0]?.message
+                : undefined
+            }
+            label="Name"
+          >
+            <Input
+              autoComplete="name"
+              id="name"
+              name={field.name}
+              onBlur={field.handleBlur}
+              onChange={(e) => field.handleChange(e.target.value)}
+              required
+              type="text"
+              value={field.state.value}
+            />
+          </Field>
+        )}
+      </form.Field>
       <form.Field name="email">
         {(field) => (
           <Field
@@ -95,11 +129,35 @@ export const SignInForm = () => {
                 ? field.state.meta.errors[0]?.message
                 : undefined
             }
+            hint="At least 8 characters."
             label="Password"
           >
             <Input
-              autoComplete="current-password"
+              autoComplete="new-password"
               id="password"
+              name={field.name}
+              onBlur={field.handleBlur}
+              onChange={(e) => field.handleChange(e.target.value)}
+              required
+              type="password"
+              value={field.state.value}
+            />
+          </Field>
+        )}
+      </form.Field>
+      <form.Field name="confirmPassword">
+        {(field) => (
+          <Field
+            error={
+              field.state.meta.isTouched
+                ? field.state.meta.errors[0]?.message
+                : undefined
+            }
+            label="Confirm password"
+          >
+            <Input
+              autoComplete="new-password"
+              id="confirmPassword"
               name={field.name}
               onBlur={field.handleBlur}
               onChange={(e) => field.handleChange(e.target.value)}
@@ -127,7 +185,7 @@ export const SignInForm = () => {
       >
         {({ canSubmit, isSubmitting }) => (
           <Button disabled={!canSubmit || isSubmitting} type="submit">
-            {isSubmitting ? "Signing in…" : "Sign in"}
+            {isSubmitting ? "Creating account…" : "Create account"}
           </Button>
         )}
       </form.Subscribe>
