@@ -4,7 +4,7 @@
 
 Mise is a personal recipe app built by a former 2-Michelin-star chef. Work tickets are tracked as [GitHub Issues](https://github.com/trroev/mise/issues), organised into [Milestones](https://github.com/trroev/mise/milestones).
 
-**Stack:** Next.js 16 (App Router) + PayloadCMS 3 (embedded) · MongoDB Atlas · MiniSearch (in-browser) · Tailwind v4 · Base UI · TanStack Query · Turborepo + pnpm workspaces · Biome
+**Stack:** Next.js 16 (App Router) + PayloadCMS 3 (embedded) · MongoDB Atlas · better-auth · MiniSearch (in-browser) · Tailwind v4 · Base UI · TanStack Form · Turborepo + pnpm workspaces · Biome
 
 ---
 
