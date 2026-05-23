@@ -16,15 +16,15 @@ import { Suspense } from "react"
 import { JsonLd } from "react-schemaorg"
 import type { Recipe as RecipeSchema } from "schema-dts"
 import { match, P } from "ts-pattern"
-import { RecipeControls } from "~/components/RecipeControls"
-import { RefreshRouteOnSave } from "~/components/RefreshRouteOnSave"
-import { canViewDraft } from "~/lib/policies/can-view-draft"
-import { getCurrentViewer } from "~/lib/queries/current-viewer"
-import { getPublishedRecipes } from "~/lib/queries/published-recipes"
+import { getPublishedRecipes } from "~/features/recipes/api/published-recipes"
 import {
   getDraftRecipeBySlug,
   getRecipeBySlug,
-} from "~/lib/queries/recipe-by-slug"
+} from "~/features/recipes/api/recipe-by-slug"
+import { RecipeControls } from "~/features/recipes/components/RecipeControls"
+import { RefreshRouteOnSave } from "~/features/recipes/components/RefreshRouteOnSave"
+import { canViewDraft } from "~/lib/policies/can-view-draft"
+import { getCurrentViewer } from "~/lib/queries/current-viewer"
 
 type Props = {
   params: Promise<{ slug: string }>

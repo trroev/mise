@@ -6,9 +6,9 @@ import { redirect } from "next/navigation"
 import { match } from "ts-pattern"
 import { AvatarManager } from "~/components/AvatarManager"
 import { SignOutButton } from "~/components/SignOutButton"
+import { getRecipesByAuthorUser } from "~/features/recipes/api/recipes-by-author"
 import { auth } from "~/lib/auth.server"
 import { getPayloadUserByBetterAuthId } from "~/lib/queries/payload-user-by-better-auth-id"
-import { getRecipesByAuthorUser } from "~/lib/queries/recipes-by-author"
 
 export const metadata: Metadata = {
   title: "Profile",

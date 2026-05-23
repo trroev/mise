@@ -15,7 +15,7 @@ import Link from "next/link"
 import { useState } from "react"
 import { ErrorBoundary } from "react-error-boundary"
 import { WidgetErrorFallback } from "~/components/WidgetErrorFallback"
-import { submitRecipeAction } from "~/lib/actions/submit-recipe"
+import { submitRecipeAction } from "~/features/recipes/actions/submit-recipe"
 import {
   COURSE_OPTIONS,
   type Course,

@@ -1,6 +1,5 @@
 "use client"
 
-import { RecipeCard } from "@mise/chrome/components/RecipeCard"
 import type { Recipe } from "@mise/payload/payload-types"
 import { Badge } from "@mise/ui/components/Badge"
 import { Button } from "@mise/ui/components/Button"
@@ -14,8 +13,9 @@ import { useSearchParams } from "next/navigation"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { ErrorBoundary } from "react-error-boundary"
 import { match } from "ts-pattern"
-import { RecipeFilterPanel } from "~/components/RecipeFilterPanel"
 import { WidgetErrorFallback } from "~/components/WidgetErrorFallback"
+import { RecipeCard } from "~/features/recipes/components/RecipeCard"
+import { RecipeFilterPanel } from "~/features/recipes/components/RecipeFilterPanel"
 import { applyFacetFilters, getNoResultsMessage } from "./recipe-search.helpers"
 import { useRecipeFilters } from "./use-recipe-filters"
 

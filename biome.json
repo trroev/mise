@@ -66,7 +66,8 @@
         "packages/ui/src/utils/*/index.ts",
         "packages/chrome/src/components/*/index.ts",
         "packages/chrome/src/utils/*/index.ts",
-        "packages/payload/src/components/*/index.ts"
+        "packages/payload/src/components/*/index.ts",
+        "apps/web/src/features/*/components/*/index.ts"
       ],
       "linter": {
         "rules": {

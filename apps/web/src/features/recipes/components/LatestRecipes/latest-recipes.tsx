@@ -1,6 +1,6 @@
-import { RecipeCard } from "@mise/chrome/components/RecipeCard"
 import type { Recipe } from "@mise/payload/payload-types"
 import Link from "next/link"
+import { RecipeCard } from "~/features/recipes/components/RecipeCard"
 
 type LatestRecipesProps = {
   recipes: ReadonlyArray<Recipe>

@@ -1,6 +1,6 @@
 import { env } from "@mise/env/app"
 import type { MetadataRoute } from "next"
-import { getPublishedRecipes } from "~/lib/queries/published-recipes"
+import { getPublishedRecipes } from "~/features/recipes/api/published-recipes"
 
 export const revalidate = 3600
 

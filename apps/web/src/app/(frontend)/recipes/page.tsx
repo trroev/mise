@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { Suspense } from "react"
-import { RecipeSearch } from "~/components/RecipeSearch"
-import { getPublishedRecipes } from "~/lib/queries/published-recipes"
+import { getPublishedRecipes } from "~/features/recipes/api/published-recipes"
+import { RecipeSearch } from "~/features/recipes/components/RecipeSearch"
 
 export const revalidate = 60
 

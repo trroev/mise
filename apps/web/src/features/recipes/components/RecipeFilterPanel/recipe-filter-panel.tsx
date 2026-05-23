@@ -6,7 +6,7 @@ import { Label } from "@mise/ui/components/Label"
 import { Select } from "@mise/ui/components/Select"
 import { cn } from "@mise/ui/utils/cn"
 import type { ReactNode } from "react"
-import { TIME_RANGE_OPTIONS } from "~/components/RecipeSearch/recipe-search.helpers"
+import { TIME_RANGE_OPTIONS } from "~/features/recipes/components/RecipeSearch/recipe-search.helpers"
 
 type FilterOption = {
   value: string

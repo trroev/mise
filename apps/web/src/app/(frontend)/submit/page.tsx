@@ -1,10 +1,10 @@
 import type { Metadata } from "next"
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
-import { RecipeSubmissionForm } from "~/components/RecipeSubmissionForm"
+import { getCuisines } from "~/features/recipes/api/cuisines"
+import { getUnits } from "~/features/recipes/api/units"
+import { RecipeSubmissionForm } from "~/features/recipes/components/RecipeSubmissionForm"
 import { auth } from "~/lib/auth.server"
-import { getCuisines } from "~/lib/queries/cuisines"
-import { getUnits } from "~/lib/queries/units"
 
 export const metadata: Metadata = {
   title: "Submit a recipe",

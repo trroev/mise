@@ -4,8 +4,8 @@ import "server-only"
 
 import type { Recipe } from "@mise/payload/payload-types"
 import { z } from "zod"
+import { createDraftRecipe } from "~/features/recipes/api/create-draft-recipe"
 import { canSubmitRecipe } from "~/lib/policies/can-submit-recipe"
-import { createDraftRecipe } from "~/lib/queries/create-draft-recipe"
 import { getCurrentViewer } from "~/lib/queries/current-viewer"
 import { createMediaAsset } from "~/lib/queries/media"
 
