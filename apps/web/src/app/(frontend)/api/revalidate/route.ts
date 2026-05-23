@@ -25,6 +25,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       revalidatePath("/recipes")
       revalidatePath(`/recipes/${slug}`)
       revalidateTag("latest-recipes", "default")
+      revalidateTag(`recipe:${slug}`, "default")
       return NextResponse.json({ revalidated: true, slug })
     })
     .otherwise(() =>
