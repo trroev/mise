@@ -1,7 +1,7 @@
+import type { HeaderAuth } from "@mise/types/HeaderAuth"
 import { NavigationMenu } from "@mise/ui/components/NavigationMenu"
 import { cn } from "@mise/ui/utils/cn"
 import Link from "next/link"
-import type { HeaderAuth } from "../AppShell"
 
 export type MobileAuthProps = {
   auth: HeaderAuth

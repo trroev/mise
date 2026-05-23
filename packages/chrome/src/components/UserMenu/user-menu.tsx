@@ -1,7 +1,7 @@
+import type { SignedInAuth } from "@mise/types/HeaderAuth"
 import { Avatar } from "@mise/ui/components/Avatar"
 import { Menu } from "@mise/ui/components/Menu"
 import Link from "next/link"
-import type { SignedInAuth } from "../AppShell"
 
 export type UserMenuProps = {
   auth: SignedInAuth

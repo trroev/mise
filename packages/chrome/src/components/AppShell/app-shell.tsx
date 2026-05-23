@@ -1,19 +1,10 @@
+import type { HeaderAuth } from "@mise/types/HeaderAuth"
 import Link from "next/link"
 import type React from "react"
 import { MobileAuth } from "../MobileAuth"
 import { UserMenu } from "../UserMenu"
 import { SiteFooter } from "./site-footer"
 import { SiteHeader } from "./site-header.client"
-
-export type SignedInAuth = {
-  status: "signed-in"
-  displayName: string
-  initials: string
-  avatarUrl: string | null
-  onSignOut: () => void | Promise<void>
-}
-
-export type HeaderAuth = SignedInAuth | { status: "anonymous" }
 
 export type AppShellProps = {
   auth: HeaderAuth
