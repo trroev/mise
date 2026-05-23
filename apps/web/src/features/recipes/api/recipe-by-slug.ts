@@ -11,6 +11,7 @@ export const recipeBySlugCacheTag = (slug: string): string => `recipe:${slug}`
 export const getRecipeBySlug = (slug: string): Promise<Recipe | null> =>
   unstable_cache(
     async (): Promise<Recipe | null> => {
+      console.log(`[getRecipeBySlug] MISS slug=${slug}`)
       const payload = await getPayload({ config })
       const { docs } = await payload.find({
         collection: "recipes",
