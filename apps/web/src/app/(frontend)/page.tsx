@@ -87,7 +87,8 @@ export default async function HomePage() {
                 sizes="(min-width: 1024px) 50vw, 100vw"
                 src={transformCloudinary({
                   url: heroImage.url,
-                  transform: "f_auto,q_auto,c_fill,g_auto,w_1200,h_900",
+                  width: 1200,
+                  aspect: "4:3",
                 })}
               />
             </div>

@@ -64,7 +64,8 @@ export const RecipeCard = ({ recipe, className }: RecipeCardProps) => {
             sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
             src={transformCloudinary({
               url: heroUrl,
-              transform: "f_auto,q_auto",
+              width: 960,
+              aspect: "4:3",
             })}
           />
         ) : (

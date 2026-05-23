@@ -1,5 +1,32 @@
 import type { Recipe } from "@mise/payload/payload-types"
+import MiniSearch from "minisearch"
 import { match, P } from "ts-pattern"
+
+type RecipeSearchDoc = {
+  id: string
+  title: string
+  description: string
+}
+
+export type RecipeSearchIndex = MiniSearch<RecipeSearchDoc>
+
+export const buildRecipeSearchIndex = (
+  recipes: ReadonlyArray<Recipe>
+): RecipeSearchIndex => {
+  const instance = new MiniSearch<RecipeSearchDoc>({
+    fields: ["title", "description"],
+    storeFields: ["id"],
+    searchOptions: { fuzzy: 0.2, prefix: true },
+  })
+  instance.addAll(
+    recipes.map((r) => ({
+      id: r.id,
+      title: r.title,
+      description: r.description ?? "",
+    }))
+  )
+  return instance
+}
 
 type Difficulty = NonNullable<Recipe["difficulty"]>
 

@@ -61,7 +61,8 @@ export async function generateMetadata({
   const ogImage = rawImageUrl
     ? transformCloudinary({
         url: rawImageUrl,
-        transform: "f_auto,q_auto,c_fill,g_auto,w_1200,h_630",
+        width: 1200,
+        height: 630,
       })
     : undefined
 
@@ -142,7 +143,8 @@ export default async function RecipeDetailPage({
             sizes="100vw"
             src={transformCloudinary({
               url: heroUrl,
-              transform: "f_auto,q_auto",
+              width: 1600,
+              aspect: "16:9",
             })}
           />
         </div>

@@ -2,7 +2,6 @@
 
 import type { Recipe } from "@mise/payload/payload-types"
 import { captureException } from "@sentry/nextjs"
-import MiniSearch from "minisearch"
 import { useSearchParams } from "next/navigation"
 import {
   createContext,
@@ -16,7 +15,11 @@ import {
 import { ErrorBoundary } from "react-error-boundary"
 import { match } from "ts-pattern"
 import { WidgetErrorFallback } from "~/components/WidgetErrorFallback"
-import { applyFacetFilters, getNoResultsMessage } from "./recipe-search.helpers"
+import {
+  applyFacetFilters,
+  buildRecipeSearchIndex,
+  getNoResultsMessage,
+} from "./recipe-search.helpers"
 import {
   type UseRecipeFiltersReturn,
   useRecipeFilters,
@@ -79,24 +82,16 @@ const RecipeSearchProviderInner = ({
     [recipes]
   )
 
-  const miniSearch = useMemo(() => {
-    const instance = new MiniSearch<{
-      id: string
-      title: string
-      description: string
-    }>({
-      fields: ["title", "description"],
-      storeFields: ["id"],
-      searchOptions: { fuzzy: 0.2, prefix: true },
-    })
-    instance.addAll(
-      recipes.map((r) => ({
-        id: r.id,
-        title: r.title,
-        description: r.description ?? "",
-      }))
-    )
-    return instance
+  const [miniSearch, setMiniSearch] = useState(() =>
+    buildRecipeSearchIndex(recipes)
+  )
+  const recipesRef = useRef(recipes)
+  useEffect(() => {
+    if (recipesRef.current === recipes) {
+      return
+    }
+    recipesRef.current = recipes
+    setMiniSearch(buildRecipeSearchIndex(recipes))
   }, [recipes])
 
   const trimmed = query.trim()

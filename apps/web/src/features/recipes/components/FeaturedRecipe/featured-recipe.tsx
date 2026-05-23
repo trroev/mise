@@ -40,7 +40,8 @@ export function FeaturedRecipe({ recipe }: FeaturedRecipeProps) {
               sizes="(min-width: 1024px) 60vw, 100vw"
               src={transformCloudinary({
                 url: heroImage.url,
-                transform: "f_auto,q_auto,c_fill,g_auto,w_1400,h_1050",
+                width: 1400,
+                aspect: "4:3",
               })}
             />
           )}
