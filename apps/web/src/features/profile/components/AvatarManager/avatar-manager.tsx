@@ -10,7 +10,7 @@ import { useEffect, useId, useRef, useState, useTransition } from "react"
 import { ErrorBoundary } from "react-error-boundary"
 import { match } from "ts-pattern"
 import { WidgetErrorFallback } from "~/components/WidgetErrorFallback"
-import { removeAvatar, uploadAvatar } from "~/lib/actions/avatar"
+import { removeAvatar, uploadAvatar } from "../../actions/avatar"
 
 const MAX_AVATAR_BYTES = 5 * 1024 * 1024
 
