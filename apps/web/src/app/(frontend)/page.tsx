@@ -4,10 +4,10 @@ import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { match, P } from "ts-pattern"
+import { getHomepage } from "~/features/home/api/homepage"
 import { getLatestRecipes } from "~/features/recipes/api/latest-recipes"
 import { FeaturedRecipe } from "~/features/recipes/components/FeaturedRecipe"
 import { LatestRecipes } from "~/features/recipes/components/LatestRecipes"
-import { getHomepage } from "~/lib/queries/homepage"
 
 const LATEST_RECIPES_LIMIT = 6
 
