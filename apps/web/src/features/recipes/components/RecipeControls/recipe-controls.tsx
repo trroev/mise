@@ -8,6 +8,7 @@ import { formatIngredient, formatQuantity } from "@mise/utils/conversions"
 import { scaleIngredients } from "@mise/utils/scaling"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useMemo, useState } from "react"
+import { z } from "zod"
 
 type RawIngredientGroups = Recipe["ingredientGroups"]
 
@@ -21,8 +22,21 @@ const UNIT_STORAGE_KEY = "recipe-unit-system"
 const MAX_YIELD = 100
 const METRIC_UNITS = new Set<string>(["g", "kg", "ml", "l", "°C"])
 
+const unitSystemSchema = z.enum(["us", "metric"])
+type UnitSystem = z.infer<typeof unitSystemSchema>
+
 function resolveUnit(unit: string | { abbreviation: string }): string {
   return typeof unit === "object" ? unit.abbreviation : unit
+}
+
+function readStoredUnitSystem(): UnitSystem | null {
+  try {
+    const raw = localStorage.getItem(UNIT_STORAGE_KEY)
+    const parsed = unitSystemSchema.safeParse(raw)
+    return parsed.success ? parsed.data : null
+  } catch {
+    return null
+  }
 }
 
 export const RecipeControls = ({
@@ -33,27 +47,51 @@ export const RecipeControls = ({
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const urlUnits = searchParams.get("units")
-  const urlYield = searchParams.get("yield")
+  const urlUnitsRaw = searchParams.get("units")
+  const urlUnits = unitSystemSchema.safeParse(urlUnitsRaw)
+  const hasExplicitUnits = urlUnits.success
+  const unitSystem: UnitSystem = urlUnits.success ? urlUnits.data : "metric"
 
-  const [unitSystem, setUnitSystem] = useState<"metric" | "us">(
-    urlUnits === "us" ? "us" : "metric"
-  )
+  const urlYield = searchParams.get("yield")
   const [targetYield, setTargetYield] = useState<number>(() => {
     const parsed = urlYield ? Number.parseInt(urlYield, 10) : Number.NaN
     return Number.isFinite(parsed) && parsed >= 1 ? parsed : baseYield
   })
 
-  // On mount: if no units URL param, load from localStorage
+  // Preference is "resolved" once we know whether to use the URL value or fall
+  // back to defaults — only unresolved during the one-tick window where we
+  // need to consult localStorage and potentially rewrite the URL.
+  const [isPreferenceResolved, setIsPreferenceResolved] =
+    useState(hasExplicitUnits)
+
+  // First-load seeding: if the URL has no preference, consult localStorage
+  // once and rewrite the URL so subsequent renders are URL-driven.
   useEffect(() => {
-    if (urlUnits) {
+    if (hasExplicitUnits) {
+      setIsPreferenceResolved(true)
       return
     }
-    const stored = localStorage.getItem(UNIT_STORAGE_KEY)
-    if (stored === "us" || stored === "metric") {
-      setUnitSystem(stored)
+    const stored = readStoredUnitSystem()
+    if (!stored) {
+      setIsPreferenceResolved(true)
+      return
     }
-  }, [urlUnits])
+    const params = new URLSearchParams(searchParams.toString())
+    params.set("units", stored)
+    router.replace(`?${params.toString()}`, { scroll: false })
+  }, [hasExplicitUnits, router, searchParams])
+
+  // Persist the active unit system as a "next-visit" cache.
+  useEffect(() => {
+    if (!hasExplicitUnits) {
+      return
+    }
+    try {
+      localStorage.setItem(UNIT_STORAGE_KEY, unitSystem)
+    } catch {
+      // Ignore quota / privacy-mode failures.
+    }
+  }, [hasExplicitUnits, unitSystem])
 
   const normalizedGroups = useMemo(
     () =>
@@ -73,13 +111,12 @@ export const RecipeControls = ({
   )
 
   const handleUnitChange = (value: string) => {
-    if (value !== "metric" && value !== "us") {
+    const parsed = unitSystemSchema.safeParse(value)
+    if (!parsed.success) {
       return
     }
-    setUnitSystem(value)
-    localStorage.setItem(UNIT_STORAGE_KEY, value)
     const params = new URLSearchParams(searchParams.toString())
-    params.set("units", value)
+    params.set("units", parsed.data)
     router.replace(`?${params.toString()}`, { scroll: false })
   }
 
@@ -124,60 +161,76 @@ export const RecipeControls = ({
               </span>
             )}
           </div>
-          <ToggleGroup.Root
-            aria-label="Unit system"
-            onValueChange={(values) => {
-              const next = values[0]
-              if (next) {
-                handleUnitChange(next)
-              }
-            }}
-            role="toolbar"
-            value={[unitSystem]}
-          >
-            <ToggleGroup.Item value="metric">Metric</ToggleGroup.Item>
-            <ToggleGroup.Item value="us">US</ToggleGroup.Item>
-          </ToggleGroup.Root>
+          {isPreferenceResolved && (
+            <ToggleGroup.Root
+              aria-label="Unit system"
+              onValueChange={(values) => {
+                const next = values[0]
+                if (next) {
+                  handleUnitChange(next)
+                }
+              }}
+              role="toolbar"
+              value={[unitSystem]}
+            >
+              <ToggleGroup.Item value="metric">Metric</ToggleGroup.Item>
+              <ToggleGroup.Item value="us">US</ToggleGroup.Item>
+            </ToggleGroup.Root>
+          )}
         </div>
       </div>
 
-      <div className="space-y-6">
-        {scaledGroups.map((group, gi) => (
-          <div key={group.id ?? gi}>
-            {group.groupLabel && (
-              <h3 className="mb-3 font-medium font-sans text-body-sm text-text-muted uppercase tracking-widest">
-                {group.groupLabel}
-              </h3>
-            )}
-            <ul className="space-y-2">
-              {group.ingredients.map((ingredient, ii) => {
-                const isMetricUnit = METRIC_UNITS.has(ingredient.unit)
-                const quantityLabel = isMetricUnit
-                  ? formatIngredient(
-                      ingredient.quantity,
-                      ingredient.unit as MetricUnit,
-                      unitSystem
-                    )
-                  : `${formatQuantity(ingredient.quantity)} ${ingredient.unit}`
-                return (
-                  <li
-                    className="font-sans text-body text-text-primary"
-                    key={ingredient.id ?? ii}
-                  >
-                    <span className="text-text-secondary">{quantityLabel}</span>{" "}
-                    {ingredient.name}
-                    {ingredient.prepNote && (
-                      <span className="text-text-muted">
-                        , {ingredient.prepNote}
-                      </span>
-                    )}
-                  </li>
-                )
-              })}
-            </ul>
-          </div>
-        ))}
-      </div>
+      {isPreferenceResolved ? (
+        <div className="space-y-6">
+          {scaledGroups.map((group, gi) => (
+            <div key={group.id ?? gi}>
+              {group.groupLabel && (
+                <h3 className="mb-3 font-medium font-sans text-body-sm text-text-muted uppercase tracking-widest">
+                  {group.groupLabel}
+                </h3>
+              )}
+              <ul className="space-y-2">
+                {group.ingredients.map((ingredient, ii) => {
+                  const isMetricUnit = METRIC_UNITS.has(ingredient.unit)
+                  const quantityLabel = isMetricUnit
+                    ? formatIngredient(
+                        ingredient.quantity,
+                        ingredient.unit as MetricUnit,
+                        unitSystem
+                      )
+                    : `${formatQuantity(ingredient.quantity)} ${ingredient.unit}`
+                  return (
+                    <li
+                      className="font-sans text-body text-text-primary"
+                      key={ingredient.id ?? ii}
+                    >
+                      <span className="text-text-secondary">
+                        {quantityLabel}
+                      </span>{" "}
+                      {ingredient.name}
+                      {ingredient.prepNote && (
+                        <span className="text-text-muted">
+                          , {ingredient.prepNote}
+                        </span>
+                      )}
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div aria-busy="true" className="space-y-2">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div
+              className="h-5 w-full animate-pulse rounded bg-surface"
+              // biome-ignore lint/suspicious/noArrayIndexKey: skeleton placeholder rows have no identity
+              key={i}
+            />
+          ))}
+        </div>
+      )}
     </section>
   )
 }
