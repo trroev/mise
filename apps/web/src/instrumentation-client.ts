@@ -1,5 +1,5 @@
 import { env } from "@mise/env/app"
-import { init } from "@sentry/nextjs"
+import { captureRouterTransitionStart, init } from "@sentry/nextjs"
 
 if (env.NEXT_PUBLIC_SENTRY_DSN) {
   init({
@@ -19,3 +19,5 @@ if (env.NEXT_PUBLIC_SENTRY_DSN) {
     },
   })
 }
+
+export const onRouterTransitionStart = captureRouterTransitionStart
