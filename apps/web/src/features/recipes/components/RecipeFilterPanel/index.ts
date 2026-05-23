@@ -1,4 +1,1 @@
-export {
-  RecipeFilterPanel,
-  type RecipeFilterPanelProps,
-} from "./recipe-filter-panel"
+export { RecipeFilterPanel } from "./recipe-filter-panel"

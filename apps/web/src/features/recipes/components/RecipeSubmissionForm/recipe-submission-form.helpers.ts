@@ -1,3 +1,4 @@
+import { useForm } from "@tanstack/react-form"
 import { z } from "zod"
 
 export const COURSE_OPTIONS = [
@@ -111,3 +112,30 @@ export const parseOptionalNumber = (
   const n = Number(value)
   return Number.isFinite(n) ? n : undefined
 }
+
+export const recipeFormDefaultValues: RecipeSubmissionFormValues = {
+  title: "",
+  description: "",
+  heroImageAlt: "",
+  cuisine: "",
+  course: "",
+  difficulty: "",
+  dietaryTags: [],
+  prepTime: "",
+  cookTime: "",
+  yieldQuantity: "",
+  yieldUnit: "",
+  ingredientGroups: [emptyIngredientGroup()],
+  instructionGroups: [emptyInstructionGroup()],
+}
+
+export const useRecipeForm = (params: {
+  onSubmit: (value: RecipeSubmissionFormValues) => Promise<void>
+}) =>
+  useForm({
+    defaultValues: recipeFormDefaultValues,
+    validators: { onChange: recipeSubmissionFormSchema },
+    onSubmit: async ({ value }) => params.onSubmit(value),
+  })
+
+export type RecipeForm = ReturnType<typeof useRecipeForm>

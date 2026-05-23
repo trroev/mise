@@ -1,7 +1,12 @@
 import type { Metadata } from "next"
 import { Suspense } from "react"
 import { getPublishedRecipes } from "~/features/recipes/api/published-recipes"
-import { RecipeSearch } from "~/features/recipes/components/RecipeSearch"
+import { RecipeFilterPanel } from "~/features/recipes/components/RecipeFilterPanel"
+import { RecipeMobileFilterDrawer } from "~/features/recipes/components/RecipeMobileFilterDrawer"
+import { RecipePagination } from "~/features/recipes/components/RecipePagination"
+import { RecipeQueryInput } from "~/features/recipes/components/RecipeQueryInput"
+import { RecipeResultGrid } from "~/features/recipes/components/RecipeResultGrid"
+import { RecipeSearchProvider } from "~/features/recipes/components/RecipeSearchProvider"
 
 export const revalidate = 60
 
@@ -34,7 +39,23 @@ export default async function RecipesPage() {
         Recipes
       </h1>
       <Suspense>
-        <RecipeSearch recipes={recipes} />
+        <RecipeSearchProvider recipes={recipes}>
+          <div className="flex flex-col gap-8">
+            <RecipeQueryInput />
+            <div className="flex items-start gap-8">
+              <aside className="hidden w-56 shrink-0 lg:block">
+                <RecipeFilterPanel />
+              </aside>
+              <div className="flex min-w-0 flex-1 flex-col gap-6">
+                <RecipeResultGrid />
+                <RecipePagination />
+              </div>
+            </div>
+            <RecipeMobileFilterDrawer>
+              <RecipeFilterPanel />
+            </RecipeMobileFilterDrawer>
+          </div>
+        </RecipeSearchProvider>
       </Suspense>
     </section>
   )
