@@ -47,8 +47,10 @@ Conventions that require discipline (not auto-enforced): readonly preference, bo
 ### Package structure
 - Types: PascalCase subdirectories — `src/Recipe/`, `src/Unit/`
 - Utils: camelCase subdirectories with an `index.ts` entry — `src/formatDate/index.ts`, `src/utils/cn/index.ts`
-- Components (in `packages/ui`): one PascalCase directory per component containing kebab-case files and a barrel — `src/components/Button/{button.tsx, button.variants.ts, index.ts}`. The `tailwind-variants` config lives in a sibling `<name>.variants.ts` only when the component has variants. Each directory is exposed via the package's wildcard exports (`./components/*` → `./src/components/*/index.ts`).
+- Components (in `packages/ui`, `packages/chrome`, `apps/web/src/components`, `apps/web/src/features/*/components`): one PascalCase directory per component containing kebab-case files and a barrel — `src/components/Button/{button.tsx, button.variants.ts, index.ts}`. The `tailwind-variants` config lives in a sibling `<name>.variants.ts` only when the component has variants. Each directory is exposed via the package's wildcard exports (`./components/*` → `./src/components/*/index.ts`).
 - Cross-directory imports use the package's TS path alias (e.g. `@mise/ui/utils/cn`); siblings inside the same directory use relative `./` imports.
+
+**Filename casing is enforced by Biome's `useFilenamingConvention` rule** (per-package overrides in `biome.json`, all set to `kebab-case`). Directory casing (PascalCase for components/types, camelCase for utils) is documented above but not auto-enforced — Biome only checks filenames.
 
 ### ts-pattern
 Install per-package as needed (`pnpm add ts-pattern --filter <package>`). Use `match(...).exhaustive()` wherever possible to get compile-time exhaustiveness checking.
