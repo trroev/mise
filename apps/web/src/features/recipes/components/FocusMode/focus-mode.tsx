@@ -71,14 +71,15 @@ export const FocusMode = ({
 
   return (
     <>
-      <div className="fixed top-4 right-4 z-50">
+      <div className="fixed right-4 bottom-4 z-50 sm:right-6 sm:bottom-6">
         <Button
           aria-label={isEnabled ? "Exit focus mode" : "Enter focus mode"}
           aria-pressed={isEnabled}
+          className="shadow-lg"
           onClick={toggle}
           size="sm"
           type="button"
-          variant="outline"
+          variant="primary"
         >
           {isEnabled ? (
             <RiFullscreenExitLine aria-hidden="true" size={16} />
