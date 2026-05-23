@@ -53,3 +53,13 @@ Install per-package as needed (`pnpm add ts-pattern --filter <package>`). Use `m
 
 ### Next.js App Router
 Default exports are required for `page.tsx`, `layout.tsx`, `error.tsx`, `loading.tsx`, `route.ts`, etc. These files are exempted from the `noDefaultExport` rule. All other files use named exports.
+
+### Import boundaries
+Layered architecture is enforced by Biome's `noRestrictedImports` in `biome.json`:
+
+- `packages/{utils,types,env}` → may not import from `packages/{ui,chrome,payload,auth}`
+- `packages/ui` → may not import from `packages/{chrome,payload}` or any app
+- `packages/chrome` → may not import from any app
+- `apps/web/src/features/<a>` → may not import from `apps/web/src/features/<b>` (no cross-feature imports) or from `~/app/**`
+
+**Every new feature requires adding its zone to `biome.json`** — copy an existing `apps/web/src/features/<name>/**` override and list the other features in the `group` patterns.

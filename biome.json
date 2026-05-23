@@ -76,6 +76,197 @@
           }
         }
       }
+    },
+    {
+      "includes": ["packages/utils/**", "packages/types/**", "packages/env/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": [
+                      "@mise/ui",
+                      "@mise/ui/**",
+                      "@mise/chrome",
+                      "@mise/chrome/**",
+                      "@mise/payload",
+                      "@mise/payload/**",
+                      "@mise/auth",
+                      "@mise/auth/**"
+                    ],
+                    "message": "Foundation packages (utils, types, env) must not import from higher layers (ui, chrome, payload, auth). Move shared code down the stack instead."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["packages/ui/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": [
+                      "@mise/chrome",
+                      "@mise/chrome/**",
+                      "@mise/payload",
+                      "@mise/payload/**",
+                      "**/apps/**"
+                    ],
+                    "message": "@mise/ui must not depend on @mise/chrome, @mise/payload, or any app. UI primitives are the lowest visual layer."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["packages/chrome/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": ["**/apps/**"],
+                    "message": "@mise/chrome must not import from any app. Apps depend on chrome, never the other way around."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["apps/web/src/features/recipes/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": [
+                      "~/features/auth",
+                      "~/features/auth/**",
+                      "~/features/profile",
+                      "~/features/profile/**",
+                      "~/features/home",
+                      "~/features/home/**",
+                      "~/app",
+                      "~/app/**"
+                    ],
+                    "message": "Features must not import from other features or from ~/app. Hoist shared code into ~/lib or ~/components."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["apps/web/src/features/auth/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": [
+                      "~/features/recipes",
+                      "~/features/recipes/**",
+                      "~/features/profile",
+                      "~/features/profile/**",
+                      "~/features/home",
+                      "~/features/home/**",
+                      "~/app",
+                      "~/app/**"
+                    ],
+                    "message": "Features must not import from other features or from ~/app. Hoist shared code into ~/lib or ~/components."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["apps/web/src/features/profile/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": [
+                      "~/features/recipes",
+                      "~/features/recipes/**",
+                      "~/features/auth",
+                      "~/features/auth/**",
+                      "~/features/home",
+                      "~/features/home/**",
+                      "~/app",
+                      "~/app/**"
+                    ],
+                    "message": "Features must not import from other features or from ~/app. Hoist shared code into ~/lib or ~/components."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["apps/web/src/features/home/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": [
+                      "~/features/recipes",
+                      "~/features/recipes/**",
+                      "~/features/auth",
+                      "~/features/auth/**",
+                      "~/features/profile",
+                      "~/features/profile/**",
+                      "~/app",
+                      "~/app/**"
+                    ],
+                    "message": "Features must not import from other features or from ~/app. Hoist shared code into ~/lib or ~/components."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
     }
   ]
 }

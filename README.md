@@ -53,6 +53,17 @@ mise/
 └── docs/                   # Operational runbooks and design docs
 ```
 
+### Import boundaries
+
+Layered dependencies are enforced by Biome's `noRestrictedImports` rule in `biome.json`:
+
+- `packages/{utils,types,env}` may not import from `packages/{ui,chrome,payload,auth}`
+- `packages/ui` may not import from `packages/{chrome,payload}` or any app
+- `packages/chrome` may not import from any app
+- `apps/web/src/features/<a>` may not import from `apps/web/src/features/<b>` or from `~/app/**`
+
+**Every new feature requires adding its zone to `biome.json`** — duplicate an existing `apps/web/src/features/<name>/**` override and list the sibling features in the `group` patterns.
+
 ---
 
 ## Getting Started
