@@ -16,4 +16,7 @@ export default mergeConfig(sharedConfig, {
       "~": path.resolve(dirname, "./src"),
     },
   },
+  test: {
+    setupFiles: ["@mise/testing/msw/setup"],
+  },
 })

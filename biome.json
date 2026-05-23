@@ -67,6 +67,8 @@
         "packages/chrome/src/components/*/index.ts",
         "packages/chrome/src/utils/*/index.ts",
         "packages/payload/src/components/*/index.ts",
+        "packages/testing/src/render/index.tsx",
+        "packages/testing/src/msw/index.ts",
         "apps/web/src/features/*/components/*/index.ts"
       ],
       "linter": {
