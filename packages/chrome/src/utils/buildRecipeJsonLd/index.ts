@@ -52,18 +52,9 @@ export const buildRecipeJsonLd = (
 
   const image = heroUrl
     ? [
-        transformCloudinary({
-          url: heroUrl,
-          transform: "f_auto,q_auto,c_fill,g_auto,ar_1:1,w_1200",
-        }),
-        transformCloudinary({
-          url: heroUrl,
-          transform: "f_auto,q_auto,c_fill,g_auto,ar_4:3,w_1200",
-        }),
-        transformCloudinary({
-          url: heroUrl,
-          transform: "f_auto,q_auto,c_fill,g_auto,ar_16:9,w_1200",
-        }),
+        transformCloudinary({ url: heroUrl, width: 1200, aspect: "1:1" }),
+        transformCloudinary({ url: heroUrl, width: 1200, aspect: "4:3" }),
+        transformCloudinary({ url: heroUrl, width: 1200, aspect: "16:9" }),
       ]
     : undefined
 
