@@ -21,6 +21,7 @@ import {
   getDraftRecipeBySlug,
   getRecipeBySlug,
 } from "~/features/recipes/api/recipe-by-slug"
+import { FocusMode } from "~/features/recipes/components/FocusMode"
 import { RecipeControls } from "~/features/recipes/components/RecipeControls"
 import { RefreshRouteOnSave } from "~/features/recipes/components/RefreshRouteOnSave"
 import { canViewDraft } from "~/lib/policies/can-view-draft"
@@ -129,151 +130,160 @@ export default async function RecipeDetailPage({
     )
     .otherwise(() => false)
 
-  return (
-    <article>
-      {isPreview && <RefreshRouteOnSave serverURL={appEnv.BASE_URL} />}
-      <JsonLd<RecipeSchema> item={buildRecipeJsonLd(recipe)} />
-      {heroUrl && (
-        <div className="relative aspect-video w-full overflow-hidden bg-surface">
-          <Image
-            alt={heroAlt}
-            className="object-cover"
-            fill
-            priority
-            sizes="100vw"
-            src={transformCloudinary({
-              url: heroUrl,
-              width: 1600,
-              aspect: "16:9",
-            })}
-          />
-        </div>
-      )}
+  const ingredientsSlot = (
+    <Suspense
+      fallback={
+        <section>
+          <h2 className="font-display text-heading-lg text-text-primary">
+            Ingredients
+          </h2>
+        </section>
+      }
+    >
+      <RecipeControls
+        baseYield={recipe.yield?.quantity ?? 1}
+        ingredientGroups={recipe.ingredientGroups}
+        yieldUnit={recipe.yield?.unit ?? ""}
+      />
+    </Suspense>
+  )
 
-      <div className="constrainer space-y-10 py-10">
-        <header className="space-y-4">
-          <h1 className="font-display text-heading-xl text-text-primary">
-            {recipe.title}
-          </h1>
-          {recipe.description && (
-            <p className="max-w-prose font-sans text-body-lg text-text-secondary">
-              {recipe.description}
-            </p>
-          )}
-          {authorName && (
-            <p className="font-sans text-body-sm text-text-muted">
-              By {authorName}
-            </p>
-          )}
-          <div className="flex flex-wrap items-center gap-2">
-            {recipe.course && (
-              <Badge variant="muted">{COURSE_LABELS[recipe.course]}</Badge>
+  const instructionsSlot = (
+    <section className="space-y-6">
+      <h2 className="font-display text-heading-lg text-text-primary">
+        Instructions
+      </h2>
+      <div className="space-y-8">
+        {recipe.instructionGroups.map((group, gi) => (
+          <div key={group.id ?? gi}>
+            {group.groupLabel && (
+              <h3 className="mb-4 font-medium font-sans text-body-sm text-text-muted uppercase tracking-widest">
+                {group.groupLabel}
+              </h3>
             )}
-            {cuisineName && <Badge variant="muted">{cuisineName}</Badge>}
-            {recipe.difficulty && (
-              <Badge>{DIFFICULTY_LABELS[recipe.difficulty]}</Badge>
-            )}
-            {recipe.dietaryTags?.map((tag) => (
-              <Badge key={tag} variant="muted">
-                {DIETARY_TAG_LABELS[tag]}
-              </Badge>
-            ))}
+            <ol className="space-y-6">
+              {group.steps.map((step, si) => (
+                <li className="flex gap-4" key={step.id ?? si}>
+                  <span className="shrink-0 pt-0.5 font-display text-accent text-heading-md leading-none">
+                    {si + 1}
+                  </span>
+                  <div className="space-y-2">
+                    <p className="font-sans text-body text-text-primary">
+                      {step.description}
+                    </p>
+                    {step.timerMinutes && (
+                      <Badge
+                        className="inline-flex items-center gap-1"
+                        variant="muted"
+                      >
+                        <RiTimerLine aria-hidden="true" size={12} />
+                        {step.timerMinutes} min
+                      </Badge>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ol>
           </div>
-        </header>
+        ))}
+      </div>
+    </section>
+  )
 
-        {hasTime && (
-          <div className="flex gap-8 border-border border-y py-4">
-            {recipe.prepTime != null && (
-              <div>
-                <p className="font-sans text-caption text-text-muted uppercase tracking-widest">
-                  Prep
-                </p>
-                <p className="font-sans text-body text-text-primary">
-                  {formatDuration(recipe.prepTime)}
-                </p>
-              </div>
-            )}
-            {recipe.cookTime != null && (
-              <div>
-                <p className="font-sans text-caption text-text-muted uppercase tracking-widest">
-                  Cook
-                </p>
-                <p className="font-sans text-body text-text-primary">
-                  {formatDuration(recipe.cookTime)}
-                </p>
-              </div>
-            )}
-            {recipe.totalTime != null && (
-              <div>
-                <p className="font-sans text-caption text-text-muted uppercase tracking-widest">
-                  Total
-                </p>
-                <p className="font-sans text-body text-text-primary">
-                  {formatDuration(recipe.totalTime)}
-                </p>
-              </div>
-            )}
+  return (
+    <FocusMode ingredients={ingredientsSlot} instructions={instructionsSlot}>
+      <article>
+        {isPreview && <RefreshRouteOnSave serverURL={appEnv.BASE_URL} />}
+        <JsonLd<RecipeSchema> item={buildRecipeJsonLd(recipe)} />
+        {heroUrl && (
+          <div className="relative aspect-video w-full overflow-hidden bg-surface">
+            <Image
+              alt={heroAlt}
+              className="object-cover"
+              fill
+              priority
+              sizes="100vw"
+              src={transformCloudinary({
+                url: heroUrl,
+                width: 1600,
+                aspect: "16:9",
+              })}
+            />
           </div>
         )}
 
-        <div className="grid gap-12 lg:grid-cols-[2fr_3fr]">
-          <Suspense
-            fallback={
-              <section>
-                <h2 className="font-display text-heading-lg text-text-primary">
-                  Ingredients
-                </h2>
-              </section>
-            }
-          >
-            <RecipeControls
-              baseYield={recipe.yield?.quantity ?? 1}
-              ingredientGroups={recipe.ingredientGroups}
-              yieldUnit={recipe.yield?.unit ?? ""}
-            />
-          </Suspense>
-
-          <section className="space-y-6">
-            <h2 className="font-display text-heading-lg text-text-primary">
-              Instructions
-            </h2>
-            <div className="space-y-8">
-              {recipe.instructionGroups.map((group, gi) => (
-                <div key={group.id ?? gi}>
-                  {group.groupLabel && (
-                    <h3 className="mb-4 font-medium font-sans text-body-sm text-text-muted uppercase tracking-widest">
-                      {group.groupLabel}
-                    </h3>
-                  )}
-                  <ol className="space-y-6">
-                    {group.steps.map((step, si) => (
-                      <li className="flex gap-4" key={step.id ?? si}>
-                        <span className="shrink-0 pt-0.5 font-display text-accent text-heading-md leading-none">
-                          {si + 1}
-                        </span>
-                        <div className="space-y-2">
-                          <p className="font-sans text-body text-text-primary">
-                            {step.description}
-                          </p>
-                          {step.timerMinutes && (
-                            <Badge
-                              className="inline-flex items-center gap-1"
-                              variant="muted"
-                            >
-                              <RiTimerLine aria-hidden="true" size={12} />
-                              {step.timerMinutes} min
-                            </Badge>
-                          )}
-                        </div>
-                      </li>
-                    ))}
-                  </ol>
-                </div>
+        <div className="constrainer space-y-10 py-10">
+          <header className="space-y-4">
+            <h1 className="font-display text-heading-xl text-text-primary">
+              {recipe.title}
+            </h1>
+            {recipe.description && (
+              <p className="max-w-prose font-sans text-body-lg text-text-secondary">
+                {recipe.description}
+              </p>
+            )}
+            {authorName && (
+              <p className="font-sans text-body-sm text-text-muted">
+                By {authorName}
+              </p>
+            )}
+            <div className="flex flex-wrap items-center gap-2">
+              {recipe.course && (
+                <Badge variant="muted">{COURSE_LABELS[recipe.course]}</Badge>
+              )}
+              {cuisineName && <Badge variant="muted">{cuisineName}</Badge>}
+              {recipe.difficulty && (
+                <Badge>{DIFFICULTY_LABELS[recipe.difficulty]}</Badge>
+              )}
+              {recipe.dietaryTags?.map((tag) => (
+                <Badge key={tag} variant="muted">
+                  {DIETARY_TAG_LABELS[tag]}
+                </Badge>
               ))}
             </div>
-          </section>
+          </header>
+
+          {hasTime && (
+            <div className="flex gap-8 border-border border-y py-4">
+              {recipe.prepTime != null && (
+                <div>
+                  <p className="font-sans text-caption text-text-muted uppercase tracking-widest">
+                    Prep
+                  </p>
+                  <p className="font-sans text-body text-text-primary">
+                    {formatDuration(recipe.prepTime)}
+                  </p>
+                </div>
+              )}
+              {recipe.cookTime != null && (
+                <div>
+                  <p className="font-sans text-caption text-text-muted uppercase tracking-widest">
+                    Cook
+                  </p>
+                  <p className="font-sans text-body text-text-primary">
+                    {formatDuration(recipe.cookTime)}
+                  </p>
+                </div>
+              )}
+              {recipe.totalTime != null && (
+                <div>
+                  <p className="font-sans text-caption text-text-muted uppercase tracking-widest">
+                    Total
+                  </p>
+                  <p className="font-sans text-body text-text-primary">
+                    {formatDuration(recipe.totalTime)}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
+          <div className="grid gap-12 lg:grid-cols-[2fr_3fr]">
+            {ingredientsSlot}
+            {instructionsSlot}
+          </div>
         </div>
-      </div>
-    </article>
+      </article>
+    </FocusMode>
   )
 }

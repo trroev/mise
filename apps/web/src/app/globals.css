@@ -1,1 +1,6 @@
 @import "@mise/tailwind";
+
+body[data-focus-mode="true"] > header,
+body[data-focus-mode="true"] > footer {
+  display: none;
+}
