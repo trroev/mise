@@ -8,6 +8,7 @@ import { formatIngredient, formatQuantity } from "@mise/utils/conversions"
 import { scaleIngredients } from "@mise/utils/scaling"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useMemo, useState } from "react"
+import { match, P } from "ts-pattern"
 import { z } from "zod"
 
 type RawIngredientGroups = Recipe["ingredientGroups"]
@@ -26,14 +27,18 @@ const unitSystemSchema = z.enum(["us", "metric"])
 type UnitSystem = z.infer<typeof unitSystemSchema>
 
 function resolveUnit(unit: string | { abbreviation: string }): string {
-  return typeof unit === "object" ? unit.abbreviation : unit
+  return match(unit)
+    .with(P.string, (u) => u)
+    .otherwise((u) => u.abbreviation)
 }
 
 function readStoredUnitSystem(): UnitSystem | null {
   try {
     const raw = localStorage.getItem(UNIT_STORAGE_KEY)
     const parsed = unitSystemSchema.safeParse(raw)
-    return parsed.success ? parsed.data : null
+    return match(parsed)
+      .with({ success: true }, (r) => r.data)
+      .otherwise(() => null)
   } catch {
     return null
   }
@@ -47,10 +52,11 @@ export const RecipeControls = ({
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const urlUnitsRaw = searchParams.get("units")
-  const urlUnits = unitSystemSchema.safeParse(urlUnitsRaw)
+  const urlUnits = unitSystemSchema.safeParse(searchParams.get("units"))
   const hasExplicitUnits = urlUnits.success
-  const unitSystem: UnitSystem = urlUnits.success ? urlUnits.data : "metric"
+  const unitSystem: UnitSystem = match(urlUnits)
+    .with({ success: true }, (r) => r.data)
+    .otherwise(() => "metric" as const)
 
   const urlYield = searchParams.get("yield")
   const [targetYield, setTargetYield] = useState<number>(() => {
@@ -58,30 +64,24 @@ export const RecipeControls = ({
     return Number.isFinite(parsed) && parsed >= 1 ? parsed : baseYield
   })
 
-  // Preference is "resolved" once we know whether to use the URL value or fall
-  // back to defaults — only unresolved during the one-tick window where we
-  // need to consult localStorage and potentially rewrite the URL.
   const [isPreferenceResolved, setIsPreferenceResolved] =
     useState(hasExplicitUnits)
 
-  // First-load seeding: if the URL has no preference, consult localStorage
-  // once and rewrite the URL so subsequent renders are URL-driven.
   useEffect(() => {
-    if (hasExplicitUnits) {
-      setIsPreferenceResolved(true)
-      return
-    }
-    const stored = readStoredUnitSystem()
-    if (!stored) {
-      setIsPreferenceResolved(true)
-      return
-    }
-    const params = new URLSearchParams(searchParams.toString())
-    params.set("units", stored)
-    router.replace(`?${params.toString()}`, { scroll: false })
+    match({ hasExplicitUnits, stored: readStoredUnitSystem() })
+      .with({ hasExplicitUnits: true }, () => {
+        setIsPreferenceResolved(true)
+      })
+      .with({ stored: P.nullish }, () => {
+        setIsPreferenceResolved(true)
+      })
+      .otherwise(({ stored }) => {
+        const params = new URLSearchParams(searchParams.toString())
+        params.set("units", stored as UnitSystem)
+        router.replace(`?${params.toString()}`, { scroll: false })
+      })
   }, [hasExplicitUnits, router, searchParams])
 
-  // Persist the active unit system as a "next-visit" cache.
   useEffect(() => {
     if (!hasExplicitUnits) {
       return
@@ -111,13 +111,15 @@ export const RecipeControls = ({
   )
 
   const handleUnitChange = (value: string) => {
-    const parsed = unitSystemSchema.safeParse(value)
-    if (!parsed.success) {
-      return
-    }
-    const params = new URLSearchParams(searchParams.toString())
-    params.set("units", parsed.data)
-    router.replace(`?${params.toString()}`, { scroll: false })
+    match(unitSystemSchema.safeParse(value))
+      .with({ success: true }, (r) => {
+        const params = new URLSearchParams(searchParams.toString())
+        params.set("units", r.data)
+        router.replace(`?${params.toString()}`, { scroll: false })
+      })
+      .otherwise(() => {
+        // Ignore unknown toggle values.
+      })
   }
 
   const handleYieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -191,14 +193,18 @@ export const RecipeControls = ({
               )}
               <ul className="space-y-2">
                 {group.ingredients.map((ingredient, ii) => {
-                  const isMetricUnit = METRIC_UNITS.has(ingredient.unit)
-                  const quantityLabel = isMetricUnit
-                    ? formatIngredient(
+                  const quantityLabel = match(METRIC_UNITS.has(ingredient.unit))
+                    .with(true, () =>
+                      formatIngredient(
                         ingredient.quantity,
                         ingredient.unit as MetricUnit,
                         unitSystem
                       )
-                    : `${formatQuantity(ingredient.quantity)} ${ingredient.unit}`
+                    )
+                    .otherwise(
+                      () =>
+                        `${formatQuantity(ingredient.quantity)} ${ingredient.unit}`
+                    )
                   return (
                     <li
                       className="font-sans text-body text-text-primary"
