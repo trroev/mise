@@ -1,6 +1,10 @@
 {
   "extends": "@mise/tsconfig/library.json",
   "compilerOptions": {
+    "declaration": false,
+    "declarationMap": false,
+    "jsx": "react-jsx",
+    "noEmit": true,
     "types": ["node"]
   },
   "include": ["src"],

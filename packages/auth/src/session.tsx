@@ -1,8 +1,8 @@
 "use client"
 
-import type { User } from "@mise/auth"
 import { createContext, type ReactNode, useContext } from "react"
-import { authClient } from "~/features/auth/auth-client"
+import { authClient } from "./client"
+import type { User } from "./index"
 
 type SessionContextValue = {
   initialUser: User | null

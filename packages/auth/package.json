@@ -4,7 +4,9 @@
   "private": true,
   "license": "MIT",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./client": "./src/client.ts",
+    "./session": "./src/session.tsx"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"
@@ -14,9 +16,14 @@
     "better-auth": "^1.2.8",
     "mongodb": "^6.16.0"
   },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
   "devDependencies": {
     "@mise/tsconfig": "workspace:*",
     "@types/node": "^22.15.3",
+    "@types/react": "19.2.2",
+    "react": "^19.2.0",
     "typescript": "^6.0.3"
   }
 }

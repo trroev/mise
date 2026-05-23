@@ -1,9 +1,9 @@
 "use client"
 
+import { authClient } from "@mise/auth/client"
 import { Button } from "@mise/ui/components/Button"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { authClient } from "~/features/auth/auth-client"
 
 export const SignOutButton = () => {
   const router = useRouter()

@@ -1,3 +1,4 @@
+import { SessionProvider } from "@mise/auth/session"
 import type { HeaderAuth } from "@mise/chrome/components/AppShell"
 import { AppShell } from "@mise/chrome/components/AppShell"
 import { env } from "@mise/env/app"
@@ -7,7 +8,6 @@ import type React from "react"
 import { SentryUser } from "~/components/SentryUser"
 import { signOutAction } from "~/features/auth/actions/sign-out"
 import { auth } from "~/features/auth/auth.server"
-import { SessionProvider } from "~/features/auth/session"
 import { cormorant, manrope } from "~/fonts"
 import { getPayloadUserByBetterAuthId } from "~/lib/queries/payload-user-by-better-auth-id"
 

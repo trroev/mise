@@ -1,5 +1,6 @@
 "use client"
 
+import { authClient } from "@mise/auth/client"
 import { Button } from "@mise/ui/components/Button"
 import { Field } from "@mise/ui/components/Field"
 import { Input } from "@mise/ui/components/Input"
@@ -8,7 +9,6 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { useState } from "react"
 import { match } from "ts-pattern"
 import { z } from "zod"
-import { authClient } from "~/features/auth/auth-client"
 
 const signInSchema = z.object({
   email: z.email("Enter a valid email address."),
