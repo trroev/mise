@@ -9,6 +9,7 @@ import { Cuisines } from "@mise/payload/collections/Cuisines"
 import { Ingredients } from "@mise/payload/collections/Ingredients"
 import { Media } from "@mise/payload/collections/Media"
 import { Recipes } from "@mise/payload/collections/Recipes"
+import { SavedRecipes } from "@mise/payload/collections/SavedRecipes"
 import { Tags } from "@mise/payload/collections/Tags"
 import { Units } from "@mise/payload/collections/Units"
 import { Users } from "@mise/payload/collections/Users"
@@ -51,6 +52,7 @@ export function createPayloadConfig({ baseDir }: CreatePayloadConfigOptions) {
       Ingredients,
       Media,
       Recipes,
+      SavedRecipes,
       Tags,
       Units,
       Users,

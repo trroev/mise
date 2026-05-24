@@ -227,6 +227,8 @@
                       "~/features/profile/**",
                       "~/features/home",
                       "~/features/home/**",
+                      "~/features/saved-recipes",
+                      "~/features/saved-recipes/**",
                       "~/app",
                       "~/app/**"
                     ],
@@ -256,6 +258,8 @@
                       "~/features/profile/**",
                       "~/features/home",
                       "~/features/home/**",
+                      "~/features/saved-recipes",
+                      "~/features/saved-recipes/**",
                       "~/app",
                       "~/app/**"
                     ],
@@ -285,6 +289,8 @@
                       "~/features/auth/**",
                       "~/features/home",
                       "~/features/home/**",
+                      "~/features/saved-recipes",
+                      "~/features/saved-recipes/**",
                       "~/app",
                       "~/app/**"
                     ],
@@ -314,6 +320,39 @@
                       "~/features/auth/**",
                       "~/features/profile",
                       "~/features/profile/**",
+                      "~/features/saved-recipes",
+                      "~/features/saved-recipes/**",
+                      "~/app",
+                      "~/app/**"
+                    ],
+                    "message": "Features must not import from other features or from ~/app. Hoist shared code into ~/lib or ~/components."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["apps/web/src/features/saved-recipes/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": [
+                      "~/features/recipes",
+                      "~/features/recipes/**",
+                      "~/features/auth",
+                      "~/features/auth/**",
+                      "~/features/profile",
+                      "~/features/profile/**",
+                      "~/features/home",
+                      "~/features/home/**",
                       "~/app",
                       "~/app/**"
                     ],

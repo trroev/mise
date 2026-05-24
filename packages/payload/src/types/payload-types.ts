@@ -72,6 +72,7 @@ export interface Config {
     ingredients: Ingredient;
     media: Media;
     recipes: Recipe;
+    'saved-recipes': SavedRecipe;
     tags: Tag;
     units: Unit;
     users: User;
@@ -87,6 +88,7 @@ export interface Config {
     ingredients: IngredientsSelect<false> | IngredientsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     recipes: RecipesSelect<false> | RecipesSelect<true>;
+    'saved-recipes': SavedRecipesSelect<false> | SavedRecipesSelect<true>;
     tags: TagsSelect<false> | TagsSelect<true>;
     units: UnitsSelect<false> | UnitsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -362,6 +364,17 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "saved-recipes".
+ */
+export interface SavedRecipe {
+  id: string;
+  user: string | User;
+  recipe: string | Recipe;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "tags".
  */
 export interface Tag {
@@ -418,6 +431,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'recipes';
         value: string | Recipe;
+      } | null)
+    | ({
+        relationTo: 'saved-recipes';
+        value: string | SavedRecipe;
       } | null)
     | ({
         relationTo: 'tags';
@@ -602,6 +619,16 @@ export interface RecipesSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "saved-recipes_select".
+ */
+export interface SavedRecipesSelect<T extends boolean = true> {
+  user?: T;
+  recipe?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
