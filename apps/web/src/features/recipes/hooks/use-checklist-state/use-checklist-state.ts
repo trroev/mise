@@ -8,9 +8,13 @@ export const UNIT_SYSTEMS = ["us", "metric"] as const satisfies ReadonlyArray<
 export type UnitSystem = (typeof UNIT_SYSTEMS)[number]
 
 export type ChecklistStorageKey = `checklist:${string}:${number}:${UnitSystem}`
+export type StepProgressStorageKey = `step-progress:${string}`
+export type ChecklistStateStorageKey =
+  | ChecklistStorageKey
+  | StepProgressStorageKey
 
 export type UseChecklistStateOptions = {
-  storageKey: ChecklistStorageKey
+  storageKey: ChecklistStateStorageKey
   initial?: ReadonlyArray<string>
 }
 

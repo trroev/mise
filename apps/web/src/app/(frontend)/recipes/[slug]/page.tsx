@@ -8,7 +8,6 @@ import { transformCloudinary } from "@mise/chrome/utils/transformCloudinary"
 import { env as appEnv } from "@mise/env/app"
 import { Badge } from "@mise/ui/components/Badge"
 import { formatDuration } from "@mise/utils/formatDuration"
-import { RiTimerLine } from "@remixicon/react"
 import type { Metadata } from "next"
 import Image from "next/image"
 import { notFound } from "next/navigation"
@@ -24,6 +23,11 @@ import {
 import { FocusMode } from "~/features/recipes/components/FocusMode"
 import { RecipeControls } from "~/features/recipes/components/RecipeControls"
 import { RefreshRouteOnSave } from "~/features/recipes/components/RefreshRouteOnSave"
+import {
+  StepProgress,
+  type StepProgressGroup,
+} from "~/features/recipes/components/StepProgress"
+import type { StepProgressStorageKey } from "~/features/recipes/hooks/use-checklist-state"
 import { canViewDraft } from "~/lib/policies/can-view-draft"
 import { getCurrentViewer } from "~/lib/queries/current-viewer"
 
@@ -149,45 +153,27 @@ export default async function RecipeDetailPage({
     </Suspense>
   )
 
+  const stepProgressGroups = recipe.instructionGroups.map<StepProgressGroup>(
+    (group, gi) => ({
+      id: group.id ?? `group-${gi}`,
+      groupLabel: group.groupLabel,
+      steps: group.steps.map((step, si) => ({
+        id: step.id ?? `${group.id ?? gi}-${si}`,
+        description: step.description,
+        timerMinutes: step.timerMinutes,
+      })),
+    })
+  )
+
   const instructionsSlot = (
     <section className="space-y-6">
       <h2 className="font-display text-heading-lg text-text-primary">
         Instructions
       </h2>
-      <div className="space-y-8">
-        {recipe.instructionGroups.map((group, gi) => (
-          <div key={group.id ?? gi}>
-            {group.groupLabel && (
-              <h3 className="mb-4 font-medium font-sans text-body-sm text-text-muted uppercase tracking-widest">
-                {group.groupLabel}
-              </h3>
-            )}
-            <ol className="space-y-6">
-              {group.steps.map((step, si) => (
-                <li className="flex gap-4" key={step.id ?? si}>
-                  <span className="shrink-0 pt-0.5 font-display text-accent text-heading-md leading-none">
-                    {si + 1}
-                  </span>
-                  <div className="space-y-2">
-                    <p className="font-sans text-body text-text-primary">
-                      {step.description}
-                    </p>
-                    {step.timerMinutes && (
-                      <Badge
-                        className="inline-flex items-center gap-1"
-                        variant="muted"
-                      >
-                        <RiTimerLine aria-hidden="true" size={12} />
-                        {step.timerMinutes} min
-                      </Badge>
-                    )}
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </div>
-        ))}
-      </div>
+      <StepProgress
+        groups={stepProgressGroups}
+        storageKey={`step-progress:${slug}` satisfies StepProgressStorageKey}
+      />
     </section>
   )
 
