@@ -34,12 +34,20 @@ describe("IngredientChecklist", () => {
 
   it("renders each ingredient as a button with aria-pressed", () => {
     render(<IngredientChecklist groups={groups} storageKey={KEY} />)
-    const buttons = screen.getAllByRole("button")
-    // 2 ingredient buttons (no reset yet)
-    expect(buttons).toHaveLength(2)
-    for (const btn of buttons) {
+    const pressables = screen
+      .getAllByRole("button")
+      .filter((b) => b.hasAttribute("aria-pressed"))
+    expect(pressables).toHaveLength(2)
+    for (const btn of pressables) {
       expect(btn).toHaveAttribute("aria-pressed", "false")
     }
+  })
+
+  it("reset button is hidden (no layout shift) until something is checked", () => {
+    render(<IngredientChecklist groups={groups} storageKey={KEY} />)
+    const reset = screen.getByText(RESET_RE)
+    expect(reset).toHaveAttribute("aria-hidden", "true")
+    expect(reset).toHaveClass("opacity-0")
   })
 
   it("toggles a row and shows the reset button after a check", async () => {
@@ -70,8 +78,8 @@ describe("IngredientChecklist", () => {
       "aria-pressed",
       "false"
     )
-    expect(
-      screen.queryByRole("button", { name: RESET_RE })
-    ).not.toBeInTheDocument()
+    const reset = screen.getByText(RESET_RE)
+    expect(reset).toHaveAttribute("aria-hidden", "true")
+    expect(reset).toHaveClass("opacity-0")
   })
 })

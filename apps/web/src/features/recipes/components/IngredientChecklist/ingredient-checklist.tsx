@@ -32,17 +32,20 @@ export const IngredientChecklist = ({
 
   return (
     <div className="space-y-6">
-      {checked.size > 0 && (
-        <div className="flex justify-end">
-          <button
-            className="font-sans text-body-sm text-text-muted underline-offset-2 hover:text-text-primary hover:underline"
-            onClick={reset}
-            type="button"
-          >
-            Reset checklist
-          </button>
-        </div>
-      )}
+      <div className="flex justify-end">
+        <button
+          aria-hidden={checked.size === 0}
+          className={cn(
+            "font-sans text-body-sm text-text-muted underline-offset-2 transition-opacity hover:text-text-primary hover:underline",
+            checked.size === 0 && "pointer-events-none opacity-0"
+          )}
+          onClick={reset}
+          tabIndex={checked.size === 0 ? -1 : 0}
+          type="button"
+        >
+          Reset checklist
+        </button>
+      </div>
       {groups.map((group, gi) => (
         <div key={group.id ?? gi}>
           {group.groupLabel && (
