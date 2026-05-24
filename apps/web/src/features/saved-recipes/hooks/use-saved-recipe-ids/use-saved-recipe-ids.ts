@@ -9,9 +9,7 @@ const fetchSavedRecipeIds = async (): Promise<ReadonlyArray<string>> => {
   const result = await listSavedRecipes()
   return match(result)
     .with({ status: "ok" }, ({ data }) =>
-      data.map((doc) =>
-        typeof doc.recipe === "string" ? doc.recipe : String(doc.recipe.id)
-      )
+      data.map((ref) => (typeof ref === "string" ? ref : String(ref.id)))
     )
     .with({ status: "unauthenticated" }, () => [])
     .with({ status: "error" }, () => [])

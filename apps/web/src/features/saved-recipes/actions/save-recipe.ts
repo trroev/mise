@@ -17,6 +17,11 @@ type SaveRecipeInput = {
 export type SaveRecipeData = { savedRecipeId: string }
 export type SaveRecipeResult = SavedRecipesActionResult<SaveRecipeData>
 
+const toRecipeId = (value: unknown): string =>
+  typeof value === "string"
+    ? value
+    : String((value as { id: string | number }).id)
+
 export const saveRecipe = async ({
   recipeId,
 }: SaveRecipeInput): Promise<SaveRecipeResult> => {
@@ -35,9 +40,7 @@ export const saveRecipe = async ({
 
     const existing = await payload.find({
       collection: "saved-recipes",
-      where: {
-        and: [{ user: { equals: userId } }, { recipe: { equals: recipeId } }],
-      },
+      where: { user: { equals: userId } },
       limit: 1,
       depth: 0,
       overrideAccess: true,
@@ -45,12 +48,22 @@ export const saveRecipe = async ({
 
     const existingDoc = existing.docs[0]
     if (existingDoc) {
-      return { status: "ok", data: { savedRecipeId: String(existingDoc.id) } }
+      const currentIds = (existingDoc.recipes ?? []).map(toRecipeId)
+      if (currentIds.includes(recipeId)) {
+        return { status: "ok", data: { savedRecipeId: String(existingDoc.id) } }
+      }
+      const updated = await payload.update({
+        collection: "saved-recipes",
+        id: existingDoc.id,
+        data: { recipes: [...currentIds, recipeId] },
+        overrideAccess: true,
+      })
+      return { status: "ok", data: { savedRecipeId: String(updated.id) } }
     }
 
     const created = await payload.create({
       collection: "saved-recipes",
-      data: { user: userId, recipe: recipeId },
+      data: { user: userId, recipes: [recipeId] },
       overrideAccess: true,
     })
 

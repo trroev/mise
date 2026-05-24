@@ -47,17 +47,17 @@ describe("listSavedRecipes", () => {
     expect(listSavedRecipesForUser).not.toHaveBeenCalled()
   })
 
-  it("should return saved-recipe docs scoped to the viewer", async () => {
+  it("should return the viewer's saved recipe references", async () => {
     getCurrentViewer.mockResolvedValueOnce({
       kind: "user",
       user: { id: "u1" },
     })
-    const docs = [{ id: "sr-1" }, { id: "sr-2" }]
-    listSavedRecipesForUser.mockResolvedValueOnce(docs)
+    const recipes = ["r1", "r2"]
+    listSavedRecipesForUser.mockResolvedValueOnce(recipes)
     const { listSavedRecipes } = await import("./list-saved-recipes")
     const result = await listSavedRecipes()
     expect(listSavedRecipesForUser).toHaveBeenCalledWith({ userId: "u1" })
-    expect(result).toEqual({ status: "ok", data: docs })
+    expect(result).toEqual({ status: "ok", data: recipes })
   })
 
   it("should return an error when the fetcher throws", async () => {

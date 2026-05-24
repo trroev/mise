@@ -369,7 +369,7 @@ export interface User {
 export interface SavedRecipe {
   id: string;
   user: string | User;
-  recipe: string | Recipe;
+  recipes?: (string | Recipe)[] | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -626,7 +626,7 @@ export interface RecipesSelect<T extends boolean = true> {
  */
 export interface SavedRecipesSelect<T extends boolean = true> {
   user?: T;
-  recipe?: T;
+  recipes?: T;
   updatedAt?: T;
   createdAt?: T;
 }

@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest"
 const getCurrentViewer = vi.fn()
 const find = vi.fn()
 const create = vi.fn()
+const update = vi.fn()
 
 vi.mock("server-only", () => ({}))
 
@@ -15,7 +16,7 @@ vi.mock("next/navigation", () => ({
 }))
 
 vi.mock("payload", () => ({
-  getPayload: vi.fn(async () => ({ find, create })),
+  getPayload: vi.fn(async () => ({ find, create, update })),
 }))
 
 vi.mock("~/payload.config", () => ({ default: {} }))
@@ -34,6 +35,7 @@ describe("saveRecipe", () => {
     getCurrentViewer.mockReset()
     find.mockReset()
     create.mockReset()
+    update.mockReset()
   })
 
   it("should return unauthenticated when no viewer is present", async () => {
@@ -42,6 +44,7 @@ describe("saveRecipe", () => {
     const result = await saveRecipe({ recipeId: "r1" })
     expect(result).toEqual({ status: "unauthenticated" })
     expect(create).not.toHaveBeenCalled()
+    expect(update).not.toHaveBeenCalled()
   })
 
   it("should return unauthenticated for an admin viewer", async () => {
@@ -63,7 +66,7 @@ describe("saveRecipe", () => {
     expect(create).not.toHaveBeenCalled()
   })
 
-  it("should create a new saved-recipe row when none exists", async () => {
+  it("should create a new saved-recipes doc when none exists for the user", async () => {
     stubUserViewer("u1")
     find.mockResolvedValueOnce({ docs: [] })
     create.mockResolvedValueOnce({ id: "sr-new" })
@@ -72,7 +75,7 @@ describe("saveRecipe", () => {
     expect(create).toHaveBeenCalledWith(
       expect.objectContaining({
         collection: "saved-recipes",
-        data: { user: "u1", recipe: "r1" },
+        data: { user: "u1", recipes: ["r1"] },
         overrideAccess: true,
       })
     )
@@ -82,11 +85,36 @@ describe("saveRecipe", () => {
     })
   })
 
-  it("should be idempotent when the recipe is already saved", async () => {
+  it("should append the recipe to an existing user doc", async () => {
     stubUserViewer("u1")
-    find.mockResolvedValueOnce({ docs: [{ id: "sr-existing" }] })
+    find.mockResolvedValueOnce({
+      docs: [{ id: "sr-existing", recipes: ["r-old"] }],
+    })
+    update.mockResolvedValueOnce({ id: "sr-existing" })
     const { saveRecipe } = await import("./save-recipe")
     const result = await saveRecipe({ recipeId: "r1" })
+    expect(update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        collection: "saved-recipes",
+        id: "sr-existing",
+        data: { recipes: ["r-old", "r1"] },
+        overrideAccess: true,
+      })
+    )
+    expect(result).toEqual({
+      status: "ok",
+      data: { savedRecipeId: "sr-existing" },
+    })
+  })
+
+  it("should be idempotent when the recipe is already in the user's list", async () => {
+    stubUserViewer("u1")
+    find.mockResolvedValueOnce({
+      docs: [{ id: "sr-existing", recipes: ["r1", "r-other"] }],
+    })
+    const { saveRecipe } = await import("./save-recipe")
+    const result = await saveRecipe({ recipeId: "r1" })
+    expect(update).not.toHaveBeenCalled()
     expect(create).not.toHaveBeenCalled()
     expect(result).toEqual({
       status: "ok",

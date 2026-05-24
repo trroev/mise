@@ -7,7 +7,7 @@ export const saveButton = tv({
       default:
         "bg-background/90 text-text-primary shadow-sm backdrop-blur-sm hover:bg-background",
       glass:
-        "border border-white/20 bg-black/35 text-white shadow-lg ring-1 ring-black/5 backdrop-blur-md backdrop-saturate-150 hover:bg-black/45",
+        "border border-white/20 bg-black/15 text-white shadow-lg ring-1 ring-black/5 backdrop-blur-md backdrop-saturate-150 hover:bg-black/45",
     },
     isSaved: {
       true: "text-accent",

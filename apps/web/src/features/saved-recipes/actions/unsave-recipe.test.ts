@@ -1,7 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
 const getCurrentViewer = vi.fn()
-const deleteFn = vi.fn()
+const find = vi.fn()
+const update = vi.fn()
 
 vi.mock("server-only", () => ({}))
 
@@ -14,7 +15,7 @@ vi.mock("next/navigation", () => ({
 }))
 
 vi.mock("payload", () => ({
-  getPayload: vi.fn(async () => ({ delete: deleteFn })),
+  getPayload: vi.fn(async () => ({ find, update })),
 }))
 
 vi.mock("~/payload.config", () => ({ default: {} }))
@@ -31,7 +32,8 @@ describe("unsaveRecipe", () => {
   beforeEach(() => {
     vi.resetModules()
     getCurrentViewer.mockReset()
-    deleteFn.mockReset()
+    find.mockReset()
+    update.mockReset()
   })
 
   it("should return unauthenticated when no viewer is present", async () => {
@@ -39,7 +41,7 @@ describe("unsaveRecipe", () => {
     const { unsaveRecipe } = await import("./unsave-recipe")
     const result = await unsaveRecipe({ recipeId: "r1" })
     expect(result).toEqual({ status: "unauthenticated" })
-    expect(deleteFn).not.toHaveBeenCalled()
+    expect(update).not.toHaveBeenCalled()
   })
 
   it("should return an error when recipeId is empty", async () => {
@@ -47,37 +49,51 @@ describe("unsaveRecipe", () => {
     const { unsaveRecipe } = await import("./unsave-recipe")
     const result = await unsaveRecipe({ recipeId: "" })
     expect(result.status).toBe("error")
-    expect(deleteFn).not.toHaveBeenCalled()
+    expect(update).not.toHaveBeenCalled()
   })
 
-  it("should delete saved-recipe rows scoped to viewer+recipe", async () => {
+  it("should report zero removed when the user has no saved-recipes doc", async () => {
     stubUserViewer("u1")
-    deleteFn.mockResolvedValueOnce({ docs: [{ id: "sr-1" }] })
+    find.mockResolvedValueOnce({ docs: [] })
     const { unsaveRecipe } = await import("./unsave-recipe")
     const result = await unsaveRecipe({ recipeId: "r1" })
-    expect(deleteFn).toHaveBeenCalledWith(
+    expect(update).not.toHaveBeenCalled()
+    expect(result).toEqual({ status: "ok", data: { removed: 0 } })
+  })
+
+  it("should remove the recipe from the user's saved-recipes array", async () => {
+    stubUserViewer("u1")
+    find.mockResolvedValueOnce({
+      docs: [{ id: "sr-1", recipes: ["r-keep", "r1"] }],
+    })
+    update.mockResolvedValueOnce({ id: "sr-1" })
+    const { unsaveRecipe } = await import("./unsave-recipe")
+    const result = await unsaveRecipe({ recipeId: "r1" })
+    expect(update).toHaveBeenCalledWith(
       expect.objectContaining({
         collection: "saved-recipes",
-        where: {
-          and: [{ user: { equals: "u1" } }, { recipe: { equals: "r1" } }],
-        },
+        id: "sr-1",
+        data: { recipes: ["r-keep"] },
         overrideAccess: true,
       })
     )
     expect(result).toEqual({ status: "ok", data: { removed: 1 } })
   })
 
-  it("should report zero removed when nothing matched", async () => {
+  it("should report zero removed when the recipe is not in the user's list", async () => {
     stubUserViewer("u1")
-    deleteFn.mockResolvedValueOnce({ docs: [] })
+    find.mockResolvedValueOnce({
+      docs: [{ id: "sr-1", recipes: ["r-other"] }],
+    })
     const { unsaveRecipe } = await import("./unsave-recipe")
     const result = await unsaveRecipe({ recipeId: "r1" })
+    expect(update).not.toHaveBeenCalled()
     expect(result).toEqual({ status: "ok", data: { removed: 0 } })
   })
 
   it("should return an error when payload throws", async () => {
     stubUserViewer("u1")
-    deleteFn.mockRejectedValueOnce(new Error("db down"))
+    find.mockRejectedValueOnce(new Error("db down"))
     const { unsaveRecipe } = await import("./unsave-recipe")
     const result = await unsaveRecipe({ recipeId: "r1" })
     expect(result.status).toBe("error")

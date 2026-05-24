@@ -74,9 +74,7 @@ export default async function FrontendLayout({
   const savedRecipesResult = await listSavedRecipes()
   const initialSavedRecipeIds = match(savedRecipesResult)
     .with({ status: "ok" }, ({ data }) =>
-      data.map((doc) =>
-        typeof doc.recipe === "string" ? doc.recipe : String(doc.recipe.id)
-      )
+      data.map((ref) => (typeof ref === "string" ? ref : String(ref.id)))
     )
     .otherwise(() => [])
 

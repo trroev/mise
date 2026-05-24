@@ -9,7 +9,7 @@ export const SavedRecipes: CollectionConfig = {
     update: isAdmin,
   },
   admin: {
-    defaultColumns: ["user", "recipe", "createdAt"],
+    defaultColumns: ["user", "recipes", "createdAt"],
     useAsTitle: "id",
   },
   fields: [
@@ -19,19 +19,14 @@ export const SavedRecipes: CollectionConfig = {
       relationTo: "users",
       required: true,
       type: "relationship",
-    },
-    {
-      index: true,
-      name: "recipe",
-      relationTo: "recipes",
-      required: true,
-      type: "relationship",
-    },
-  ],
-  indexes: [
-    {
-      fields: ["user", "recipe"],
       unique: true,
+    },
+    {
+      hasMany: true,
+      index: true,
+      name: "recipes",
+      relationTo: "recipes",
+      type: "relationship",
     },
   ],
   labels: {
