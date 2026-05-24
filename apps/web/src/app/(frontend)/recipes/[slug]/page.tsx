@@ -183,7 +183,7 @@ export default async function RecipeDetailPage({
         {isPreview && <RefreshRouteOnSave serverURL={appEnv.BASE_URL} />}
         <JsonLd<RecipeSchema> item={buildRecipeJsonLd(recipe)} />
         {heroUrl && (
-          <div className="relative aspect-video w-full overflow-hidden bg-surface">
+          <div className="relative aspect-video w-full overflow-hidden bg-surface print:hidden">
             <Image
               alt={heroAlt}
               className="object-cover"
@@ -214,7 +214,10 @@ export default async function RecipeDetailPage({
                 By {authorName}
               </p>
             )}
-            <div className="flex flex-wrap items-center gap-2">
+            <p className="hidden font-sans text-body-sm text-text-muted print:block">
+              Source: {`${appEnv.BASE_URL}/recipes/${slug}`}
+            </p>
+            <div className="flex flex-wrap items-center gap-2 print:hidden">
               {recipe.course && (
                 <Badge variant="muted">{COURSE_LABELS[recipe.course]}</Badge>
               )}
@@ -265,7 +268,7 @@ export default async function RecipeDetailPage({
             </div>
           )}
 
-          <div className="grid gap-12 lg:grid-cols-[2fr_3fr]">
+          <div className="grid gap-12 lg:grid-cols-[2fr_3fr] print:grid-cols-1 print:gap-6">
             {ingredientsSlot}
             {instructionsSlot}
           </div>

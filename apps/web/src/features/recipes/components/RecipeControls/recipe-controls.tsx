@@ -147,7 +147,7 @@ export const RecipeControls = ({
         <h2 className="font-display text-heading-lg text-text-primary">
           Ingredients
         </h2>
-        <div className="flex flex-wrap items-center gap-4">
+        <div className="flex flex-wrap items-center gap-4 print:hidden">
           <div className="flex items-center gap-2">
             <label
               className="font-sans text-body-sm text-text-muted"

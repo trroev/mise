@@ -32,7 +32,7 @@ export const IngredientChecklist = ({
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-end">
+      <div className="flex justify-end print:hidden">
         <button
           aria-hidden={checked.size === 0}
           className={cn(
@@ -70,7 +70,7 @@ export const IngredientChecklist = ({
                     <span
                       aria-hidden="true"
                       className={cn(
-                        "mt-0.5 inline-flex h-4 w-4 shrink-0 items-center justify-center rounded border border-border bg-background",
+                        "mt-0.5 inline-flex h-4 w-4 shrink-0 items-center justify-center rounded border border-border bg-background print:hidden",
                         isChecked && "border-accent bg-accent text-background"
                       )}
                     >

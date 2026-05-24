@@ -71,7 +71,7 @@ export const FocusMode = ({
 
   return (
     <>
-      <div className="fixed right-4 bottom-4 z-50 sm:right-6 sm:bottom-6">
+      <div className="fixed right-4 bottom-4 z-50 sm:right-6 sm:bottom-6 print:hidden">
         <Button
           aria-label={isEnabled ? "Exit focus mode" : "Enter focus mode"}
           aria-pressed={isEnabled}

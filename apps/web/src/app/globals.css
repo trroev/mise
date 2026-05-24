@@ -1,6 +1,54 @@
 @import "@mise/tailwind";
 
-body[data-focus-mode="true"] > header,
-body[data-focus-mode="true"] > footer {
+:where(body[data-focus-mode="true"]) > header,
+:where(body[data-focus-mode="true"]) > footer {
   display: none;
+}
+
+/*
+ * Print stylesheet for /recipes/[slug].
+ *
+ * Goal: a clean, single-column, ink-saving printout containing the recipe
+ * title, meta line (prep/cook/total/yield), ingredients, instructions, and
+ * the canonical source URL. UI chrome (site header/footer, focus toggle,
+ * yield/unit controls, reset buttons) is hidden via `print:hidden` utility
+ * classes colocated on the relevant components; the rules below cover the
+ * pieces that can't be reached with Tailwind utilities (global header/footer,
+ * body typography, ink-saving overrides, page-break behavior).
+ */
+@media print {
+  body {
+    font-family: var(--font-cormorant), Georgia, "Times New Roman", serif;
+    color: black;
+    background: white;
+  }
+
+  body > header,
+  body > footer {
+    display: none;
+  }
+
+  article,
+  article * {
+    color: black !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  article a {
+    text-decoration: underline;
+  }
+
+  article li,
+  article h1,
+  article h2,
+  article h3 {
+    break-inside: avoid;
+  }
+
+  article h1,
+  article h2,
+  article h3 {
+    break-after: avoid;
+  }
 }
