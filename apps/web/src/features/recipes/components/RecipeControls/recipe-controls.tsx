@@ -10,6 +10,11 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useMemo, useState } from "react"
 import { match, P } from "ts-pattern"
 import { z } from "zod"
+import {
+  type ChecklistGroup,
+  IngredientChecklist,
+} from "~/features/recipes/components/IngredientChecklist"
+import type { ChecklistStorageKey } from "~/features/recipes/hooks/use-checklist-state"
 
 type RawIngredientGroups = Recipe["ingredientGroups"]
 
@@ -17,6 +22,7 @@ export type RecipeControlsProps = {
   ingredientGroups: RawIngredientGroups
   baseYield: number
   yieldUnit: string
+  recipeSlug: string
 }
 
 const UNIT_STORAGE_KEY = "recipe-unit-system"
@@ -48,6 +54,7 @@ export const RecipeControls = ({
   ingredientGroups,
   baseYield,
   yieldUnit,
+  recipeSlug,
 }: RecipeControlsProps) => {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -183,49 +190,35 @@ export const RecipeControls = ({
       </div>
 
       {isPreferenceResolved ? (
-        <div className="space-y-6">
-          {scaledGroups.map((group, gi) => (
-            <div key={group.id ?? gi}>
-              {group.groupLabel && (
-                <h3 className="mb-3 font-medium font-sans text-body-sm text-text-muted uppercase tracking-widest">
-                  {group.groupLabel}
-                </h3>
-              )}
-              <ul className="space-y-2">
-                {group.ingredients.map((ingredient, ii) => {
-                  const quantityLabel = match(METRIC_UNITS.has(ingredient.unit))
-                    .with(true, () =>
-                      formatIngredient(
-                        ingredient.quantity,
-                        ingredient.unit as MetricUnit,
-                        unitSystem
-                      )
-                    )
-                    .otherwise(
-                      () =>
-                        `${formatQuantity(ingredient.quantity)} ${ingredient.unit}`
-                    )
-                  return (
-                    <li
-                      className="font-sans text-body text-text-primary"
-                      key={ingredient.id ?? ii}
-                    >
-                      <span className="text-text-secondary">
-                        {quantityLabel}
-                      </span>{" "}
-                      {ingredient.name}
-                      {ingredient.prepNote && (
-                        <span className="text-text-muted">
-                          , {ingredient.prepNote}
-                        </span>
-                      )}
-                    </li>
+        <IngredientChecklist
+          groups={scaledGroups.map<ChecklistGroup>((group, gi) => ({
+            id: group.id ?? `group-${gi}`,
+            groupLabel: group.groupLabel,
+            ingredients: group.ingredients.map((ingredient, ii) => {
+              const quantityLabel = match(METRIC_UNITS.has(ingredient.unit))
+                .with(true, () =>
+                  formatIngredient(
+                    ingredient.quantity,
+                    ingredient.unit as MetricUnit,
+                    unitSystem
                   )
-                })}
-              </ul>
-            </div>
-          ))}
-        </div>
+                )
+                .otherwise(
+                  () =>
+                    `${formatQuantity(ingredient.quantity)} ${ingredient.unit}`
+                )
+              return {
+                id: ingredient.id ?? `${group.id ?? gi}-${ii}`,
+                quantityLabel,
+                name: ingredient.name,
+                prepNote: ingredient.prepNote,
+              }
+            }),
+          }))}
+          storageKey={
+            `checklist:${recipeSlug}:${targetYield}:${unitSystem}` satisfies ChecklistStorageKey
+          }
+        />
       ) : (
         <div aria-busy="true" className="space-y-2">
           {Array.from({ length: 6 }).map((_, i) => (

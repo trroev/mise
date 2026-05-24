@@ -143,6 +143,7 @@ export default async function RecipeDetailPage({
       <RecipeControls
         baseYield={recipe.yield?.quantity ?? 1}
         ingredientGroups={recipe.ingredientGroups}
+        recipeSlug={slug}
         yieldUnit={recipe.yield?.unit ?? ""}
       />
     </Suspense>
