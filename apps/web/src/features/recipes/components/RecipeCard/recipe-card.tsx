@@ -9,14 +9,16 @@ import { Card } from "@mise/ui/components/Card"
 import { formatDuration } from "@mise/utils/formatDuration"
 import { RiImage2Line } from "@remixicon/react"
 import Image from "next/image"
+import type { ReactNode } from "react"
 import { match, P } from "ts-pattern"
 
 export type RecipeCardProps = {
   recipe: Recipe
   className?: string
+  actions?: ReactNode
 }
 
-export const RecipeCard = ({ recipe, className }: RecipeCardProps) => {
+export const RecipeCard = ({ recipe, className, actions }: RecipeCardProps) => {
   const heroUrl = match(recipe.heroImage)
     .with(P.nullish, () => null)
     .with(P.string, () => null)
@@ -33,48 +35,51 @@ export const RecipeCard = ({ recipe, className }: RecipeCardProps) => {
   const hasBadges = Boolean(recipe.course ?? recipe.difficulty)
 
   return (
-    <Card
-      badges={
-        hasBadges ? (
-          <>
-            {recipe.course && (
-              <Badge variant="muted">{COURSE_LABELS[recipe.course]}</Badge>
-            )}
-            {recipe.difficulty && (
-              <Badge>{DIFFICULTY_LABELS[recipe.difficulty]}</Badge>
-            )}
-          </>
-        ) : undefined
-      }
-      className={className}
-      href={`/recipes/${recipe.slug}`}
-      lockUp={{
-        title: recipe.title,
-        body:
-          typeof recipe.totalTime === "number"
-            ? formatDuration(recipe.totalTime)
-            : undefined,
-      }}
-      media={
-        heroUrl ? (
-          <Image
-            alt={heroAlt}
-            className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-            fill
-            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-            src={transformCloudinary({
-              url: heroUrl,
-              width: 960,
-              aspect: "4:3",
-            })}
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center text-text-muted">
-            <RiImage2Line aria-hidden="true" size={32} />
-          </div>
-        )
-      }
-      titleAs="h2"
-    />
+    <div className="relative">
+      {actions && <div className="absolute top-2 right-2 z-10">{actions}</div>}
+      <Card
+        badges={
+          hasBadges ? (
+            <>
+              {recipe.course && (
+                <Badge variant="muted">{COURSE_LABELS[recipe.course]}</Badge>
+              )}
+              {recipe.difficulty && (
+                <Badge>{DIFFICULTY_LABELS[recipe.difficulty]}</Badge>
+              )}
+            </>
+          ) : undefined
+        }
+        className={className}
+        href={`/recipes/${recipe.slug}`}
+        lockUp={{
+          title: recipe.title,
+          body:
+            typeof recipe.totalTime === "number"
+              ? formatDuration(recipe.totalTime)
+              : undefined,
+        }}
+        media={
+          heroUrl ? (
+            <Image
+              alt={heroAlt}
+              className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+              fill
+              sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+              src={transformCloudinary({
+                url: heroUrl,
+                width: 960,
+                aspect: "4:3",
+              })}
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center text-text-muted">
+              <RiImage2Line aria-hidden="true" size={32} />
+            </div>
+          )
+        }
+        titleAs="h2"
+      />
+    </div>
   )
 }

@@ -7,6 +7,7 @@ import { RecipePagination } from "~/features/recipes/components/RecipePagination
 import { RecipeQueryInput } from "~/features/recipes/components/RecipeQueryInput"
 import { RecipeResultGrid } from "~/features/recipes/components/RecipeResultGrid"
 import { RecipeSearchProvider } from "~/features/recipes/components/RecipeSearchProvider"
+import { SaveButton } from "~/features/saved-recipes/components/SaveButton"
 
 export const revalidate = 60
 
@@ -47,7 +48,7 @@ export default async function RecipesPage() {
                 <RecipeFilterPanel />
               </aside>
               <div className="flex min-w-0 flex-1 flex-col gap-6">
-                <RecipeResultGrid />
+                <RecipeResultGrid ActionsComponent={SaveButton} />
                 <RecipePagination />
               </div>
             </div>

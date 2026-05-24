@@ -32,7 +32,11 @@ const friendlySignInError = (code?: string, message?: string): string =>
     )
     .otherwise(() => message ?? "Sign in failed. Please try again.")
 
-export const SignInForm = () => {
+type SignInFormProps = {
+  onSuccess?: () => void
+}
+
+export const SignInForm = ({ onSuccess }: SignInFormProps) => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const rawCallback = searchParams.get("callbackUrl")
@@ -47,6 +51,11 @@ export const SignInForm = () => {
       const { error } = await authClient.signIn.email(value)
       if (error) {
         setServerError(friendlySignInError(error.code, error.message))
+        return
+      }
+      if (onSuccess) {
+        router.refresh()
+        onSuccess()
         return
       }
       router.push(callbackUrl)

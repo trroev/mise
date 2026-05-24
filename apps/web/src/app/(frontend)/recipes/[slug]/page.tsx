@@ -29,6 +29,7 @@ import {
   type StepProgressGroup,
 } from "~/features/recipes/components/StepProgress"
 import type { StepProgressStorageKey } from "~/features/recipes/hooks/use-checklist-state"
+import { SaveButton } from "~/features/saved-recipes/components/SaveButton"
 import { canViewDraft } from "~/lib/policies/can-view-draft"
 import { getCurrentViewer } from "~/lib/queries/current-viewer"
 
@@ -219,6 +220,7 @@ export default async function RecipeDetailPage({
               Source: {`${appEnv.BASE_URL}/recipes/${slug}`}
             </p>
             <div className="flex flex-wrap items-center gap-2 print:hidden">
+              <SaveButton recipeId={recipe.id} />
               <SendToPhone origin={appEnv.BASE_URL} slug={slug} />
               {recipe.course && (
                 <Badge variant="muted">{COURSE_LABELS[recipe.course]}</Badge>

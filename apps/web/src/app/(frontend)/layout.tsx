@@ -6,10 +6,14 @@ import type { Metadata, Viewport } from "next"
 import { headers } from "next/headers"
 import type React from "react"
 import { Toaster } from "sonner"
+import { match } from "ts-pattern"
 import { QueryProvider } from "~/components/QueryProvider"
 import { SentryUser } from "~/components/SentryUser"
+import { SignInModalProvider } from "~/components/SignInModalProvider"
 import { signOutAction } from "~/features/auth/actions/sign-out"
 import { auth } from "~/features/auth/auth.server"
+import { listSavedRecipes } from "~/features/saved-recipes/actions/list-saved-recipes"
+import { SavedRecipesHydrator } from "~/features/saved-recipes/components/SavedRecipesHydrator"
 import { cormorant, manrope } from "~/fonts"
 import { getPayloadUserByBetterAuthId } from "~/lib/queries/payload-user-by-better-auth-id"
 
@@ -67,6 +71,15 @@ export default async function FrontendLayout({
     }
   }
 
+  const savedRecipesResult = await listSavedRecipes()
+  const initialSavedRecipeIds = match(savedRecipesResult)
+    .with({ status: "ok" }, ({ data }) =>
+      data.map((doc) =>
+        typeof doc.recipe === "string" ? doc.recipe : String(doc.recipe.id)
+      )
+    )
+    .otherwise(() => [])
+
   return (
     <html
       className={`${cormorant.variable} ${manrope.variable}`}
@@ -76,8 +89,11 @@ export default async function FrontendLayout({
       <body className="flex min-h-dvh flex-col font-sans">
         <SessionProvider initialUser={session?.user ?? null}>
           <QueryProvider>
-            <SentryUser />
-            <AppShell auth={headerAuth}>{children}</AppShell>
+            <SavedRecipesHydrator initialIds={initialSavedRecipeIds} />
+            <SignInModalProvider>
+              <SentryUser />
+              <AppShell auth={headerAuth}>{children}</AppShell>
+            </SignInModalProvider>
             <Toaster position="bottom-right" richColors />
           </QueryProvider>
         </SessionProvider>

@@ -1,11 +1,18 @@
 "use client"
 
 import { Button } from "@mise/ui/components/Button"
+import type { ComponentType } from "react"
 import { match } from "ts-pattern"
 import { RecipeCard } from "~/features/recipes/components/RecipeCard"
 import { useRecipeSearch } from "~/features/recipes/components/RecipeSearchProvider"
 
-export const RecipeResultGrid = () => {
+type RecipeResultGridProps = {
+  ActionsComponent?: ComponentType<{ recipeId: string }>
+}
+
+export const RecipeResultGrid = ({
+  ActionsComponent,
+}: RecipeResultGridProps) => {
   const {
     view,
     pagedResults,
@@ -65,7 +72,14 @@ export const RecipeResultGrid = () => {
           <ul className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {pagedResults.map((recipe) => (
               <li key={recipe.id}>
-                <RecipeCard recipe={recipe} />
+                <RecipeCard
+                  actions={
+                    ActionsComponent ? (
+                      <ActionsComponent recipeId={recipe.id} />
+                    ) : undefined
+                  }
+                  recipe={recipe}
+                />
               </li>
             ))}
           </ul>
