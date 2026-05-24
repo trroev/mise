@@ -23,6 +23,7 @@ import {
 import { FocusMode } from "~/features/recipes/components/FocusMode"
 import { RecipeControls } from "~/features/recipes/components/RecipeControls"
 import { RefreshRouteOnSave } from "~/features/recipes/components/RefreshRouteOnSave"
+import { SendToPhone } from "~/features/recipes/components/SendToPhone"
 import {
   StepProgress,
   type StepProgressGroup,
@@ -218,6 +219,7 @@ export default async function RecipeDetailPage({
               Source: {`${appEnv.BASE_URL}/recipes/${slug}`}
             </p>
             <div className="flex flex-wrap items-center gap-2 print:hidden">
+              <SendToPhone origin={appEnv.BASE_URL} slug={slug} />
               {recipe.course && (
                 <Badge variant="muted">{COURSE_LABELS[recipe.course]}</Badge>
               )}
