@@ -345,8 +345,6 @@
                 "patterns": [
                   {
                     "group": [
-                      "~/features/recipes",
-                      "~/features/recipes/**",
                       "~/features/auth",
                       "~/features/auth/**",
                       "~/features/profile",
@@ -356,7 +354,7 @@
                       "~/app",
                       "~/app/**"
                     ],
-                    "message": "Features must not import from other features or from ~/app. Hoist shared code into ~/lib or ~/components."
+                    "message": "Features must not import from other features or from ~/app. saved-recipes may consume the public RecipeCard from ~/features/recipes (no reverse import). Hoist other shared code into ~/lib or ~/components."
                   }
                 ]
               }
