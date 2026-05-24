@@ -5,6 +5,8 @@ import type { HeaderAuth } from "@mise/types/HeaderAuth"
 import type { Metadata, Viewport } from "next"
 import { headers } from "next/headers"
 import type React from "react"
+import { Toaster } from "sonner"
+import { QueryProvider } from "~/components/QueryProvider"
 import { SentryUser } from "~/components/SentryUser"
 import { signOutAction } from "~/features/auth/actions/sign-out"
 import { auth } from "~/features/auth/auth.server"
@@ -73,8 +75,11 @@ export default async function FrontendLayout({
     >
       <body className="flex min-h-dvh flex-col font-sans">
         <SessionProvider initialUser={session?.user ?? null}>
-          <SentryUser />
-          <AppShell auth={headerAuth}>{children}</AppShell>
+          <QueryProvider>
+            <SentryUser />
+            <AppShell auth={headerAuth}>{children}</AppShell>
+            <Toaster position="bottom-right" richColors />
+          </QueryProvider>
         </SessionProvider>
       </body>
     </html>

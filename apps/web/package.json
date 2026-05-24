@@ -16,8 +16,8 @@
   },
   "dependencies": {
     "@mise/auth": "workspace:*",
-    "@mise/env": "workspace:*",
     "@mise/chrome": "workspace:*",
+    "@mise/env": "workspace:*",
     "@mise/payload": "workspace:*",
     "@mise/tailwind": "workspace:*",
     "@mise/types": "workspace:*",
@@ -30,6 +30,7 @@
     "@remixicon/react": "^4.9.0",
     "@sentry/nextjs": "^10.53.1",
     "@tanstack/react-form": "^1.32.0",
+    "@tanstack/react-query": "^5.100.14",
     "better-auth": "^1.2.8",
     "minisearch": "^7.2.0",
     "next": "16.2.4",
@@ -40,6 +41,7 @@
     "react-schemaorg": "^2.0.1",
     "schema-dts": "^2.0.0",
     "server-only": "^0.0.1",
+    "sonner": "^2.0.7",
     "ts-pattern": "^5.9.0",
     "zod": "^4.3.6"
   },
