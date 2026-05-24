@@ -10,9 +10,22 @@ export const saveButton = tv({
         "border border-white/20 bg-black/15 text-white shadow-lg ring-1 ring-black/5 backdrop-blur-md backdrop-saturate-150 hover:bg-black/45",
     },
     isSaved: {
-      true: "text-accent",
+      true: "",
     },
   },
+  compoundVariants: [
+    {
+      variant: "default",
+      isSaved: true,
+      class: "text-accent",
+    },
+    {
+      variant: "glass",
+      isSaved: true,
+      class:
+        "border-accent bg-accent text-white shadow-md ring-0 backdrop-blur-none backdrop-saturate-100 hover:bg-accent/90",
+    },
+  ],
   defaultVariants: {
     variant: "default",
     isSaved: false,
