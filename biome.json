@@ -229,6 +229,8 @@
                       "~/features/home/**",
                       "~/features/saved-recipes",
                       "~/features/saved-recipes/**",
+                      "~/features/collections",
+                      "~/features/collections/**",
                       "~/app",
                       "~/app/**"
                     ],
@@ -260,6 +262,8 @@
                       "~/features/home/**",
                       "~/features/saved-recipes",
                       "~/features/saved-recipes/**",
+                      "~/features/collections",
+                      "~/features/collections/**",
                       "~/app",
                       "~/app/**"
                     ],
@@ -291,6 +295,8 @@
                       "~/features/home/**",
                       "~/features/saved-recipes",
                       "~/features/saved-recipes/**",
+                      "~/features/collections",
+                      "~/features/collections/**",
                       "~/app",
                       "~/app/**"
                     ],
@@ -322,6 +328,8 @@
                       "~/features/profile/**",
                       "~/features/saved-recipes",
                       "~/features/saved-recipes/**",
+                      "~/features/collections",
+                      "~/features/collections/**",
                       "~/app",
                       "~/app/**"
                     ],
@@ -351,10 +359,43 @@
                       "~/features/profile/**",
                       "~/features/home",
                       "~/features/home/**",
+                      "~/features/collections",
+                      "~/features/collections/**",
                       "~/app",
                       "~/app/**"
                     ],
                     "message": "Features must not import from other features or from ~/app. saved-recipes may consume the public RecipeCard from ~/features/recipes (no reverse import). Hoist other shared code into ~/lib or ~/components."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["apps/web/src/features/collections/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": [
+                      "~/features/auth",
+                      "~/features/auth/**",
+                      "~/features/profile",
+                      "~/features/profile/**",
+                      "~/features/home",
+                      "~/features/home/**",
+                      "~/features/saved-recipes",
+                      "~/features/saved-recipes/**",
+                      "~/app",
+                      "~/app/**"
+                    ],
+                    "message": "Features must not import from other features or from ~/app. collections may consume the public RecipeCard from ~/features/recipes (no reverse import). Hoist other shared code into ~/lib or ~/components."
                   }
                 ]
               }

@@ -68,6 +68,7 @@ export interface Config {
   blocks: {};
   collections: {
     admins: Admin;
+    collections: Collection;
     cuisines: Cuisine;
     ingredients: Ingredient;
     media: Media;
@@ -84,6 +85,7 @@ export interface Config {
   collectionsJoins: {};
   collectionsSelect: {
     admins: AdminsSelect<false> | AdminsSelect<true>;
+    collections: CollectionsSelect<false> | CollectionsSelect<true>;
     cuisines: CuisinesSelect<false> | CuisinesSelect<true>;
     ingredients: IngredientsSelect<false> | IngredientsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
@@ -162,62 +164,33 @@ export interface Admin {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "cuisines".
+ * via the `definition` "collections".
  */
-export interface Cuisine {
+export interface Collection {
   id: string;
   name: string;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
+  slug?: string | null;
+  owner: string | User;
+  recipes?: (string | Recipe)[] | null;
   updatedAt: string;
   createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ingredients".
+ * via the `definition` "users".
  */
-export interface Ingredient {
+export interface User {
   id: string;
-  name: string;
+  email: string;
+  name?: string | null;
   /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   * BetterAuth user ID. Set automatically on sign-up.
    */
-  generateSlug?: boolean | null;
-  slug: string;
+  betterAuthId?: string | null;
   /**
-   * Alternate names for this ingredient (e.g. 'cilantro' for 'coriander').
+   * Avatar image. Written by the uploadAvatar server action (overrides access) or by admins.
    */
-  aliases?: string[] | null;
-  /**
-   * Default unit suggested when this ingredient is added to a recipe.
-   */
-  defaultUnit?: (string | null) | Unit;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "units".
- */
-export interface Unit {
-  id: string;
-  name: string;
-  abbreviation: string;
-  /**
-   * Measurement system this unit belongs to. Count-type units may omit this.
-   */
-  system?: ('metric' | 'imperial') | null;
-  /**
-   * Category of measurement.
-   */
-  type?: ('weight' | 'volume' | 'count') | null;
-  /**
-   * Multiplier to convert this unit to its base SI unit (gram for weight, milliliter for volume). Temperature units use offset conversions and may leave this blank.
-   */
-  conversionFactor?: number | null;
+  avatar?: (string | null) | Media;
   updatedAt: string;
   createdAt: string;
 }
@@ -345,20 +318,62 @@ export interface Recipe {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
+ * via the `definition` "cuisines".
  */
-export interface User {
+export interface Cuisine {
   id: string;
-  email: string;
-  name?: string | null;
+  name: string;
   /**
-   * BetterAuth user ID. Set automatically on sign-up.
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
-  betterAuthId?: string | null;
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "units".
+ */
+export interface Unit {
+  id: string;
+  name: string;
+  abbreviation: string;
   /**
-   * Avatar image. Written by the uploadAvatar server action (overrides access) or by admins.
+   * Measurement system this unit belongs to. Count-type units may omit this.
    */
-  avatar?: (string | null) | Media;
+  system?: ('metric' | 'imperial') | null;
+  /**
+   * Category of measurement.
+   */
+  type?: ('weight' | 'volume' | 'count') | null;
+  /**
+   * Multiplier to convert this unit to its base SI unit (gram for weight, milliliter for volume). Temperature units use offset conversions and may leave this blank.
+   */
+  conversionFactor?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ingredients".
+ */
+export interface Ingredient {
+  id: string;
+  name: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  /**
+   * Alternate names for this ingredient (e.g. 'cilantro' for 'coriander').
+   */
+  aliases?: string[] | null;
+  /**
+   * Default unit suggested when this ingredient is added to a recipe.
+   */
+  defaultUnit?: (string | null) | Unit;
   updatedAt: string;
   createdAt: string;
 }
@@ -415,6 +430,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'admins';
         value: string | Admin;
+      } | null)
+    | ({
+        relationTo: 'collections';
+        value: string | Collection;
       } | null)
     | ({
         relationTo: 'cuisines';
@@ -511,6 +530,18 @@ export interface AdminsSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "collections_select".
+ */
+export interface CollectionsSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  owner?: T;
+  recipes?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

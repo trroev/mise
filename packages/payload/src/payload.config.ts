@@ -5,6 +5,7 @@ import { env as cloudinaryEnv } from "@mise/env/cloudinary"
 import { env as payloadEnv } from "@mise/env/payload"
 import { cloudinaryAdapter } from "@mise/payload/adapters/cloudinary"
 import { Admins } from "@mise/payload/collections/Admins"
+import { Collections } from "@mise/payload/collections/Collections"
 import { Cuisines } from "@mise/payload/collections/Cuisines"
 import { Ingredients } from "@mise/payload/collections/Ingredients"
 import { Media } from "@mise/payload/collections/Media"
@@ -48,6 +49,7 @@ export function createPayloadConfig({ baseDir }: CreatePayloadConfigOptions) {
     },
     collections: [
       Admins,
+      Collections,
       Cuisines,
       Ingredients,
       Media,
