@@ -8,7 +8,7 @@ import { getHomepage } from "~/features/home/api/homepage"
 import { getLatestRecipes } from "~/features/recipes/api/latest-recipes"
 import { FeaturedRecipe } from "~/features/recipes/components/FeaturedRecipe"
 import { LatestRecipes } from "~/features/recipes/components/LatestRecipes"
-import { SaveButton } from "~/features/saved-recipes/components/SaveButton"
+import { CardSaveButton } from "~/features/saved-recipes/components/SaveButton"
 
 const LATEST_RECIPES_LIMIT = 6
 
@@ -99,7 +99,10 @@ export default async function HomePage() {
 
       {featured && <FeaturedRecipe recipe={featured} />}
 
-      <LatestRecipes ActionsComponent={SaveButton} recipes={latestRecipes} />
+      <LatestRecipes
+        ActionsComponent={CardSaveButton}
+        recipes={latestRecipes}
+      />
     </>
   )
 }

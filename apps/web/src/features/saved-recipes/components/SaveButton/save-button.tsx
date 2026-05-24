@@ -6,6 +6,7 @@ import { RiHeart3Fill, RiHeart3Line } from "@remixicon/react"
 import { match } from "ts-pattern"
 import { useRequireSignIn } from "~/components/SignInModalProvider"
 import { useSaveRecipe } from "~/features/saved-recipes/hooks/use-save-recipe"
+import { type SaveButtonVariants, saveButton } from "./save-button.variants"
 
 type ViewerState =
   | { kind: "authenticated" }
@@ -14,6 +15,7 @@ type ViewerState =
 
 type SaveButtonProps = Omit<React.ComponentProps<"button">, "onClick"> & {
   recipeId: string
+  variant?: SaveButtonVariants["variant"]
 }
 
 const resolveViewer = (
@@ -32,6 +34,7 @@ const resolveViewer = (
 export const SaveButton = ({
   recipeId,
   className,
+  variant,
   ...buttonProps
 }: SaveButtonProps) => {
   const session = useSession()
@@ -61,11 +64,7 @@ export const SaveButton = ({
     <button
       aria-label={label}
       aria-pressed={isSaved}
-      className={cn(
-        "inline-flex h-9 w-9 items-center justify-center rounded-full bg-background/90 text-text-primary shadow-sm backdrop-blur-sm transition-colors hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:opacity-60",
-        isSaved && "text-accent",
-        className
-      )}
+      className={cn(saveButton({ variant, isSaved }), className)}
       disabled={isPending || viewer.kind === "loading"}
       onClick={(event) => {
         event.preventDefault()
@@ -79,3 +78,7 @@ export const SaveButton = ({
     </button>
   )
 }
+
+export const CardSaveButton = (props: Omit<SaveButtonProps, "variant">) => (
+  <SaveButton {...props} variant="glass" />
+)
