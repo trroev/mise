@@ -1,7 +1,7 @@
 import { tv, type VariantProps } from "tailwind-variants"
 
 export const saveButton = tv({
-  base: "inline-flex size-9 items-center justify-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:opacity-60",
+  base: "inline-flex size-9 items-center justify-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background",
   variants: {
     variant: {
       default:

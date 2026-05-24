@@ -38,7 +38,7 @@ export const SaveButton = ({
   ...buttonProps
 }: SaveButtonProps) => {
   const session = useSession()
-  const { toggle, isSaved, isPending } = useSaveRecipe({ recipeId })
+  const { toggle, isSaved } = useSaveRecipe({ recipeId })
   const requireSignIn = useRequireSignIn()
 
   const viewer = resolveViewer(session.isLoading, session.isAuthenticated)
@@ -65,7 +65,7 @@ export const SaveButton = ({
       aria-label={label}
       aria-pressed={isSaved}
       className={cn(saveButton({ variant, isSaved }), className)}
-      disabled={isPending || viewer.kind === "loading"}
+      disabled={viewer.kind === "loading"}
       onClick={(event) => {
         event.preventDefault()
         event.stopPropagation()
