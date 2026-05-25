@@ -1,7 +1,7 @@
 "use client"
 
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import { match } from "ts-pattern"
 import { createCollection } from "~/features/collections/actions/create-collection"
 import { collectionsQueryKeys } from "../collections-query-keys"
@@ -48,20 +48,30 @@ export const useCreateCollection = (): UseCreateCollectionReturn => {
     },
   })
 
-  return {
-    mutate: async (variables) => {
+  const mutateAsync = mutation.mutateAsync
+  const mutationReset = mutation.reset
+
+  const mutate = useCallback(
+    async (variables: CreateCollectionVariables): Promise<string | null> => {
       setFieldError(null)
       try {
-        return await mutation.mutateAsync(variables)
+        return await mutateAsync(variables)
       } catch {
         return null
       }
     },
+    [mutateAsync]
+  )
+
+  const reset = useCallback((): void => {
+    setFieldError(null)
+    mutationReset()
+  }, [mutationReset])
+
+  return {
+    mutate,
     isPending: mutation.isPending,
     fieldError,
-    reset: () => {
-      setFieldError(null)
-      mutation.reset()
-    },
+    reset,
   }
 }

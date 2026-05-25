@@ -2,7 +2,7 @@
 
 import type { Collection } from "@mise/payload/payload-types"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import { toast } from "sonner"
 import { match } from "ts-pattern"
 import { renameCollection } from "~/features/collections/actions/rename-collection"
@@ -85,21 +85,31 @@ export const useRenameCollection = (): UseRenameCollectionReturn => {
     },
   })
 
-  return {
-    mutate: async (variables) => {
+  const mutateAsync = mutation.mutateAsync
+  const mutationReset = mutation.reset
+
+  const mutate = useCallback(
+    async (variables: RenameCollectionVariables): Promise<boolean> => {
       setFieldError(null)
       try {
-        await mutation.mutateAsync(variables)
+        await mutateAsync(variables)
         return true
       } catch {
         return false
       }
     },
+    [mutateAsync]
+  )
+
+  const reset = useCallback((): void => {
+    setFieldError(null)
+    mutationReset()
+  }, [mutationReset])
+
+  return {
+    mutate,
     isPending: mutation.isPending,
     fieldError,
-    reset: () => {
-      setFieldError(null)
-      mutation.reset()
-    },
+    reset,
   }
 }

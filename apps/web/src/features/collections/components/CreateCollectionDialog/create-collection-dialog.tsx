@@ -5,7 +5,6 @@ import { Dialog } from "@mise/ui/components/Dialog"
 import { Field } from "@mise/ui/components/Field"
 import { Input } from "@mise/ui/components/Input"
 import { useForm } from "@tanstack/react-form"
-import { useEffect } from "react"
 import { z } from "zod"
 import { useCreateCollection } from "~/features/collections/hooks/use-create-collection"
 
@@ -38,15 +37,16 @@ export const CreateCollectionDialog = ({
     },
   })
 
-  useEffect(() => {
-    if (!open) {
+  const handleOpenChange = (next: boolean): void => {
+    if (!next) {
       form.reset()
       reset()
     }
-  }, [open, form, reset])
+    onOpenChange(next)
+  }
 
   return (
-    <Dialog.Root onOpenChange={onOpenChange} open={open}>
+    <Dialog.Root onOpenChange={handleOpenChange} open={open}>
       <Dialog.Portal>
         <Dialog.Backdrop />
         <Dialog.Popup>
