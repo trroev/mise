@@ -3,6 +3,7 @@
 import type { Collection } from "@mise/payload/payload-types"
 import { Button } from "@mise/ui/components/Button"
 import { RiAddLine, RiDeleteBin6Line, RiPencilLine } from "@remixicon/react"
+import Link from "next/link"
 import { useState } from "react"
 import { match } from "ts-pattern"
 import { CreateCollectionDialog } from "~/features/collections/components/CreateCollectionDialog"
@@ -59,9 +60,12 @@ export const CollectionsList = () => {
               key={collection.id}
             >
               <div className="space-y-1">
-                <p className="font-display text-heading-md text-text-primary">
+                <Link
+                  className="font-display text-heading-md text-text-primary hover:underline"
+                  href={`/profile/collections/${collection.slug ?? collection.id}`}
+                >
                   {collection.name}
-                </p>
+                </Link>
                 <p className="font-sans text-body-sm text-text-secondary">
                   {recipeCount(collection)} recipe
                   {recipeCount(collection) === 1 ? "" : "s"} · Updated{" "}
