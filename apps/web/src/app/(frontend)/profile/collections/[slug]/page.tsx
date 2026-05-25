@@ -4,7 +4,6 @@ import { headers } from "next/headers"
 import { notFound, redirect } from "next/navigation"
 import { auth } from "~/features/auth/auth.server"
 import { getCollectionBySlug } from "~/features/collections/api/get-collection-by-slug"
-import { AddToCollectionButton } from "~/features/collections/components/AddToCollectionButton"
 import { CollectionDetail } from "~/features/collections/components/CollectionDetail"
 import { CardSaveButton } from "~/features/saved-recipes/components/SaveButton"
 import { canManageCollection } from "~/lib/policies/can-manage-collection"
@@ -55,12 +54,7 @@ export default async function CollectionDetailPage({
     .filter(isPopulatedRecipe)
     .map((recipe) => ({
       recipe,
-      actions: (
-        <div className="flex items-center gap-1">
-          <CardSaveButton recipeId={recipe.id} />
-          <AddToCollectionButton recipeId={recipe.id} />
-        </div>
-      ),
+      actions: <CardSaveButton recipeId={recipe.id} />,
     }))
 
   return <CollectionDetail collection={collection} entries={entries} />
