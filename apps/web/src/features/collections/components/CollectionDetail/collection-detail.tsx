@@ -12,18 +12,21 @@ import { DeleteCollectionConfirmDialog } from "~/features/collections/components
 import { RenameCollectionDialog } from "~/features/collections/components/RenameCollectionDialog"
 import { RecipeCard } from "~/features/recipes/components/RecipeCard"
 
+type CollectionRecipeEntry = {
+  recipe: Recipe
+  actions?: ReactNode
+}
+
 type CollectionDetailProps = {
   collection: Collection
-  recipes: ReadonlyArray<Recipe>
-  renderRecipeActions?: (recipeId: string) => ReactNode
+  entries: ReadonlyArray<CollectionRecipeEntry>
 }
 
 type DialogState = { kind: "closed" } | { kind: "rename" } | { kind: "delete" }
 
 export const CollectionDetail = ({
   collection,
-  recipes,
-  renderRecipeActions,
+  entries,
 }: CollectionDetailProps) => {
   const [dialog, setDialog] = useState<DialogState>({ kind: "closed" })
 
@@ -72,14 +75,11 @@ export const CollectionDetail = ({
         </div>
       </div>
 
-      {recipes.length > 0 ? (
+      {entries.length > 0 ? (
         <ul className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {recipes.map((recipe) => (
+          {entries.map(({ recipe, actions }) => (
             <li key={recipe.id}>
-              <RecipeCard
-                actions={renderRecipeActions?.(recipe.id)}
-                recipe={recipe}
-              />
+              <RecipeCard actions={actions} recipe={recipe} />
             </li>
           ))}
         </ul>

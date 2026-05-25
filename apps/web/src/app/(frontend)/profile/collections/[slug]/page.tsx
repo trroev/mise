@@ -51,20 +51,17 @@ export default async function CollectionDetailPage({
     notFound()
   }
 
-  const recipes = (collection.recipes ?? []).filter(isPopulatedRecipe)
+  const entries = (collection.recipes ?? [])
+    .filter(isPopulatedRecipe)
+    .map((recipe) => ({
+      recipe,
+      actions: (
+        <div className="flex items-center gap-1">
+          <CardSaveButton recipeId={recipe.id} />
+          <AddToCollectionButton recipeId={recipe.id} />
+        </div>
+      ),
+    }))
 
-  const renderRecipeActions = (recipeId: string): React.ReactNode => (
-    <div className="flex items-center gap-1">
-      <CardSaveButton recipeId={recipeId} />
-      <AddToCollectionButton recipeId={recipeId} />
-    </div>
-  )
-
-  return (
-    <CollectionDetail
-      collection={collection}
-      recipes={recipes}
-      renderRecipeActions={renderRecipeActions}
-    />
-  )
+  return <CollectionDetail collection={collection} entries={entries} />
 }
