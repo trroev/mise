@@ -7,6 +7,7 @@ import type { ReactNode } from "react"
 import { match } from "ts-pattern"
 import { auth } from "~/features/auth/auth.server"
 import { SignOutButton } from "~/features/auth/components/SignOutButton"
+import { CollectionsTab } from "~/features/collections/components/CollectionsTab"
 import { AvatarManager } from "~/features/profile/components/AvatarManager"
 import {
   ProfileTabs,
@@ -34,6 +35,7 @@ type ProfilePageProps = {
 const resolveInitialTab = (raw: string | undefined): ProfileTabValue =>
   match(raw)
     .with("saved", () => "saved" as const)
+    .with("collections", () => "collections" as const)
     .otherwise(() => "my-recipes" as const)
 
 export default async function ProfilePage({ searchParams }: ProfilePageProps) {
@@ -104,6 +106,14 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
     </p>
   )
 
+  const collectionsPanel: ReactNode = payloadUser ? (
+    <CollectionsTab payloadUserId={payloadUser.id} />
+  ) : (
+    <p className="text-body text-text-secondary">
+      Sign in to create collections.
+    </p>
+  )
+
   return (
     <section className="constrainer flex flex-col space-y-10 py-10">
       <div className="space-y-1">
@@ -140,6 +150,7 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
       </div>
 
       <ProfileTabs
+        collections={collectionsPanel}
         initialTab={initialTab}
         myRecipes={myRecipesPanel}
         saved={savedPanel}

@@ -15,6 +15,7 @@ import { Suspense } from "react"
 import { JsonLd } from "react-schemaorg"
 import type { Recipe as RecipeSchema } from "schema-dts"
 import { match, P } from "ts-pattern"
+import { AddToCollectionButton } from "~/features/collections/components/AddToCollectionButton"
 import { getPublishedRecipes } from "~/features/recipes/api/published-recipes"
 import {
   getDraftRecipeBySlug,
@@ -221,6 +222,7 @@ export default async function RecipeDetailPage({
             </p>
             <div className="flex flex-wrap items-center gap-2 print:hidden">
               <SaveButton recipeId={recipe.id} />
+              <AddToCollectionButton recipeId={recipe.id} />
               <SendToPhone origin={appEnv.BASE_URL} slug={slug} />
               {recipe.course && (
                 <Badge variant="muted">{COURSE_LABELS[recipe.course]}</Badge>
