@@ -75,6 +75,9 @@ Install per-package as needed (`pnpm add ts-pattern --filter <package>`). Use `m
 ### Next.js App Router
 Default exports are required for `page.tsx`, `layout.tsx`, `error.tsx`, `loading.tsx`, `route.ts`, etc. These files are exempted from the `noDefaultExport` rule. All other files use named exports.
 
+### Feature read vs. mutate split
+Within `apps/web/src/features/<x>/hooks/`: **read hooks call fetchers in `features/<x>/api/`** (invoked from RSC prefetch + `dehydrate`/`hydrate`, or via a thin route handler under `app/(frontend)/api/`) — never import server-only fetchers directly into a client component. **Mutation hooks call server actions in `features/<x>/actions/`**.
+
 ### Import boundaries
 Layered architecture is enforced by Biome's `noRestrictedImports` in `biome.json`:
 

@@ -1,19 +1,16 @@
 "use client"
 
 import { type UseQueryResult, useQuery } from "@tanstack/react-query"
-import { match } from "ts-pattern"
-import { listSavedRecipes } from "~/features/saved-recipes/actions/list-saved-recipes"
 import { savedRecipesQueryKeys } from "../saved-recipes-query-keys"
 
 const fetchSavedRecipeIds = async (): Promise<ReadonlyArray<string>> => {
-  const result = await listSavedRecipes()
-  return match(result)
-    .with({ status: "ok" }, ({ data }) =>
-      data.map((ref) => (typeof ref === "string" ? ref : String(ref.id)))
-    )
-    .with({ status: "unauthenticated" }, () => [])
-    .with({ status: "error" }, () => [])
-    .exhaustive()
+  const response = await fetch("/api/saved-recipes/ids", {
+    headers: { accept: "application/json" },
+  })
+  if (!response.ok) {
+    throw new Error("Failed to load saved recipes")
+  }
+  return (await response.json()) as ReadonlyArray<string>
 }
 
 export const useSavedRecipeIds = (): UseQueryResult<
