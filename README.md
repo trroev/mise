@@ -122,8 +122,6 @@ dotenvx set SOME_SECRET "value" -f .env.development.local
 
 This encrypts the value in place and updates `.env.keys`.
 
-**Forking the template?** Every variable the app reads is documented in [`docs/env-reference.md`](./docs/env-reference.md) — start there to provision your own values.
-
 ### Develop
 
 ```sh
@@ -244,25 +242,6 @@ log.withContext({ requestId }).info("handled")  // returns a fresh child
 ```
 
 `withContext` returns a new child logger so per-request context can't leak onto the long-lived root. Sensitive keys (`password`, `token`, `authorization`, `cookie`, `set-cookie`, `secret`) are redacted by default; pass `createLogger({ redact: ["apiKey"] })` to extend the list. Level is controlled by `LOG_LEVEL` (`trace` | `debug` | `info` | `warn` | `error` | `fatal`) — defaults to `info` in production, `debug` otherwise.
-
----
-
-## Sentry
-
-Error capture and source-map upload are pre-wired in `apps/web/next.config.ts` via `withSentryConfig`. The runtime is a no-op until you provide credentials, so a fresh fork builds and runs without any Sentry setup.
-
-To turn it on for your own deployment:
-
-1. **Create a Sentry project** at [sentry.io](https://sentry.io) (Next.js platform).
-2. **Generate an auth token** under *Settings → Auth Tokens* with the `project:releases` and `org:read` scopes.
-3. **Set four env vars** in your host's Production scope (Vercel: *Project Settings → Environment Variables*):
-   - `NEXT_PUBLIC_SENTRY_DSN` — from *Settings → Client Keys (DSN)*
-   - `SENTRY_ORG` — your Sentry org slug
-   - `SENTRY_PROJECT` — your Sentry project slug
-   - `SENTRY_AUTH_TOKEN` — the token from step 2 (mark **Sensitive** so it's write-only)
-4. **Trigger a Production deploy.** The build log should include `[sentry] Successfully uploaded source maps` and a new release should appear in the Sentry UI with source maps attached. Source maps are stripped from the build output after upload (`deleteSourcemapsAfterUpload: true`) so they aren't served to clients.
-
-Without `SENTRY_AUTH_TOKEN`, the build still succeeds — source-map upload just silently skips and stack traces in Sentry will be minified.
 
 ---
 
