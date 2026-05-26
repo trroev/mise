@@ -8,9 +8,9 @@ import Link from "next/link"
 import type { ReactNode } from "react"
 import { useState } from "react"
 import { match } from "ts-pattern"
+import { RecipeCard } from "~/components/RecipeCard"
 import { DeleteCollectionConfirmDialog } from "~/features/collections/components/DeleteCollectionConfirmDialog"
 import { RenameCollectionDialog } from "~/features/collections/components/RenameCollectionDialog"
-import { RecipeCard } from "~/features/recipes/components/RecipeCard"
 
 type CollectionRecipeEntry = {
   recipe: Recipe

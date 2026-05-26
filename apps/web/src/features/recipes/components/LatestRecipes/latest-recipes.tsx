@@ -1,7 +1,7 @@
 import type { Recipe } from "@mise/payload/payload-types"
 import Link from "next/link"
 import type { ComponentType } from "react"
-import { RecipeCard } from "~/features/recipes/components/RecipeCard"
+import { RecipeCard } from "~/components/RecipeCard"
 
 type LatestRecipesProps = {
   recipes: ReadonlyArray<Recipe>

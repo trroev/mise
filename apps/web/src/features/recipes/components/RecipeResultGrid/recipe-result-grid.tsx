@@ -3,7 +3,7 @@
 import { Button } from "@mise/ui/components/Button"
 import type { ComponentType } from "react"
 import { match } from "ts-pattern"
-import { RecipeCard } from "~/features/recipes/components/RecipeCard"
+import { RecipeCard } from "~/components/RecipeCard"
 import { useRecipeSearch } from "~/features/recipes/components/RecipeSearchProvider"
 
 type RecipeResultGridProps = {
