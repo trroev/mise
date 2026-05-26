@@ -41,6 +41,7 @@ mise/
 ├── packages/
 │   ├── auth/               # better-auth configuration
 │   ├── env/                # Shared env loading + zod schema
+│   ├── logger/             # Isomorphic structured logger (LogLayer + pino)
 │   ├── features/           # Feature-level modules (server actions, queries)
 │   ├── payload/            # Payload collections, hooks, adapters
 │   ├── tailwind/           # Tailwind v4 preset + design tokens
@@ -57,7 +58,7 @@ mise/
 
 Layered dependencies are enforced by Biome's `noRestrictedImports` rule in `biome.json`:
 
-- `packages/{utils,types,env}` may not import from `packages/{ui,chrome,payload,auth}`
+- `packages/{utils,types,env,logger}` may not import from `packages/{ui,chrome,payload,auth}`
 - `packages/ui` may not import from `packages/{chrome,payload}` or any app
 - `packages/chrome` may not import from any app
 - `apps/web/src/features/<a>` may not import from `apps/web/src/features/<b>` or from `~/app/**`
@@ -224,6 +225,23 @@ pnpm add -DW xlsx zod                          # re-add deps
 ```
 
 The field-by-field mapping and data-quality decisions live in [`docs/migration-mapping.md`](./docs/migration-mapping.md) — that document is the source of truth for any future import that follows the savory/pastry workbook shape.
+
+---
+
+## Logging
+
+`@repo/logger` is the shared logging primitive — `console.*` is banned by Biome's `noConsole` rule. Built on [LogLayer](https://loglayer.dev) with pino on Node (JSON in production, pino-pretty in dev) and `ConsoleTransport` on edge/browser, selected via package.json `exports` conditions.
+
+```ts
+import { createLogger, logger } from "@repo/logger"
+
+const log = createLogger({ name: "payload.revalidate-post" })
+
+log.withMetadata({ status: 502 }).error("revalidation failed")
+log.withContext({ requestId }).info("handled")  // returns a fresh child
+```
+
+`withContext` returns a new child logger so per-request context can't leak onto the long-lived root. Sensitive keys (`password`, `token`, `authorization`, `cookie`, `set-cookie`, `secret`) are redacted by default; pass `createLogger({ redact: ["apiKey"] })` to extend the list. Level is controlled by `LOG_LEVEL` (`trace` | `debug` | `info` | `warn` | `error` | `fatal`) — defaults to `info` in production, `debug` otherwise.
 
 ---
 
