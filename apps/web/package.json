@@ -18,6 +18,7 @@
     "@mise/auth": "workspace:*",
     "@mise/chrome": "workspace:*",
     "@mise/env": "workspace:*",
+    "@mise/logger": "workspace:*",
     "@mise/payload": "workspace:*",
     "@mise/tailwind": "workspace:*",
     "@mise/types": "workspace:*",

@@ -139,6 +139,9 @@ importers:
       '@mise/env':
         specifier: workspace:*
         version: link:../../packages/env
+      '@mise/logger':
+        specifier: workspace:*
+        version: link:../../packages/logger
       '@mise/payload':
         specifier: workspace:*
         version: link:../../packages/payload
