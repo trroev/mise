@@ -69,6 +69,9 @@
         "packages/payload/src/components/*/index.ts",
         "packages/testing/src/render/index.tsx",
         "packages/testing/src/msw/index.ts",
+        "packages/logger/src/index.ts",
+        "packages/logger/src/logger/index.ts",
+        "packages/logger/src/test-transport/index.ts",
         "apps/web/src/features/*/components/*/index.ts",
         "apps/web/src/features/*/hooks/*/index.ts",
         "apps/web/src/components/*/index.ts"
@@ -136,7 +139,28 @@
       }
     },
     {
-      "includes": ["packages/utils/**", "packages/types/**", "packages/env/**"],
+      "includes": ["packages/logger/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useFilenamingConvention": {
+              "level": "error",
+              "options": {
+                "requireAscii": true,
+                "filenameCases": ["kebab-case"]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "packages/utils/**",
+        "packages/types/**",
+        "packages/env/**",
+        "packages/logger/**"
+      ],
       "linter": {
         "rules": {
           "style": {
@@ -155,7 +179,7 @@
                       "@mise/auth",
                       "@mise/auth/**"
                     ],
-                    "message": "Foundation packages (utils, types, env) must not import from higher layers (ui, chrome, payload, auth). Move shared code down the stack instead."
+                    "message": "Foundation packages (utils, types, env, logger) must not import from higher layers (ui, chrome, payload, auth). Move shared code down the stack instead."
                   }
                 ]
               }

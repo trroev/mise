@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@mise/env": "workspace:*",
+    "@mise/logger": "workspace:*",
     "@payloadcms/db-mongodb": "^3.84.1",
     "@payloadcms/plugin-cloud-storage": "^3.84.1",
     "@payloadcms/plugin-seo": "^3.84.1",
