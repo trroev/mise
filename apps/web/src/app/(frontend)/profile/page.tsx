@@ -9,11 +9,13 @@ import { auth } from "~/features/auth/auth.server"
 import { SignOutButton } from "~/features/auth/components/SignOutButton"
 import { CollectionsTab } from "~/features/collections/components/CollectionsTab"
 import { AvatarManager } from "~/features/profile/components/AvatarManager"
+import { AvatarManagerErrorBoundary } from "~/features/profile/components/AvatarManagerErrorBoundary"
 import {
   ProfileTabs,
   type ProfileTabValue,
 } from "~/features/profile/components/ProfileTabs"
 import { getRecipesByAuthorUser } from "~/features/recipes/api/recipes-by-author"
+import { SavedRecipesErrorBoundary } from "~/features/saved-recipes/components/SavedRecipesErrorBoundary"
 import { SavedRecipesTab } from "~/features/saved-recipes/components/SavedRecipesTab"
 import { getPayloadUserByBetterAuthId } from "~/lib/queries/payload-user-by-better-auth-id"
 
@@ -99,7 +101,9 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
     )
 
   const savedPanel: ReactNode = payloadUser ? (
-    <SavedRecipesTab payloadUserId={payloadUser.id} />
+    <SavedRecipesErrorBoundary>
+      <SavedRecipesTab payloadUserId={payloadUser.id} />
+    </SavedRecipesErrorBoundary>
   ) : (
     <p className="text-body text-text-secondary">
       You haven&apos;t saved any recipes yet.
@@ -126,14 +130,16 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
       </div>
 
       <div className="space-y-6">
-        <AvatarManager
-          avatarUrl={
-            typeof payloadUser?.avatar === "object" && payloadUser.avatar
-              ? (payloadUser.avatar.url ?? null)
-              : null
-          }
-          email={user.email}
-        />
+        <AvatarManagerErrorBoundary>
+          <AvatarManager
+            avatarUrl={
+              typeof payloadUser?.avatar === "object" && payloadUser.avatar
+                ? (payloadUser.avatar.url ?? null)
+                : null
+            }
+            email={user.email}
+          />
+        </AvatarManagerErrorBoundary>
         <dl className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-1">
             <dt className="text-body-sm text-text-secondary">Email</dt>

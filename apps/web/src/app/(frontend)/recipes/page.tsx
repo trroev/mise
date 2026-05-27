@@ -6,6 +6,7 @@ import { RecipeMobileFilterDrawer } from "~/features/recipes/components/RecipeMo
 import { RecipePagination } from "~/features/recipes/components/RecipePagination"
 import { RecipeQueryInput } from "~/features/recipes/components/RecipeQueryInput"
 import { RecipeResultGrid } from "~/features/recipes/components/RecipeResultGrid"
+import { RecipeResultGridErrorBoundary } from "~/features/recipes/components/RecipeResultGridErrorBoundary"
 import { RecipeSearchProvider } from "~/features/recipes/components/RecipeSearchProvider"
 import { CardSaveButton } from "~/features/saved-recipes/components/SaveButton"
 
@@ -48,7 +49,9 @@ export default async function RecipesPage() {
                 <RecipeFilterPanel />
               </aside>
               <div className="flex min-w-0 flex-1 flex-col gap-6">
-                <RecipeResultGrid ActionsComponent={CardSaveButton} />
+                <RecipeResultGridErrorBoundary>
+                  <RecipeResultGrid ActionsComponent={CardSaveButton} />
+                </RecipeResultGridErrorBoundary>
                 <RecipePagination />
               </div>
             </div>

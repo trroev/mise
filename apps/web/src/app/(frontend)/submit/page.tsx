@@ -5,6 +5,7 @@ import { auth } from "~/features/auth/auth.server"
 import { getCuisines } from "~/features/recipes/api/cuisines"
 import { getUnits } from "~/features/recipes/api/units"
 import { RecipeSubmissionForm } from "~/features/recipes/components/RecipeSubmissionForm"
+import { RecipeSubmissionFormErrorBoundary } from "~/features/recipes/components/RecipeSubmissionFormErrorBoundary"
 
 export const metadata: Metadata = {
   title: "Submit a recipe",
@@ -30,7 +31,9 @@ export default async function SubmitPage() {
           submission before it&apos;s published.
         </p>
       </div>
-      <RecipeSubmissionForm cuisines={cuisines} units={units} />
+      <RecipeSubmissionFormErrorBoundary>
+        <RecipeSubmissionForm cuisines={cuisines} units={units} />
+      </RecipeSubmissionFormErrorBoundary>
     </section>
   )
 }
