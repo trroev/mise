@@ -12,6 +12,14 @@ runs:
       with:
         cache-prefix: coverage_
 
+    - name: Cache MongoDB binaries
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/mongodb-binaries
+        key: mongodb-binaries-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+        restore-keys: |
+          mongodb-binaries-${{ runner.os }}-
+
     - name: Coverage
       shell: bash
       run: pnpm coverage
