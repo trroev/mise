@@ -12,6 +12,8 @@
     "generate:types": "pnpm with-env payload generate:types",
     "generate:importmap": "pnpm with-env payload generate:importmap",
     "test": "vitest run",
+    "test:integration": "TEST_SCOPE=integration vitest run",
+    "coverage": "TEST_SCOPE=all vitest run --coverage",
     "postinstall": "if [ -z \"$CI\" ]; then pnpm generate:types && pnpm generate:importmap; fi"
   },
   "dependencies": {
@@ -57,7 +59,9 @@
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
     "@vitejs/plugin-react": "^5.2.0",
+    "@vitest/coverage-v8": "^3.2.4",
     "jsdom": "^29.1.1",
+    "mongodb-memory-server": "^11.1.0",
     "tailwindcss": "^4.2.4",
     "typescript": "^6.0.3",
     "vitest": "^3.2.4"
