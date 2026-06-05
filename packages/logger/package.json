@@ -29,7 +29,6 @@
     "pino-pretty": "^13.0.0"
   },
   "devDependencies": {
-    "@mise/testing": "workspace:*",
     "@mise/tsconfig": "workspace:*",
     "@vitest/coverage-v8": "^3.2.4",
     "typescript": "^6.0.3",
