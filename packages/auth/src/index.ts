@@ -2,8 +2,14 @@ import { env } from "@mise/env/auth"
 import { type BetterAuthOptions, betterAuth } from "better-auth"
 import { mongodbAdapter } from "better-auth/adapters/mongodb"
 import { MongoClient } from "mongodb"
+import { createVerificationEmailSender } from "./verificationEmail"
 
 const client = new MongoClient(env.MONGODB_URI)
+
+const sendVerificationEmail = createVerificationEmailSender({
+  apiKey: env.RESEND_API_KEY,
+  from: env.EMAIL_FROM,
+})
 
 export function createAuth(
   extraOptions?: Readonly<Partial<BetterAuthOptions>>
@@ -12,7 +18,14 @@ export function createAuth(
     database: mongodbAdapter(client.db(), { transaction: false }),
     secret: env.BETTER_AUTH_SECRET,
     baseURL: env.BETTER_AUTH_URL,
-    emailAndPassword: { enabled: true },
+    emailAndPassword: { enabled: true, requireEmailVerification: true },
+    emailVerification: {
+      autoSignInAfterVerification: true,
+      sendOnSignUp: true,
+      sendVerificationEmail: async ({ user, url }) => {
+        await sendVerificationEmail({ user, url })
+      },
+    },
     ...extraOptions,
   })
 }
