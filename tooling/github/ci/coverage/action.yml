@@ -31,6 +31,13 @@ runs:
         fail_ci_if_error: false
         flags: utils
 
+    - name: Upload to Codecov (auth)
+      uses: codecov/codecov-action@v5
+      with:
+        directory: ./packages/auth/coverage
+        fail_ci_if_error: false
+        flags: auth
+
     - name: Upload to Codecov (logger)
       uses: codecov/codecov-action@v5
       with:
