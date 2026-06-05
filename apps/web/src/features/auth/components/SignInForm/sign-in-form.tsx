@@ -7,8 +7,12 @@ import { Input } from "@mise/ui/components/Input"
 import { useForm } from "@tanstack/react-form"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useState } from "react"
-import { match } from "ts-pattern"
 import { z } from "zod"
+import { ResendVerificationButton } from "~/features/auth/components/ResendVerificationButton"
+import {
+  signInErrorMessage,
+  toSignInErrorCode,
+} from "~/features/auth/utils/auth-error-messages"
 
 const signInSchema = z.object({
   email: z.email("Enter a valid email address."),
@@ -18,44 +22,36 @@ const signInSchema = z.object({
 const isSafeCallbackUrl = (value: string | null): value is string =>
   value?.startsWith("/") === true && !value.startsWith("//")
 
-const friendlySignInError = (code?: string, message?: string): string =>
-  match(code)
-    .with(
-      "INVALID_EMAIL_OR_PASSWORD",
-      "INVALID_PASSWORD",
-      () => "The email or password you entered is incorrect."
-    )
-    .with("USER_NOT_FOUND", () => "No account found for that email.")
-    .with(
-      "EMAIL_NOT_VERIFIED",
-      () => "Please verify your email before signing in."
-    )
-    .otherwise(() => message ?? "Sign in failed. Please try again.")
-
 type SignInFormProps = {
-  onSuccess?: () => void
+  onSuccessAction?: () => void
 }
 
-export const SignInForm = ({ onSuccess }: SignInFormProps) => {
+export const SignInForm = ({ onSuccessAction }: SignInFormProps) => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const rawCallback = searchParams.get("callbackUrl")
   const callbackUrl = isSafeCallbackUrl(rawCallback) ? rawCallback : "/"
   const [serverError, setServerError] = useState<string | undefined>()
+  const [unverifiedEmail, setUnverifiedEmail] = useState<string | undefined>()
 
   const form = useForm({
     defaultValues: { email: "", password: "" },
     validators: { onChange: signInSchema },
     onSubmit: async ({ value }) => {
       setServerError(undefined)
+      setUnverifiedEmail(undefined)
       const { error } = await authClient.signIn.email(value)
       if (error) {
-        setServerError(friendlySignInError(error.code, error.message))
+        const code = toSignInErrorCode(error.code)
+        setServerError(signInErrorMessage(code))
+        if (code === "EMAIL_NOT_VERIFIED") {
+          setUnverifiedEmail(value.email)
+        }
         return
       }
-      if (onSuccess) {
+      if (onSuccessAction) {
         router.refresh()
-        onSuccess()
+        onSuccessAction()
         return
       }
       router.push(callbackUrl)
@@ -128,6 +124,7 @@ export const SignInForm = ({ onSuccess }: SignInFormProps) => {
           {serverError}
         </p>
       )}
+      {unverifiedEmail && <ResendVerificationButton email={unverifiedEmail} />}
       <form.Subscribe
         selector={(state) => ({
           canSubmit: state.canSubmit,

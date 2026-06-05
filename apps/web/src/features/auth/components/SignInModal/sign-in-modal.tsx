@@ -30,7 +30,7 @@ export const SignInModal = ({
             Sign in to keep your favorite recipes one tap away.
           </Dialog.Description>
           <div className="mt-6">
-            <SignInForm onSuccess={handleSuccess} />
+            <SignInForm onSuccessAction={handleSuccess} />
           </div>
           <p className="mt-4 font-sans text-body-sm text-text-secondary">
             Don&apos;t have an account?{" "}

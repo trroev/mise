@@ -6,8 +6,9 @@ import { renderWithProviders, userEvent } from "@mise/testing/render"
 import { cleanup, screen, waitFor } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
-const { signInEmail, nav } = vi.hoisted(() => ({
+const { signInEmail, resendVerificationEmailAction, nav } = vi.hoisted(() => ({
   signInEmail: vi.fn(),
+  resendVerificationEmailAction: vi.fn(),
   nav: {
     push: vi.fn(),
     replace: vi.fn(),
@@ -25,6 +26,10 @@ vi.mock("@mise/auth/client", () => ({
     useSession: () => ({ data: null, isPending: true }),
     signIn: { email: signInEmail },
   },
+}))
+
+vi.mock("~/features/auth/actions/resend-verification-email", () => ({
+  resendVerificationEmailAction,
 }))
 
 vi.mock("next/navigation", () => ({
@@ -47,6 +52,7 @@ const { SignInForm } = await import("./sign-in-form")
 
 beforeEach(() => {
   signInEmail.mockReset()
+  resendVerificationEmailAction.mockReset()
   nav.push.mockReset()
   nav.refresh.mockReset()
 })
@@ -88,5 +94,55 @@ describe("SignInForm", () => {
       await screen.findByText("Enter a valid email address.")
     ).toBeInTheDocument()
     expect(signInEmail).not.toHaveBeenCalled()
+  })
+
+  it("offers to resend the verification email when the account is unverified", async () => {
+    signInEmail.mockResolvedValueOnce({
+      data: null,
+      error: { code: "EMAIL_NOT_VERIFIED", message: "Email not verified" },
+    })
+    resendVerificationEmailAction.mockResolvedValueOnce({
+      status: "success",
+      data: undefined,
+    })
+    const user = userEvent.setup()
+
+    renderWithProviders(<SignInForm />)
+
+    await user.type(screen.getByLabelText("Email"), "chef@example.com")
+    await user.type(screen.getByLabelText("Password"), "hunter22")
+    await user.click(screen.getByRole("button", { name: "Sign in" }))
+
+    expect(
+      await screen.findByText("Please verify your email before signing in.")
+    ).toBeInTheDocument()
+
+    await user.click(
+      screen.getByRole("button", { name: "Resend verification email" })
+    )
+    await waitFor(() => {
+      expect(resendVerificationEmailAction).toHaveBeenCalledWith(
+        "chef@example.com"
+      )
+    })
+    expect(nav.push).not.toHaveBeenCalled()
+  })
+
+  it("shows a friendly fallback for unknown error codes", async () => {
+    signInEmail.mockResolvedValueOnce({
+      data: null,
+      error: { code: "SOMETHING_NEW", message: "raw server message" },
+    })
+    const user = userEvent.setup()
+
+    renderWithProviders(<SignInForm />)
+
+    await user.type(screen.getByLabelText("Email"), "chef@example.com")
+    await user.type(screen.getByLabelText("Password"), "hunter22")
+    await user.click(screen.getByRole("button", { name: "Sign in" }))
+
+    expect(
+      await screen.findByText("Sign in failed. Please try again.")
+    ).toBeInTheDocument()
   })
 })

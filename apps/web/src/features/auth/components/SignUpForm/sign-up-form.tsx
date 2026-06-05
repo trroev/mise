@@ -5,10 +5,13 @@ import { Button } from "@mise/ui/components/Button"
 import { Field } from "@mise/ui/components/Field"
 import { Input } from "@mise/ui/components/Input"
 import { useForm } from "@tanstack/react-form"
-import { useRouter, useSearchParams } from "next/navigation"
 import { useState } from "react"
-import { match } from "ts-pattern"
 import { z } from "zod"
+import { ResendVerificationButton } from "~/features/auth/components/ResendVerificationButton"
+import {
+  signUpErrorMessage,
+  toSignUpErrorCode,
+} from "~/features/auth/utils/auth-error-messages"
 
 const signUpSchema = z
   .object({
@@ -25,26 +28,9 @@ const signUpSchema = z
     path: ["confirmPassword"],
   })
 
-const isSafeCallbackUrl = (value: string | null): value is string =>
-  value?.startsWith("/") === true && !value.startsWith("//")
-
-const friendlySignUpError = (code?: string, message?: string): string =>
-  match(code)
-    .with(
-      "USER_ALREADY_EXISTS",
-      "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL",
-      () => "An account with that email already exists."
-    )
-    .with("PASSWORD_TOO_SHORT", () => "Password must be at least 8 characters.")
-    .with("INVALID_EMAIL", () => "Enter a valid email address.")
-    .otherwise(() => message ?? "Sign up failed. Please try again.")
-
 export const SignUpForm = () => {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const rawCallback = searchParams.get("callbackUrl")
-  const callbackUrl = isSafeCallbackUrl(rawCallback) ? rawCallback : "/"
   const [serverError, setServerError] = useState<string | undefined>()
+  const [submittedEmail, setSubmittedEmail] = useState<string | undefined>()
 
   const form = useForm({
     defaultValues: { name: "", email: "", password: "", confirmPassword: "" },
@@ -55,15 +41,35 @@ export const SignUpForm = () => {
         name: value.name,
         email: value.email,
         password: value.password,
+        callbackURL: "/verify-email",
       })
       if (error) {
-        setServerError(friendlySignUpError(error.code, error.message))
+        setServerError(signUpErrorMessage(toSignUpErrorCode(error.code)))
         return
       }
-      router.push(callbackUrl)
-      router.refresh()
+      setSubmittedEmail(value.email)
     },
   })
+
+  if (submittedEmail) {
+    return (
+      <div className="flex flex-col gap-4">
+        <div className="space-y-1">
+          <h2 className="font-display text-heading-md text-text-primary">
+            Check your email
+          </h2>
+          <p className="text-body text-text-secondary">
+            We sent a verification link to{" "}
+            <span className="font-medium text-text-primary">
+              {submittedEmail}
+            </span>
+            . Follow the link to activate your account.
+          </p>
+        </div>
+        <ResendVerificationButton email={submittedEmail} />
+      </div>
+    )
+  }
 
   return (
     <form
