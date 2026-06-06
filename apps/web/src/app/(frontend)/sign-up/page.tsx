@@ -16,10 +16,7 @@ export default function SignUpPage() {
           </h1>
           <p className="text-body text-text-secondary">
             Already have an account?{" "}
-            <Link
-              className="text-text-primary underline-offset-4 hover:underline"
-              href="/sign-in"
-            >
+            <Link className="text-text-primary underline" href="/sign-in">
               Sign in
             </Link>
           </p>
