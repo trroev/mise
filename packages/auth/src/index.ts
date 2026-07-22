@@ -18,10 +18,12 @@ export function createAuth(
     database: mongodbAdapter(client.db(), { transaction: false }),
     secret: env.BETTER_AUTH_SECRET,
     baseURL: env.BETTER_AUTH_URL,
-    emailAndPassword: { enabled: true, requireEmailVerification: true },
+    // Verification is disabled until the app has its own domain — Resend
+    // cannot send from the current vercel.app deployment.
+    emailAndPassword: { enabled: true, requireEmailVerification: false },
     emailVerification: {
       autoSignInAfterVerification: true,
-      sendOnSignUp: true,
+      sendOnSignUp: false,
       sendVerificationEmail: async ({ user, url }) => {
         await sendVerificationEmail({ user, url })
       },

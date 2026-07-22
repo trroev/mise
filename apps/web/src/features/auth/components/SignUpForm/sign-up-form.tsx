@@ -5,9 +5,9 @@ import { Button } from "@mise/ui/components/Button"
 import { Field } from "@mise/ui/components/Field"
 import { Input } from "@mise/ui/components/Input"
 import { useForm } from "@tanstack/react-form"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useState } from "react"
 import { z } from "zod"
-import { ResendVerificationButton } from "~/features/auth/components/ResendVerificationButton"
 import {
   signUpErrorMessage,
   toSignUpErrorCode,
@@ -28,9 +28,15 @@ const signUpSchema = z
     path: ["confirmPassword"],
   })
 
+const isSafeCallbackUrl = (value: string | null): value is string =>
+  value?.startsWith("/") === true && !value.startsWith("//")
+
 export const SignUpForm = () => {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const rawCallback = searchParams.get("callbackUrl")
+  const callbackUrl = isSafeCallbackUrl(rawCallback) ? rawCallback : "/"
   const [serverError, setServerError] = useState<string | undefined>()
-  const [submittedEmail, setSubmittedEmail] = useState<string | undefined>()
 
   const form = useForm({
     defaultValues: { name: "", email: "", password: "", confirmPassword: "" },
@@ -41,35 +47,15 @@ export const SignUpForm = () => {
         name: value.name,
         email: value.email,
         password: value.password,
-        callbackURL: "/verify-email",
       })
       if (error) {
         setServerError(signUpErrorMessage(toSignUpErrorCode(error.code)))
         return
       }
-      setSubmittedEmail(value.email)
+      router.push(callbackUrl)
+      router.refresh()
     },
   })
-
-  if (submittedEmail) {
-    return (
-      <div className="flex flex-col gap-4">
-        <div className="space-y-1">
-          <h2 className="font-display text-heading-md text-text-primary">
-            Check your email
-          </h2>
-          <p className="text-body text-text-secondary">
-            We sent a verification link to{" "}
-            <span className="font-medium text-text-primary">
-              {submittedEmail}
-            </span>
-            . Follow the link to activate your account.
-          </p>
-        </div>
-        <ResendVerificationButton email={submittedEmail} />
-      </div>
-    )
-  }
 
   return (
     <form
